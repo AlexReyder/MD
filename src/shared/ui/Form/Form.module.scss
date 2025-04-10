@@ -1,0 +1,26 @@
+.FormContainer{
+	background-color: #fff;
+	padding: 16px;
+}
+
+.FormTitle{
+  margin: 0;
+  color: #222;
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 30px;
+}
+.FormDescription{
+  margin: 0;
+  color: #6c757d;
+  margin-bottom: 16px;
+}
+
+.FormFooter{
+	display: flex;
+	flex-direction: column;
+  align-items: center;
+  justify-content: center;
+	margin-top: 16px;
+  margin-bottom: 32px;
+}

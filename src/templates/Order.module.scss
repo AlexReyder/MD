@@ -1,0 +1,20 @@
+.Order{
+	padding-bottom: 243px;
+
+  @media (max-width: 580px) {
+    padding-bottom: 80px;
+  }
+}
+
+.Title{
+	margin: 0;
+	margin-bottom: 80px;
+	color: var(--p-color);
+	font-size: 42px;
+	font-weight: 700;
+
+	@media (max-width: 580px) {
+		font-size: 24px;
+		margin-bottom: 32px;
+	}
+}

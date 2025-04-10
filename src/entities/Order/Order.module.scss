@@ -1,0 +1,28 @@
+.ItemTitle{
+				margin: 0;
+        color: var(--s-color);
+        padding: 16px;
+        background-color: var(--p-color);
+        font-size: 22px;
+        font-weight: 700;
+        font-variant-numeric: lining-nums tabular-nums stacked-fractions;
+
+        @media (max-width: 580px) {
+          padding: 12px 27px;
+          font-size: 16px;
+          margin: 0 -15px;
+        }
+
+        @media (max-width: 400px) {
+          padding: 12px 15px;
+        }
+
+        span:first-child {
+          display: inline-block;
+          border-right: 1px solid #565C66;
+          padding-right: 14px;
+          margin-right: 14px;
+        }
+}
+
+

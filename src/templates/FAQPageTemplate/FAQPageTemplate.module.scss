@@ -1,0 +1,33 @@
+.Wrapper {
+	width: 100%;
+	min-height: 100%;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	justify-items: start;
+	gap: 0rem;
+	position: relative;
+	z-index: 5;
+	@media only screen and (max-width: 47rem) {
+		grid-template-columns: repeat(1fr);
+		grid-template-rows: auto;
+
+	}
+}
+
+.Contact {
+	grid-column: 1 / end;
+	grid-row: 1/2;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+
+	padding: 4rem 0;
+	@media only screen and (max-width: 47rem) {
+		align-items: flex-start;
+		gap: 1rem;
+
+	}
+}
