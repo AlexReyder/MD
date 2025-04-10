@@ -83,31 +83,6 @@ export const Breadcrumbs = () => {
     },
 
   }
-  // const searchParams = useSearchParams()
-
-  // const breadcrumbs = useMemo(
-  //   function generateBreadcrumbs() {
-  //     const asPathNestedRoutes = generatePathParts(pathname)
-  //     const pathnameNestedRoutes = generatePathParts(pathname)
-
-  //     const crumbList = asPathNestedRoutes.map((subpath, idx) => {
-  //       const param = pathnameNestedRoutes[idx]
-  //         .replace('[', '')
-  //         .replace(']', '')
-
-  //       const href = '/' + asPathNestedRoutes.slice(0, idx + 1).join('/')
-
-  //       return {
-  //         href,
-  //         textGenerator: getTextGenerator(param, searchParams.getAll('')),
-  //         text: getDefaultTextGenerator(subpath, href),
-  //       }
-  //     })
-
-  //     return [...crumbList]
-  //   },
-  //   [pathname, getTextGenerator, searchParams, getDefaultTextGenerator]
-  // )
 
   return (
     <div>

@@ -2,15 +2,18 @@
 import { signIn } from '@/shared/api/auth'
 import { signInSchema } from '@/shared/types/schemas'
 import { Form, FormContainer, FormFooter, FormHeader, FormSubmit, Input } from '@/shared/ui'
+import { FormError } from '@/shared/ui/Form/FormError'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 type FormSchema = z.infer<typeof signInSchema>
 
 const AuthPopupLogin = ({includeHeading = true, className = ''}: {includeHeading?: boolean, className?: string}) => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const router = useRouter()
   const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }} = useForm<FormSchema>({
     defaultValues: {
@@ -25,7 +28,7 @@ const AuthPopupLogin = ({includeHeading = true, className = ''}: {includeHeading
     if(success){
       router.push('/')
     }
-    // setError(error)
+    setErrorMessage(error)
   }
 
   return (
@@ -42,12 +45,13 @@ const AuthPopupLogin = ({includeHeading = true, className = ''}: {includeHeading
            />
         </Form>
         <FormFooter>
-            <Link
+          <FormError errorMessage={errorMessage}/>
+          <Link
                 href='/password-recovery'
                 className='inner__reset'
               >
                 Восстановить пароль
-              </Link>
+          </Link>
         <div>
         <span className='inner__bottom__text'>
                 Еще нет аккаунта?

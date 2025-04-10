@@ -2,15 +2,20 @@
 import { signUp } from '@/shared/api/auth'
 import { signUpSchema } from '@/shared/types/schemas'
 import { Form, FormContainer, FormFooter, FormHeader, FormSubmit, Input } from '@/shared/ui'
+import { FormError } from '@/shared/ui/Form/FormError'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 type FormSchema = z.infer<typeof signUpSchema>
 
 const AuthPopupRegistration = ({className = ''}: {className?: string}) => {
-    const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }} = useForm<FormSchema>({
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const router = useRouter()
+  const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }} = useForm<FormSchema>({
       defaultValues: {
         name:"",
         surname:"",
@@ -22,9 +27,11 @@ const AuthPopupRegistration = ({className = ''}: {className?: string}) => {
     })
 
     async function onSubmit(data: FormSchema) {
-      const error = await signUp(data)
-      console.log(error)
-      // setError(error)
+      const {success, error} = await signUp(data)
+      if(success){
+        router.push('/signin')
+      }
+      setErrorMessage(error)
     }
 
 
@@ -44,6 +51,7 @@ const AuthPopupRegistration = ({className = ''}: {className?: string}) => {
                 isSubmitting={isSubmitting}
         />
         <FormFooter>
+        <FormError errorMessage={errorMessage}/>
         <span className='inner__bottom__text'>
                Уже есть аккаунт?
               </span>

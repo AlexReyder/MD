@@ -29,7 +29,7 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
   if (!user || !compareSync(data.password, user.password)) {
     return {
       success: null,
-      error:"Пользователя не существует"
+      error:"Неправильно введенная электронная почта или пароль."
     }
   }
 

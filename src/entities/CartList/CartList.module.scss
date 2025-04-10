@@ -12,6 +12,13 @@
 			margin-bottom: 12px;
 		}
 
+		@media (max-width: 400px) {
+			padding-bottom: 12px;
+			margin-bottom: 12px;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
 		&__delete {
 			position: absolute;
 			right: 0;
@@ -41,6 +48,9 @@
 				top: auto;
 				bottom: 21px;
 				z-index: 1;
+			}
+			@media (max-width: 430px) {
+				top: 0;
 			}
 		}
 
@@ -153,6 +163,12 @@
 			@media (max-width: 430px) {
 				flex-direction: column-reverse;
 				align-items: flex-start;
+				width: 100%;
+				position: relative;
+				top:unset !important;
+				left:unset !important;
+				right:unset !important;
+				bottom:unset !important;
 			}
 		}
 
@@ -171,6 +187,7 @@
 			@media (max-width: 430px) {
 				margin-top: 10px;
 			}
+
 
 			& span {
 				font-size: 13px;

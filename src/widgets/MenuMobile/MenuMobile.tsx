@@ -36,13 +36,14 @@ export const MenuMobile = ({ className }: MenuProps) => {
 				<div className='nav__content'>
 					<ul className='nav__list'>
 						<li className='nav__list-item'>
-							<Link href='/' >
+							<Link href='/'  onClick={onToggle}>
 								Главная
 							</Link>
 						</li>
 						<li className='nav__list-item'>
 							<Link
 								href='/catalog/futbolki'
+								 onClick={onToggle}
 								style={{ color: '#fff' }}
 							>
 								Футболки
@@ -51,6 +52,7 @@ export const MenuMobile = ({ className }: MenuProps) => {
 						<li className='nav__list-item'>
 							<Link
 								href='/catalog/longslivy'
+								 onClick={onToggle}
 								style={{ color: '#fff' }}
 								className='nav__list-link'
 							>
@@ -60,6 +62,7 @@ export const MenuMobile = ({ className }: MenuProps) => {
 						<li className='nav__list-item'>
 							<Link
 								href='/catalog/flagi'
+								 onClick={onToggle}
 								style={{ color: '#fff' }}
 							>
 								Флаги
@@ -68,8 +71,8 @@ export const MenuMobile = ({ className }: MenuProps) => {
 						<li className='nav__list-item'>
 							<Link
 								href='/catalog/nashivki'
+								 onClick={onToggle}
 								style={{ color: '#fff' }}
-								onClick={onToggle}
 							>
 								Нашивки
 							</Link>
@@ -77,8 +80,8 @@ export const MenuMobile = ({ className }: MenuProps) => {
 						<li className='nav__list-item'>
 							<Link
 								href='/about'
+								 onClick={onToggle}
 								style={{ color: '#fff' }}
-								onClick={onToggle}
 							>
 								О нас
 							</Link>
@@ -86,8 +89,8 @@ export const MenuMobile = ({ className }: MenuProps) => {
 						<li className='nav__list-item'>
 							<Link
 								href='/contacts'
+								 onClick={onToggle}
 								style={{ color: '#fff' }}
-								onClick={onToggle}
 							>
 								Контакты
 							</Link>
