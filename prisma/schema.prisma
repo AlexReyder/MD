@@ -7,32 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
-  name          String?
-  surname       String?
-  phone         String   @unique
-  password      String
-  role          Role     @default(USER)
-  emailVerified Boolean  @default(false) @map("email_verified")
-  emailToken    String   @default(uuid()) @map("email_token")
-  recoveryToken String   @default(uuid()) @map("recovery_token")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  Cart          Cart[]
-  Order         Order[]
-}
-
 enum Role {
   ADMIN
   USER
 }
 
 enum OrderStatus {
-  ACCEPT
-  VERIFICATION
   DECLINE
+  VERIFICATION
+  ACCEPT
+  PAID
+  COLLECT
+  SENT
+  DELIVERED
 }
 
 enum PaymentType {
@@ -47,6 +34,75 @@ enum DeliveryType {
   FIVEPOST
 }
 
+enum BonusType {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  name            String?
+  surname         String?
+  phone           String           @unique
+  password        String
+  role            Role             @default(USER)
+  emailVerified   Boolean          @default(false) @map("email_verified")
+  emailToken      String           @default(uuid()) @map("email_token")
+  recoveryToken   String           @default(uuid()) @map("recovery_token")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  firstBuy        Boolean          @default(true) @map("first_buy")
+  purchasesAmount Int              @default(0) @map("purchases_amount")
+  whatsapp        Boolean          @default(false)
+  telegram        Boolean          @default(false)
+  Cart            Cart[]
+  Order           Order[]
+  Bonus           Bonus[]
+  NotifyProducts  NotifyProducts[]
+}
+
+model Bonus {
+  id        String    @id @default(uuid())
+  amount    Int       @default(0)
+  status    BonusType @default(BRONZE)
+  history   Json[]    @default([])
+  User      User      @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Order {
+  id          String       @id @default(uuid())
+  User        User         @relation(fields: [userId], references: [id])
+  userId      String
+  payment     PaymentType
+  delivery    DeliveryType
+  products    Json
+  details     Json
+  amount      Int
+  trackNumber String?
+  status      OrderStatus  @default(VERIFICATION)
+  Promocode   Promocode?   @relation(fields: [promocodeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  promocodeId String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Promocode {
+  id        String   @id @default(uuid())
+  value     String   @unique
+  expiresAt DateTime
+  discount  Int
+  Order     Order[]
+  Users     String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Category {
   id        String         @id @default(uuid())
   name      String
@@ -57,107 +113,146 @@ model Category {
 }
 
 model Band {
-  id        String         @id @default(uuid())
+  id        String   @id @default(uuid())
   name      String
   slug      String
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  products  ShoppingCard[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-// model MusicStyle {
-//   id        String         @id @default(uuid())
-//   name      String
-//   slug      String
-//   createdAt DateTime       @default(now())
-//   updatedAt DateTime       @updatedAt
-//   products  ShoppingCard[]
-//   @@map("music_style")
-// }
+model Genre {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-// model Manufacturer {
-//   id        String         @id @default(uuid())
-//   name      String
-//   slug      String
-//   createdAt DateTime       @default(now())
-//   updatedAt DateTime       @updatedAt
-//   products  ShoppingCard[]
-// }
-
-// model Sizes {
-//   id        String         @id @default(uuid())
-//   name      String
-//   slug      String
-//   createdAt DateTime       @default(now())
-//   updatedAt DateTime       @updatedAt
-//   products  ShoppingCard[]
-// }
-
-// model Colors {
-//   id        String         @id @default(uuid())
-//   name      String
-//   slug      String
-//   createdAt DateTime       @default(now())
-//   updatedAt DateTime       @updatedAt
-//   products  ShoppingCard[]
-// }
-
-model ShoppingCard {
-  id             String     @id @default(uuid())
+model Manufacturer {
+  id             String        @id @default(uuid())
   name           String
   slug           String
-  isActive       Boolean    @default(true) @map("is_active")
-  isNew          Boolean    @default(false) @map("is_new")
-  isBestseller   Boolean    @default(false) @map("is_bestseller")
-  isInStock      Boolean    @map("is_in_stock")
-  articleNumber  String     @unique @map("article_number")
-  colors         String[]
-  sizes          String[]
-  description    String?
-  material       String
-  specifications String?
-  price          Int
-  images         Json
-  details        Json
-  categoryId     String
-  categorySlug   String
-  bandId         String
-  bandName       String
-  Category       Category[]
-  Band           Band[]
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  material       Material?     @relation(fields: [materialId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  materialId     String?
+  print          Print?        @relation(fields: [printId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  printId        String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  ShoppingCard   ShoppingCard? @relation(fields: [shoppingCardId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  shoppingCardId String?
+}
+
+model Sizes {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Colors {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Material {
+  id           String         @id @default(uuid())
+  name         String
+  slug         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Manufacturer Manufacturer[]
+}
+
+model Print {
+  id           String         @id @default(uuid())
+  name         String
+  slug         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Manufacturer Manufacturer[]
+}
+
+model Country {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShoppingCard {
+  id                String          @id @default(uuid())
+  name              String
+  slug              String
+  isActive          Boolean         @default(true) @map("is_active")
+  isNew             Boolean         @default(false) @map("is_new")
+  isBestseller      Boolean         @default(false) @map("is_bestseller")
+  isInStock         Boolean         @map("is_in_stock")
+  articleNumber     String          @unique @map("article_number")
+  description       String?
+  adPrice           Int
+  price             Int
+  images            Json
+  details           Json
+  category          Json[]
+  band              Json[]
+  genre             Json[]
+  colors            Json[]
+  sizes             Json[]
+  manufacturer      Json[]
+  material          Json[]
+  print             Json[]
+  country           Json[]
+  CategoryTable     Category[]
+  ManufacturerTable Manufacturer[]
+  NotifyProducts    NotifyProducts?
+  notifyProductsId  String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 
   @@map("shopping_card")
+}
+
+model NotifyProducts {
+  id         String       @id @default(uuid())
+  User       User         @relation(fields: [userId], references: [id])
+  userId     String
+  isNotified Boolean      @default(false)
+  Product    ShoppingCard @relation(fields: [productId], references: [id])
+  productId  String       @unique
+  color      String
+  size       String
+
+  @@map("notify_products")
 }
 
 model Cart {
   id        String      @id @default(uuid())
   status    OrderStatus @default(VERIFICATION)
   userId    String
-  user      User        @relation(fields: [userId], references: [id])
+  user      User        @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   products  Json
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
 }
 
-model Order {
-  id             String       @id @default(uuid())
-  user           User         @relation(fields: [userId], references: [id])
-  userId         String
-  payment        PaymentType
-  delivery       DeliveryType
-  products       Json
-  details        Json
-  promocodeValue String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model Promocode {
+model Banner {
   id        String   @id @default(uuid())
-  value     String
-  expiresAt DateTime
+  alt       String
+  url       String
+  link      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

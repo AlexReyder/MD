@@ -1,6 +1,6 @@
 import s from './ProductSpecification.module.scss'
 
-const ProductSpecification = ({specifications}:{specifications: string}) => {
+const ProductSpecification = ({specifications}:{specifications: any}) => {
 
 	return(
 	<div>
@@ -9,19 +9,19 @@ const ProductSpecification = ({specifications}:{specifications: string}) => {
 			<tbody>
 			<tr className={s.Item}>
 				<td className={s.ItemTitle}>Бренд:</td>
-				<td className={s.ItemValue}>HellBlast</td>
+				<td className={s.ItemValue}>{specifications.manufacturer}</td>
 			</tr>
 			<tr className={s.Item}>
 				<td className={s.ItemTitle}>Страна производства:</td>
-				<td className={s.ItemValue}>Перу</td>
+				<td className={s.ItemValue}>{specifications.country}</td>
 			</tr>
 			<tr className={s.Item}>
 				<td className={s.ItemTitle}>Материал:</td>
-				<td className={s.ItemValue}>100% хлопок (20/1)</td>
+				<td className={s.ItemValue}>{specifications.material}</td>
 			</tr>
 			<tr className={s.Item}>
 				<td className={s.ItemTitle}>Печать:</td>
-				<td className={s.ItemValue}>Шелкография (пластизол)</td>
+				<td className={s.ItemValue}>{specifications.print}</td>
 			</tr>
 			<tr className={s.Item}>
 				<td className={s.ItemTitle}>Посадка:</td>

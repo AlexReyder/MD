@@ -3,6 +3,7 @@
 import { PrismaClient } from '@prisma/client'
 import slug from 'slug'
 
+
 const randomDecimalNumber = (min:number, max:number) => {
 	const num = Math.floor(Math.random() * (max - min) * 10 + min * 10)/10
   return Math.round(num)
@@ -130,130 +131,130 @@ const imagesClothes = ["img/clothes/flag_carcass_heartwork.JPG",
 
 
 export async function testDb(){
-	for (let i = 0; i < 30; i++) {
+	// for (let i = 0; i < 30; i++) {
 		await seedDb()
-	}
+	// }
 }
 
 
 
 async function seedDb(){
-	const selectedCategory = categoryIds[randomDecimalNumber(0, categoryIds.length - 2)]
-	const selectedBand = bandIds[randomDecimalNumber(0, categoryIds.length - 2)]
+	// const selectedCategory = categoryIds[randomDecimalNumber(0, categoryIds.length - 2)]
+	// const selectedBand = bandIds[randomDecimalNumber(0, categoryIds.length - 2)]
 	const prisma = new PrismaClient();
 
-	const opd = await prisma.shoppingCard.updateMany({data:
-		{
-			colors:color,
-			sizes:["x", "l", "m", "xl","xxl"]
-		}
-	})
-	const cate = await prisma.category.findFirst({where:{id: selectedCategory}, select:{
-		id: true,
-		slug: true
-	}})
-
-	const ba = await prisma.band.findFirst({where:{id: selectedBand}, select:{
-		id: true,
-		name: true
-	}})
-
-	const seed = await prisma.shoppingCard.create(
-		{
-		data:{
-				name: 'Товар',
-				slug:slug('Товар'),
-				colors:getRandomArray(color),
-				sizes:getRandomArray(sizes),
-				categoryId: cate?.id as string,
-				categorySlug: cate?.slug as string,
-				bandId: ba?.id as string,
-				bandName: ba?.name as string,
-				isInStock: true,
-				articleNumber:randomDecimalNumberToString(1, 9999999),
-				// bandId:bandIds[randomDecimalNumber(0, bandIds.length - 2)],
-				description: 'sdf2wo45lwkgepk	twkg]wpkghoju6y765gijh',
-				material:'Хлопок 100%',
-				specifications: 'asdf3wh3q y3qhygthf h35 uwqa jtjretj fghfsghfsgh',
-				price: randomDecimalNumber(1000,7000),
-				images: {
-					"white": get4RandomStrings(imagesClothes),
-					"black": get4RandomStrings(imagesClothes),
-					"blue": get4RandomStrings(imagesClothes),
-					"red": get4RandomStrings(imagesClothes),
-					"green": get4RandomStrings(imagesClothes),
-					"yellow": get4RandomStrings(imagesClothes),
-				},
-				details:{
-					"white": {
-						x:randomDecimalNumber(0,10),
-						l:randomDecimalNumber(0,10),
-						m:randomDecimalNumber(0,10),
-						xl:randomDecimalNumber(0,10),
-						xxl: randomDecimalNumber(0,10),
-					},
-					"black": {
-						x:randomDecimalNumber(0,10),
-						l:randomDecimalNumber(0,10),
-						m:randomDecimalNumber(0,10),
-						xl:randomDecimalNumber(0,10),
-						xxl: randomDecimalNumber(0,10),
-					},
-					"blue": {
-						x:randomDecimalNumber(0,10),
-						l:randomDecimalNumber(0,10),
-						m:randomDecimalNumber(0,10),
-						xl:randomDecimalNumber(0,10),
-						xxl: randomDecimalNumber(0,10),
-					},
-					"red": {
-						x:randomDecimalNumber(0,10),
-						l:randomDecimalNumber(0,10),
-						m:randomDecimalNumber(0,10),
-						xl:randomDecimalNumber(0,10),
-						xxl: randomDecimalNumber(0,10),
-					},
-					"green": {
-						x:randomDecimalNumber(0,10),
-						l:randomDecimalNumber(0,10),
-						m:randomDecimalNumber(0,10),
-						xl:randomDecimalNumber(0,10),
-						xxl: randomDecimalNumber(0,10),
-					},
-					"yellow": {
-						x:randomDecimalNumber(0,10),
-						l:randomDecimalNumber(0,10),
-						m:randomDecimalNumber(0,10),
-						xl:randomDecimalNumber(0,10),
-						xxl: randomDecimalNumber(0,10),
-					},
-				},
-		},
-
-	})
-
-
-
-	// const categoriesSeed = await prisma.category.createMany({
-	// 	data:[
-	// 		{
-	// 			name: 'Футболки',
-	// 			slug: slug('футболки')
-	// 		},
-	// 		{
-	// 			name: 'Лонгсливы',
-	// 			slug: slug('Лонгсливы')
-	// 		},
-	// 		{
-	// 			name: 'Флаги',
-	// 			slug: slug('Флаги')
-	// 		},
-	// 		{
-	// 			name: 'Нашивки',
-	// 			slug: slug('Нашивки')
-	// 		},
-	// 	]
+	// const opd = await prisma.shoppingCard.updateMany({data:
+	// 	{
+	// 		colors:color,
+	// 		sizes:["x", "l", "m", "xl","xxl"]
+	// 	}
 	// })
+	// const cate = await prisma.category.findFirst({where:{id: selectedCategory}, select:{
+	// 	id: true,
+	// 	slug: true
+	// }})
+
+	// const ba = await prisma.band.findFirst({where:{id: selectedBand}, select:{
+	// 	id: true,
+	// 	name: true
+	// }})
+
+	// const seed = await prisma.shoppingCard.create(
+	// 	{
+	// 	data:{
+	// 			name: 'Товар',
+	// 			slug:slug('Товар'),
+	// 			colors:getRandomArray(color),
+	// 			sizes:getRandomArray(sizes),
+	// 			categoryId: cate?.id as string,
+	// 			categorySlug: cate?.slug as string,
+	// 			bandId: ba?.id as string,
+	// 			bandName: ba?.name as string,
+	// 			isInStock: true,
+	// 			articleNumber:randomDecimalNumberToString(1, 9999999),
+	// 			// bandId:bandIds[randomDecimalNumber(0, bandIds.length - 2)],
+	// 			description: 'sdf2wo45lwkgepk	twkg]wpkghoju6y765gijh',
+	// 			material:'Хлопок 100%',
+	// 			specifications: 'asdf3wh3q y3qhygthf h35 uwqa jtjretj fghfsghfsgh',
+	// 			price: randomDecimalNumber(1000,7000),
+	// 			images: {
+	// 				"white": get4RandomStrings(imagesClothes),
+	// 				"black": get4RandomStrings(imagesClothes),
+	// 				"blue": get4RandomStrings(imagesClothes),
+	// 				"red": get4RandomStrings(imagesClothes),
+	// 				"green": get4RandomStrings(imagesClothes),
+	// 				"yellow": get4RandomStrings(imagesClothes),
+	// 			},
+	// 			details:{
+	// 				"white": {
+	// 					x:randomDecimalNumber(0,10),
+	// 					l:randomDecimalNumber(0,10),
+	// 					m:randomDecimalNumber(0,10),
+	// 					xl:randomDecimalNumber(0,10),
+	// 					xxl: randomDecimalNumber(0,10),
+	// 				},
+	// 				"black": {
+	// 					x:randomDecimalNumber(0,10),
+	// 					l:randomDecimalNumber(0,10),
+	// 					m:randomDecimalNumber(0,10),
+	// 					xl:randomDecimalNumber(0,10),
+	// 					xxl: randomDecimalNumber(0,10),
+	// 				},
+	// 				"blue": {
+	// 					x:randomDecimalNumber(0,10),
+	// 					l:randomDecimalNumber(0,10),
+	// 					m:randomDecimalNumber(0,10),
+	// 					xl:randomDecimalNumber(0,10),
+	// 					xxl: randomDecimalNumber(0,10),
+	// 				},
+	// 				"red": {
+	// 					x:randomDecimalNumber(0,10),
+	// 					l:randomDecimalNumber(0,10),
+	// 					m:randomDecimalNumber(0,10),
+	// 					xl:randomDecimalNumber(0,10),
+	// 					xxl: randomDecimalNumber(0,10),
+	// 				},
+	// 				"green": {
+	// 					x:randomDecimalNumber(0,10),
+	// 					l:randomDecimalNumber(0,10),
+	// 					m:randomDecimalNumber(0,10),
+	// 					xl:randomDecimalNumber(0,10),
+	// 					xxl: randomDecimalNumber(0,10),
+	// 				},
+	// 				"yellow": {
+	// 					x:randomDecimalNumber(0,10),
+	// 					l:randomDecimalNumber(0,10),
+	// 					m:randomDecimalNumber(0,10),
+	// 					xl:randomDecimalNumber(0,10),
+	// 					xxl: randomDecimalNumber(0,10),
+	// 				},
+	// 			},
+	// 	},
+
+	// })
+
+
+
+	const categoriesSeed = await prisma.category.createMany({
+		data:[
+			{
+				name: 'Футболки',
+				slug: slug('футболки')
+			},
+			{
+				name: 'Лонгсливы',
+				slug: slug('Лонгсливы')
+			},
+			{
+				name: 'Флаги',
+				slug: slug('Флаги')
+			},
+			{
+				name: 'Нашивки',
+				slug: slug('Нашивки')
+			},
+		]
+	})
 
 	// const bandsSeed = await prisma.band.createMany({
 	// 	data:[

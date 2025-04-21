@@ -1,6 +1,9 @@
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
 type Mods = Record<string, boolean | string>
 
-export  function cn(...args: string[]): string {
+export  function cnn(...args: string[]): string {
 	 return [...arguments].join(' ')
 }
 
@@ -13,6 +16,13 @@ export  function cnx(cls: string, mods: Mods = {}, additional: string[] = []): s
 			.map(([className]) => className),
 	]
 		.join(' ');
+}
+
+
+
+ 
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }
 
 // export  function cif(arg1: string, args2: string): string {

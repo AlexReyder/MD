@@ -11,16 +11,33 @@ import ProductDescription from './ProductDescription'
 import ProductForm from './ProductForm'
 import ProductImages from './ProductImages'
 import ProductSpecification from './ProductSpecification'
+import { ProductTable } from './ProductTable'
 
 export const Product = ({product}: any) => {
-  const {id, isBestseller, isNew,name, description, specifications, colors, sizes, details, images, price, material} = product
+  let {id, isBestseller, isNew,name, description, colors, sizes, details, images, price, material, manufacturer, print, country, category} = product
+  colors = colors.map((color) => `${color.label}`)
+  sizes = sizes.map((size) => `${size.label}`)
+
+  material = material[0].label
+  manufacturer = manufacturer[0].label
+  print = print[0].label
+  country = country[0].label
+  category = category[0].label
+  
+  const specifications = {
+    material,
+    manufacturer,
+    print,
+    country
+  }
 
 	return(
-			 <div className={styles.product__top}>
+			 <div className={s.ProductContainer}>
        <Suspense fallback={<Skeleton/>}>
-        <ProductImages images={images}/>
+        <ProductImages images={images} className={s.ProductImages}/>
         </Suspense>
-        <div className={styles.product__top__right}>
+        <ProductTable className={s.ProductTable} category={category} manufacturer = {manufacturer}/>
+        <div className={s.ProductContent}>
         <ProductAttentionLabel isBestseller={isBestseller} isNew={isNew}/>
           <h1 className={styles.product__top__title}>{name}</h1>
           <div className={styles.product__top__price}>

@@ -1,13 +1,31 @@
+"use client"
 import { showCountMessage } from '@/shared/ui'
+import { calculateBonusDiscount } from '@/shared/utils/common'
 import styles from '@/styles/order-block/index.module.scss'
 import Link from 'next/link'
 
 const OrderInfoBlock = ({
   cartData,
   isOrderPage,
-}: any) => {
-  const itemsQuantity = getItemsQuantity(cartData)
-  const itemsTotalPrice = getItemsTOtalPrice(cartData, itemsQuantity)
+  bonusType,
+  bonusStatus,
+  bonus,
+  promocode
+}: {
+  cartData: any,
+  isOrderPage: any,
+  bonusType?:any
+  bonusStatus?: any
+  bonus?: any
+  promocode?: any
+}) => {
+  let itemsQuantity = getItemsQuantity(cartData)
+  let itemsTotalPrice = getItemsTOtalPrice(isOrderPage, cartData, bonusStatus, bonus, promocode)
+
+  // useEffect(() => {
+  //   itemsQuantity = getItemsQuantity(cartData)
+  //   itemsTotalPrice = getItemsTOtalPrice(cartData, bonusStatus, bonus, promocode)
+  // }, [promocode])
 
 
   return (
@@ -26,12 +44,18 @@ const OrderInfoBlock = ({
         {isOrderPage && (
           <>
             <p className={styles.order_block__info}>
-              {/* {translations[lang].order.delivery}:{' '} */}
               <span className={styles.order_block__info__text}>
-                {/* {pickupTab
-                  ? translations[lang].order.pickup_free
-                  : translations[lang].order.courier_delivery} */}
+                Программа лояльности: {bonusType}
               </span>
+             {bonus > 0 ? ( <span className={styles.order_block__info__text}>
+                Списано бонусов: {bonus}
+              </span>) : <></>}
+              {
+                promocode.discount > 0 ?
+                (<span className={styles.order_block__info__text}>
+                  Промокод: Активирован
+                 </span>) : <></>
+              }
             </p>
             <p className={styles.order_block__info}>
               {/* {translations[lang].order.payment}:{' '} */}
@@ -112,14 +136,17 @@ function getItemsQuantity(arr: any[]){
   return quantity;
 }
 
-function getItemsTOtalPrice(arr: any[], quantity: number){
+function getItemsTOtalPrice(isOrderPage: boolean, arr: any[], status?: any, bonus: any = 0, promocode?:any){
   let price = 0;
   arr.forEach(item => {
     price+= +item.price * +item.quantity
   })
-  return price;
-  // if(arr.length === 1){
-  //   return (+arr.quantity) * (+a.price)
-  // }
-  // return arr.reduce((a,c) => (+a.price * +a.quantity) + (c.price * +c.quantity))
+  if(isOrderPage){
+    let total = calculateBonusDiscount(+price, status, +bonus)
+    if(promocode.discount > 0){
+      total = total - promocode.discount
+    }
+    return total ;
+  }
+  return price
 }

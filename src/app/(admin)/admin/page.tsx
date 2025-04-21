@@ -1,10 +1,11 @@
-
+import { Button } from '@/shared/shadcnui/ui/button'
 
 export default function AdminMainPage() {
 	
 	return (
 		<>
-			<h2>Admin</h2>
+			<h2 className='text-3xl font-bold underline'>Admin</h2>
+			<Button variant="default">Button</Button>
 		</>
 	);
 }

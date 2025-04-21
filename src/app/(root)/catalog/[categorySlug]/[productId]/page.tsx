@@ -14,6 +14,7 @@ export default async function ProductPage({
   const { productId } = await params
   const color = (await searchParams).color as string | undefined;
   const {success, error} = await getOneProduct(productId);
+  console.log(error)
   // if(color){
   //   if(!success?.colors.includes(color)){
   //     notFound()
@@ -28,7 +29,7 @@ export default async function ProductPage({
           success ? 
           (
            <>
-            <Breadcrumbs/>
+            <Breadcrumbs name={success.name}/>
             <Product product={success}/>
            </>
           ) 

@@ -8,55 +8,64 @@ import OrderInfoBlock from '@/entities/OrderInfoBlock/OrderInfoBlock'
 import PromotionalCode from '@/features/PromotionalCode/PromotionalCode'
 import { makeOrder } from '@/shared/api/order'
 import { CartItems } from '@/shared/types/cart'
-import { DeliveryEnum, makeOrderSchema, PaymentEnum, } from '@/shared/types/schemas'
-import { UserProfileDTO } from '@/shared/types/user'
-import { Form, Section } from '@/shared/ui'
+import { bonusStatusAdminForm, UserProfileDTO } from '@/shared/types/user'
+import { BonusDb } from '@/shared/types/validation/bonus'
+import { CreateOrder, CreateOrderSchema } from '@/shared/types/validation/order'
+import { Form, Input, Section } from '@/shared/ui'
 import styles from '@/styles/order/index.module.scss'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { DeliveryType, PaymentType } from '@prisma/client'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import s from './Order.module.scss'
 
 interface Props{
 	cartData: CartItems
 	profileData: UserProfileDTO 
+  bonusData: BonusDb
 }
-type FormSchema = z.infer<typeof makeOrderSchema>
+// type FormSchema = z.infer<typeof makeOrderSchema>
 
-const CartPageTemplate = ({cartData, profileData}: Props) => {
+const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
+  const [promocodeValue, setPromocodeValue] = useState({id:'', discount:0})
   const router = useRouter()
-   const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }} = useForm<FormSchema>({
+  const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }, watch, getValues, setValue} = useForm<CreateOrder>({
         defaultValues: {
-          payment: PaymentEnum.TRANSFER,
-          delivery:DeliveryEnum.CDEK,
+          payment: PaymentType.TRANSFER,
+          delivery:DeliveryType.CDEK,
+          products: cartData,
           name: profileData.name ?? "",
           surname: profileData.surname ?? "",
           phone: profileData.phone ?? "",
           email: profileData.email ?? "",
-          comment: "",
-          promocode: ""
+          promocodeId: promocodeValue,
+          bonusMinusAmount: 0
         },
-        resolver: zodResolver(makeOrderSchema)
+        resolver: zodResolver(CreateOrderSchema)
       })
-
-    async function onSubmit(data: FormSchema) {
-            const {success, error} = await makeOrder(data, cartData)
+  watch('bonusMinusAmount')
+  const bonuses = getValues().bonusMinusAmount    
+  const bonusType = bonusStatusAdminForm.filter((el) => el.value === bonusData.status)[0].label
+  async function onSubmit(data: CreateOrder) {
+            const {success, error} = await makeOrder(data)
             if(success){
               router.push(`/order-confirm?order=${success}`)
             }
             if(error){
               console.log(error)
             }
-          }
+  }
+
+  function setPromocodeData(data:any){
+    setPromocodeValue(data)
+    setValue('promocodeId', data)
+  }
 
 	return(
 		<main>
 		<Section className={s.Order}>
         <Form className='container' action={handleSubmit(onSubmit)}>
-          {/* <h1 className={s.Title}>
-					Оформление заказа
-          </h1> */}
           <div className={styles.order__inner}>
             <div className={styles.order__inner__left}>
               <ul className={`list-reset ${styles.order__list}`}>
@@ -107,15 +116,36 @@ const CartPageTemplate = ({cartData, profileData}: Props) => {
 								<li className={styles.order__list__item}>
                   <OrderTitle
                     orderNumber='5'
+                    text='Программа лояльности'
+                  />
+                  <div className={s.BonusBlock}>
+                    <p className={s.BonusText}>
+                      <span className={s.BonusTitle}>Ваш уровень: </span>
+                      <span className={s.BonusValue}>{bonusType}</span>
+                    </p>
+                  </div>
+                  <div className={s.BonusBlock}>
+                    <p className={s.BonusText}>
+                      <span className={s.BonusTitle}>Ваши бонусы: </span>
+                      <span className={s.BonusValue}>{bonusData.amount}</span>
+                    </p>
+                  </div>
+                    <label className={s.BonusMinusLabel} htmlFor='minusBonusIn'>Списать бонусы:</label>
+                    <Input id='minusBonusIn' registerName='bonusMinusAmount' register={register} errors={errors.name} type='number' placeholder='Списать бонусы' className={s.BonusMinus} min={0} max={bonusData.amount} />
+                </li>
+								<li className={styles.order__list__item}>
+                  <OrderTitle
+                    orderNumber='6'
                     text='Промокод'
                   />
-                  <PromotionalCode register={register} errors={errors} />
+                  <PromotionalCode register={register} errors={errors} setPromocodeValue={setPromocodeData}/>
                 </li>
               </ul>
             </div>
             <div className={styles.order__inner__right}>
               <div className={styles.order__inner__right__order}>
-                <OrderInfoBlock cartData={cartData} isOrderPage={true} />
+                <OrderInfoBlock cartData={cartData} isOrderPage={true} bonus={bonuses} bonusType={bonusType} bonusStatus={bonusData.status}
+                promocode={promocodeValue} />
               </div>
             </div>
           </div>

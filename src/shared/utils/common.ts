@@ -1,3 +1,5 @@
+import { BonusType } from '@prisma/client'
+
 export const mergeArrays = (a, b, predicate = (a, b) => a === b) => {
   const c = [...a];
   b.forEach((bItem) => (c.some((cItem) => predicate(bItem, cItem)) ? null : c.push(bItem)))
@@ -54,3 +56,47 @@ export const updateSearchParam = (
 
 
 
+export function formatBytes(
+  bytes: number,
+  opts: {
+    decimals?: number;
+    sizeType?: 'accurate' | 'normal';
+  } = {}
+) {
+  const { decimals = 0, sizeType = 'normal' } = opts;
+
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const accurateSizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB'];
+  if (bytes === 0) return '0 Byte';
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${
+    sizeType === 'accurate'
+      ? (accurateSizes[i] ?? 'Bytest')
+      : (sizes[i] ?? 'Bytes')
+  }`;
+}
+
+export const formatDate = (date: Date) => {
+  return date.toLocaleString('ru-RU',{year: 'numeric', month: '2-digit', day: '2-digit', hour:'numeric', minute:'numeric'}) 
+}
+
+export  function calculateBonusDiscount(total: number, status: BonusType, minus: number){
+  let discount = 0;
+  if(status === BonusType.BRONZE){
+    discount = (total - (total * 0.01)) - minus
+  }
+
+  if(status === BonusType.SILVER){
+    discount = (total - (total * 0.03)) - minus
+  }
+
+  if(status === BonusType.GOLD){
+    discount = (total - (total * 0.05)) - minus
+  }
+
+  if(status === BonusType.PLATINUM){
+    discount = (total - (total * 0.10)) - minus
+  }
+
+  return discount;
+}

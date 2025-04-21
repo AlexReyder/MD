@@ -1,4 +1,5 @@
 "use client"
+import { IUploadedFile } from '@/shared/types/file'
 import { getQueryParamValue } from '@/shared/utils/search-params'
 import useEmblaCarousel from 'embla-carousel-react'
 import Image from 'next/image'
@@ -9,11 +10,11 @@ import { Gallery, Item } from 'react-photoswipe-gallery'
 import s from './ProductSlider.module.scss'
 
 
-const ProductImages = ({images}: {images:any}) => {
+const ProductImages = ({images, className}: {images:any, className: string}) => {
   const [activeThumb, setActiveThumb] = useState()
 	const searchParams = useSearchParams()
 	const colorFromUrl = getQueryParamValue(searchParams, 'color') as string
-  const color = colorFromUrl ? colorFromUrl : 'blue';
+  const color = colorFromUrl ? colorFromUrl : 'chernyj';
   // const slides = images[color].length;
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel()
@@ -48,21 +49,21 @@ const ProductImages = ({images}: {images:any}) => {
 
 	return(
 
-      <div className={s.embla}>
+      <div className={`${s.embla} ${className}`}>
         <div className="embla__viewport" ref={emblaMainRef}>
           <Gallery>
           <div className={s.embla__container}>
-            {images[color].map((src) => (
-              <div className={s.Slide} key={src}>
+            {images[color].map((item:IUploadedFile) => (
+              <div className={s.Slide} key={item.url + 'overview'}>
                 <div className={s.SlideWrapper}>
                 <Item
-                  original={'/' + src}
-                  thumbnail={'/' + src}
-                  width="4032"
-                  height="3024"
+                  original={item.url}
+                  thumbnail={item.url}
+                  width={item.dimension.width}
+                  height={item.dimension.height}
                  >   
                   {({ ref, open }) => (
-                      <Image src={'/' + src} alt={src} fill 
+                      <Image src={item.url} alt={item.url} fill 
                       style={{objectFit:'scale-down'}}
                       onClick={open}
                       ref={ref}
@@ -79,18 +80,19 @@ const ProductImages = ({images}: {images:any}) => {
         <div className="embla-thumbs">
           <div className="embla-thumbs__viewport" ref={emblaThumbsRef}>
             <div className={s.ThumbWrapper}>
-              {images[color].map((index, i) => (
+              {images[color].map((item: IUploadedFile, i: number) => (
                 <Thumb
-                  key={index}
+                  key={item.url}
                   onClick={() => onThumbClick(i)}
                   selected={i === selectedIndex}
                   index={i}
-                  image={index}
+                  image={item.url}
                 />
               ))}
             </div>
           </div>
         </div>
+
       </div>
 	)
 }
@@ -117,8 +119,15 @@ const Thumb: React.FC<PropType> = (props) => {
         type="button"
         className={s.ThumbBtn}
       >
-          <Image src={'/' + image} alt={image} fill  style={{objectFit:'cover'}}/>
+          <Image src={image} alt={image} fill  style={{objectFit:'cover'}}/>
       </button>
     </div>
   )
 }
+// {"chernyj": 
+//   [
+//     {"url": "https://s3.ru1.storage.beget.cloud/b1b38ea06b5c-intelligent-elder/longsleeve_cannibal_corpse_sacrifice_confessions_hb_l9-Photoroom.png", "name": "longsleeve_cannibal_corpse_sacrifice_confessions_hb_l9-Photoroom.png", "dimension": {"type": "png", "width": 1280, "height": 963}}
+//     , {"url": "https://s3.ru1.storage.beget.cloud/b1b38ea06b5c-intelligent-elder/longsleeve_entombed_left_hand_path_hb_l10-Photoroom.png", "name": "longsleeve_entombed_left_hand_path_hb_l10-Photoroom.png", "dimension": {"type": "png", "width": 1280, "height": 963}},
+//     {"url": "https://s3.ru1.storage.beget.cloud/b1b38ea06b5c-intelligent-elder/longsleeve_cannibal_corpse_sacrifice_confessions_hb_l-Photoroom.png", "name": "longsleeve_cannibal_corpse_sacrifice_confessions_hb_l-Photoroom.png", "dimension": {"type": "png", "width": 1280, "height": 963}},
+//     {"url": "https://s3.ru1.storage.beget.cloud/b1b38ea06b5c-intelligent-elder/tshirt_bathory_bathory_mald_l8.JPG", "name": "tshirt_bathory_bathory_mald_l8.JPG", "dimension": {"type": "jpg", "width": 5328, "height": 4000, "orientation": 1}}
+//   ]}

@@ -1,16 +1,19 @@
 "use server"
 
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
-import { CartItems } from '../types/cart'
-import { makeOrderSchema } from '../types/schemas'
+import { CreateOrder, CreateOrderSchema } from '../types/validation/order'
+import { calculateBonusDiscount } from '../utils/common'
+import { minusBonus } from './bonus'
 import { removeDbCart } from './cart'
 import { mailOrderConfirm } from './mail'
 import { prisma } from './prismaInstance'
+import { applyPromocode } from './promocode'
 import { verifySession } from './session'
+import { updateUserPurchasesAmount } from './user'
 
-export async function makeOrder(unsafeData: z.infer<typeof makeOrderSchema>, cart: CartItems) {
-	const { success, data } = makeOrderSchema.safeParse(unsafeData)
+// export async function makeOrder(unsafeData: z.infer<typeof makeOrderSchema>, cart: CartItems) {
+export async function makeOrder(unsafeData: CreateOrder) {
+	const { success, data } = CreateOrderSchema.safeParse(unsafeData)
 	if (!success) return {
 		success: null,
 		error: 'Неправильно введенные данные'
@@ -21,7 +24,7 @@ export async function makeOrder(unsafeData: z.infer<typeof makeOrderSchema>, car
 
 		const existingUser = await prisma.user.findFirst({where: {
 			id: userId as string
-		}})
+		}, include:{Bonus:true}})
 
 		if (existingUser === null) {
 			return {
@@ -38,28 +41,56 @@ export async function makeOrder(unsafeData: z.infer<typeof makeOrderSchema>, car
 			comment: data.comment
 		}
 
+		const bonus = await prisma.bonus.findFirst({
+			where:{
+				userId: userId as string
+			}
+		})
+		if(!bonus) {
+			return {
+				success: null,
+				error: 'BONUS USER DATA NOT FOUND'
+			}
+		}
+
+		let price = 0;
+		data.products.forEach((item:any) => {
+			price+= +item.price * +item.quantity
+		})
+
+		let total = calculateBonusDiscount(+price, bonus.status, data.bonusMinusAmount)
+		if(data.promocodeId.id !== ''){
+      total = total - data.promocodeId.discount
+    }
+
 		try {
-			const savedUser = await prisma.order.create({
+			const order = await prisma.order.create({
 				data: {
 					userId: userId as string,
-					products: JSON.stringify(cart),
-					details: JSON.stringify(detailsClient),
+					products: data.products,
+					details: detailsClient,
 					payment: data.payment,
 					delivery: data.delivery,
-					promocodeValue: data.promocode
+					amount: total
 				},
 			});
-
-			if(!savedUser){
+			
+			if(!order){
 				return {
 					success: null,
 					error: 'ORDER_NOT_CREATED'
 				}
 			}
-			await mailOrderConfirm(existingUser.email, data, cart)
+			
+			await minusBonus(bonus.id, bonus.amount, data.bonusMinusAmount, bonus.history)
+			await updateUserPurchasesAmount(userId as string, existingUser.purchasesAmount, total)
+			await applyPromocode(data.promocodeId.id, userId as string)
+
+
+			await mailOrderConfirm(existingUser.email, data)
 			await removeDbCart()
 			return {
-				success: savedUser.id,
+				success: order.id,
 				error: null
 			}
 

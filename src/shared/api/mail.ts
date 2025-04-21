@@ -1,8 +1,8 @@
 "use server"
 import nodemailer from 'nodemailer'
 import { z } from 'zod'
-import { CartItems } from '../types/cart'
-import { makeOrderSchema, recoveryEmail } from '../types/schemas'
+import { recoveryEmail } from '../types/schemas'
+import { CreateOrder } from '../types/validation/order'
 import { prisma } from './prismaInstance'
 
 const site = process.env.SITE_DOMAIN
@@ -92,7 +92,7 @@ export async function mailConfirmSignUp(to: string, token: string){
 
 }
 
-export async function mailOrderConfirm(to: string, details: z.infer<typeof makeOrderSchema>, cart:CartItems){
+export async function mailOrderConfirm(to: string, details: CreateOrder){
 	const message = 'Заказ создан. '
 
 	const mailOptions = {
@@ -115,3 +115,48 @@ export async function mailOrderConfirm(to: string, details: z.infer<typeof makeO
 	}		
 }
 
+export async function mailBonusEmail(to: string, subject: string, description: string){
+	const message = 'Заказ создан. '
+
+	const mailOptions = {
+			from: user,
+			to,
+			subject,
+			text: description,
+		}
+
+	try {
+		 transporter.sendMail(mailOptions, function (error: any, info: any) {
+			if (error) {
+				console.log(error)
+			}
+		}
+	)
+	return {send: true}
+	} catch(e){
+		return e;
+	}		
+}
+
+export async function mailNotifyProduct(to: string, subject: string, description: string){
+	const message = 'Заказ поступил. '
+
+	const mailOptions = {
+			from: user,
+			to,
+			subject,
+			text: description,
+		}
+
+	try {
+		 transporter.sendMail(mailOptions, function (error: any, info: any) {
+			if (error) {
+				console.log(error)
+			}
+		}
+	)
+	return {send: true}
+	} catch(e){
+		return e;
+	}		
+}

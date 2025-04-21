@@ -2,14 +2,16 @@
 import { createQueryString } from '@/shared/utils/search-params'
 import Image from 'next/image'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import slug from 'slug'
 import s from './Product.module.scss'
 
 const ProductColorsItem = ({color, image, selectedColor}: {color: string, image: string, selectedColor: string | null}) => {
 
+	const colorSlug = slug(color)
 	const searchParams = useSearchParams()
 	const pathname = usePathname()
 	const router = useRouter()
-	const queries = createQueryString(searchParams, 'color', color)
+	const queries = createQueryString(searchParams, 'color', colorSlug)
 	const url = pathname + '?' + queries
 
 	function handle(){
@@ -17,8 +19,8 @@ const ProductColorsItem = ({color, image, selectedColor}: {color: string, image:
 	}
 
 	return (
-		<button onClick={handle} type='button' className={`${s.ColorFilter} ${color === selectedColor ? s.ColorFilter__selected : ''}`}>
-			<Image src={'/' + image} alt={color} fill style={{objectFit:'cover'}}/>
+		<button onClick={handle} type='button' className={`${s.ColorFilter} ${colorSlug === selectedColor ? s.ColorFilter__selected : ''}`}>
+			<Image src={image} alt={color} fill style={{objectFit:'cover'}}/>
 		</button>
 	)
 }

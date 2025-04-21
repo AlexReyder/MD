@@ -34,12 +34,12 @@ const ProductSize = ({sizes, details}: {sizes: string[], details: any}) => {
 export default ProductSize
 
 export function checkIfInStock(
-	stock: any, 
+	stock: any[], 
 	selectedColor: string | null, 
 	currentSize : string){
-
 	if(selectedColor === null){
 		return false
 	}
-		return stock[selectedColor][currentSize] !== 0
+		let index = stock.findIndex((el) => Object.keys(el)[0] === selectedColor)
+		return stock[index][selectedColor][currentSize] !== 0
 }

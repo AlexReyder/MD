@@ -6,7 +6,7 @@ import { MessangerLink } from '@/shared/ui/Link/MessangerLink/MessangerLink'
 import { Logo, Section } from '@/shared/ui'
 
 import { TelegramIcon } from '@/shared/ui/Icons/TelegramIcon/TelegramIcon'
-import { ViberIcon } from '@/shared/ui/Icons/ViberIcon/ViberIcon'
+import { VkIcon } from '@/shared/ui/Icons/VkIcon/VkIcon'
 import { WhatsAppIcon } from '@/shared/ui/Icons/WhatsAppIcon/WhatsAppIcon'
 import Link from 'next/link'
 interface FooterProps {}
@@ -83,32 +83,32 @@ export const Footer = ({}: FooterProps) => {
 					</Typography>
 					<ul>
 						<li className={cls.Item}>
-							<Link href='tel:+79036057555'>
-								<Typography variant='text'>+7 (965) 651 69 47</Typography>
+							<Link href='tel:+79500178989'>
+								<Typography variant='text'>+7 (950) 017 89 89</Typography>
 							</Link>
 						</li>
 
 						<li className={cls.Item}>
-							<Link href='mailto:razrab@bk.ru'>
-								<Typography variant='text'>razrab@bk.ru</Typography>
+							<Link href='mailto:info@maldito.ru'>
+								<Typography variant='text'>info@maldito.ru</Typography>
 							</Link>
 						</li>
 					</ul>
 					<div className={cls.Messangers}>
 						<MessangerLink
-							to='https://wa.me/79655516947'
+							to='https://wa.me/79500178989'
 							className='f-c'
 							icon={<WhatsAppIcon className='nav__list-icon' />}
 						/>
 						<MessangerLink
-							to='viber://chat?number=79655516947'
-							className='f-c'
-							icon={<ViberIcon className='nav__list-icon' />}
-						/>
-						<MessangerLink
-							to='https://t.me/+79655516947'
+							to='https://t.me/+79500178989'
 							className='f-c'
 							icon={<TelegramIcon className='nav__list-icon' />}
+						/>
+						<MessangerLink
+							to='https://vk.com/maldito666'
+							className='f-c'
+							icon={<VkIcon className='nav__list-icon' />}
 						/>
 					</div>
 				</div>

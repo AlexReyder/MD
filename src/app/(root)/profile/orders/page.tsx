@@ -14,14 +14,15 @@ export default async function ProfileOrderHistoryPage() {
 				error && error  === 'EMPTY_ORDERS' ? (<h3>У вас пока нет заказов.</h3>) : null
 			}
 			 {success && success.map((item, i: number) => {
-				const productJson = item.products as string
-				const product = JSON.parse(productJson)
+				const productJson = item.products
+				const product = productJson
 				return (
 					<div key={i} className={s.OrderDiv}>
 					{	product.map((j, z) => {
 					return(
 						<OrderCartItem
 						key={j.productId + j.color + j.size}
+						main = {item}
 						item={j}
 						position={z + 1}
 					/>

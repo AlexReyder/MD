@@ -39,7 +39,7 @@ export default async  function CatalogPage({
 			<Section className={s.Container}>
 					<CatalogFilters data={success} error={error}/>
 					<Suspense fallback={<Skeleton count={7}/>}>
-						<Products products={products.success.products}/>
+						<Products products={products.success.data}/>
 					</Suspense>
 			</Section>
 			<CatalogPagination productsCount={products.success.length} queryPage={selected} />

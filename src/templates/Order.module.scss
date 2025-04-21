@@ -18,3 +18,27 @@
 		margin-bottom: 32px;
 	}
 }
+
+.BonusBlock{
+	margin-top: 1.5rem;
+}
+
+.BonusText{
+	font-size: 1.6rem;
+	color: var(--p-color)
+}
+
+.BonusValue{
+	font-weight: 600;
+}
+
+.BonusMinusLabel{
+	display: block;
+	margin-top: 1.5rem;
+	margin-bottom: 1rem;
+	font-size: 1.6rem;
+	font-weight: 400;
+	color: var(--p-color);
+}
+.BonusMinus{
+}

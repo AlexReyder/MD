@@ -53,3 +53,28 @@ export async function changePassword(unsafeData: z.infer<typeof profilePassword>
 			return "Unable to update password"
 		}
 }
+
+export async function updateUserPurchasesAmount(userId: string, currentTotal: number, plusAmount: number){
+	const amount = currentTotal + plusAmount
+	try{
+		await prisma.user.update({
+			where:{
+				id:userId
+			},
+			data:{
+				purchasesAmount: amount,
+				firstBuy: false,
+			}
+		})
+		return{
+			success: true,
+			error: null
+		}
+
+	} catch(e){
+		return{
+			success:null,
+			error: e as string
+		}
+	}
+}

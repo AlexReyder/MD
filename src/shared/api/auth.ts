@@ -5,6 +5,7 @@ import { compareSync, genSaltSync, hash } from 'bcrypt'
 import { redirect } from "next/navigation"
 import { v4 as uuid } from 'uuid'
 import { z } from "zod"
+import { createBonusTable } from './bonus'
 import { removeLocalCart, syncCart } from './cart'
 import { mailConfirmSignUp } from './mail'
 import { prisma } from './prismaInstance'
@@ -73,6 +74,8 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
         password: hashedPassword,
       },
     });
+    const bonus = await createBonusTable(savedUser.id)
+    
     mailConfirmSignUp(data.email, savedUser.emailToken)
     return {
       success: true,

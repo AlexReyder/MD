@@ -108,9 +108,13 @@ export async function syncCart(userId: string){
 	}
 }
  
+
 export async function addProductToCart(unsafeData: z.infer<typeof productFormSchema>){
 	const { success, data } = productFormSchema.safeParse(unsafeData)
-	if (!success) return "Unable to log you in"
+	if (!success) return {
+		success: null,
+		error: 'Неправильно введенные данные'
+	}
 	revalidatePath('/')
 	const cookieStore = await cookies()
 	const {isAuth, userId}= await verifySession()

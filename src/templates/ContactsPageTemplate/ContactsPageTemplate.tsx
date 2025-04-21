@@ -1,6 +1,6 @@
 import { Section } from '@/shared/ui'
 import { TelegramIcon } from '@/shared/ui/Icons/TelegramIcon/TelegramIcon'
-import { ViberIcon } from '@/shared/ui/Icons/ViberIcon/ViberIcon'
+import { VkIcon } from '@/shared/ui/Icons/VkIcon/VkIcon'
 import { WhatsAppIcon } from '@/shared/ui/Icons/WhatsAppIcon/WhatsAppIcon'
 import { MessangerLink } from '@/shared/ui/Link/MessangerLink/MessangerLink'
 import s from './ContactsPageTemplate.module.scss'
@@ -12,43 +12,52 @@ export const ContactsPageTemplate = () => {
 					<div className={`${s.Contacts__entity} ${s.Entity_1}`}>
 						<p className={s.Title}>Электронная почта</p>
 						<a
-							href='mailto:razrab@bk.ru'
+							href='mailto:info@maldito.ru'
 							className={`${s.Email} link`}
 						>
-							razrab@bk.ru
+							info@maldito.ru
 						</a>
 					</div>
 					<div className={`${s.Contacts__entity} ${s.Entity_2}`}>
 						<p className={s.Title}>Номер телефона</p>
-						<a href='tel:+79655516947' className={`${s.Email} link`}>
-							+7(965) 551-69-47
+						<a href='tel:+79500178989' className={`${s.Email} link`}>
+						+7 (950) 017 89 89
 						</a>
 					</div>
 					<div className={`${s.Contacts__entity} ${s.Entity_3}`}>
 						<p className={s.Title}>Мессенджеры</p>
 						<div className={s.Messangers}>
 						<MessangerLink
-												to='https://wa.me/79655516947'
+												to='https://wa.me/79500178989'
 												className='f-c'
 												icon={<WhatsAppIcon className='nav__list-icon' />}
 											/>
+												<MessangerLink
+													to='https://t.me/+79500178989'
+													className='f-c'
+													icon={<TelegramIcon className='nav__list-icon' />}
+												/>
 											<MessangerLink
-												to='viber://chat?number=79655516947'
+												to='https://vk.com/maldito666'
 												className='f-c'
-												icon={<ViberIcon className='nav__list-icon' />}
-											/>
-											<MessangerLink
-												to='https://t.me/+79655516947'
-												className='f-c'
-												icon={<TelegramIcon className='nav__list-icon' />}
+												icon={<VkIcon className='nav__list-icon' />}
 											/>
 						</div>
+					</div>
+					<div className={`${s.Contacts__entity} ${s.Entity_1}`}>
+						<p className={s.Title}>Канал в телеграм</p>
+						<a
+							href='https://t.me/maldito_merch_store'
+							className={`${s.Email} link`}
+						>
+							Перейти &#8594;
+						</a>
 					</div>
 				</div>
 				<div className={s.Office}>
 					<div className={`${s.Contacts__entity} ${s.Entity_4}`}>
-						<p className={s.Title}>Самовывоз</p>
-						<p className={`${s.Address}`}>г. Пермь, ул. Ухтинская д.83</p>
+						<p className={s.Title}>Адрес склада:</p>
+						<p className={`${s.Address}`}>г. Санкт-Петербург, Невский пр. 172/1.</p>
 					</div>
 				</div>
 				<div className={s.Requisites}>

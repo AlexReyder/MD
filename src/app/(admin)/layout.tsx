@@ -1,5 +1,11 @@
+import { verifySession } from '@/shared/api/session'
+import AppSidebar from '@/shared/shadcnui/layouts/app-sidebar'
+import HeaderAdmin from '@/shared/shadcnui/layouts/header'
+import { SidebarInset, SidebarProvider } from '@/shared/shadcnui/ui/sidebar'
 import type { Metadata, Viewport } from "next"
 import { Manrope } from "next/font/google"
+import { cookies } from 'next/headers'
+import './globals-admin.css'
 const manrope = Manrope({
 	variable: "--font-manrope",
 	subsets: ["latin", "cyrillic"],
@@ -19,15 +25,26 @@ export const viewport: Viewport = {
 }
 
 
-export default function AdminRootLayout({
+export default async function AdminRootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true';
+	const {userName} = await verifySession()
 	return (
 		<html lang="ru">
 			<body className={`${manrope.variable}`}>
-				{children}
+				<SidebarProvider defaultOpen={defaultOpen}>
+        <AppSidebar userName={userName as string} />
+        <SidebarInset>
+          <HeaderAdmin/>
+          {/* page main content */}
+          {children}
+          {/* page main content ends */}
+        </SidebarInset>
+      </SidebarProvider>
 			</body>
 		</html>
 	);

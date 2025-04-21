@@ -32,7 +32,7 @@ const CartListItem = ({ item }: { item: CartItem }) => {
         className={`${s.Item__img} ${s.Item__block}`}
       >
         <Image
-          src={'/'+image}
+          src={image}
           alt={name}
           width={imageSize}
           height={imageSize}

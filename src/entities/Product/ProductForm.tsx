@@ -1,6 +1,7 @@
 "use client"
 import ProductCounter from '@/features/ProductsListItem/ProductCounter'
 import { addProductToCart } from '@/shared/api/cart'
+import { makeNotifyProducts } from '@/shared/api/notify'
 import { productFormSchema } from '@/shared/types/schemas'
 import { Form } from '@/shared/ui'
 import { getQueryParamValue } from '@/shared/utils/search-params'
@@ -31,31 +32,40 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 		const searchParams = useSearchParams()
 		const selectedColor = getQueryParamValue(searchParams, 'color') as string
 		const selectedSize = getQueryParamValue(searchParams, 'size') as string
-
 		useEffect(()=>{
 			setCount(0)
 			if(selectedSize !== null) {
-				const totalCount = details[selectedColor][selectedSize]
-				setInStock(totalCount)
+				let index = details.findIndex((el) => Object.keys(el)[0] === selectedColor)
+				const totalCount = details[index][selectedColor][selectedSize]
+				setInStock(+totalCount)
 			}
 
-		},[selectedSize])
-
+		},[selectedColor, selectedSize])
 
 		const {handleSubmit, formState:{ isSubmitting }} = useForm<FormSchema>()
 
 			async function onSubmit() {
-				const data = {
-					productId,
-					name,
-					price: `${price}`,
-					image:images[selectedColor][0],
-					color: selectedColor,
-					size: selectedSize,
-					quantity: `${count}`
+				if(inStock !== 0 ){
+					const data = {
+						productId,
+						name,
+						price: `${price}`,
+						image:images[selectedColor][0].url,
+						color: selectedColor,
+						size: selectedSize,
+						quantity: `${count}`
+					}
+					const cart = await addProductToCart(data)
+				} else {
+					const data = {
+						productId,
+						color: selectedColor,
+						size: selectedSize,
+					}
+					const {success, error} = await makeNotifyProducts(data)
+					console.log(error)
 				}
-				const error = await addProductToCart(data)
-				// setError(error)
+
 			}
 
 	return (

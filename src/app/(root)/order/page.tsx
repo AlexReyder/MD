@@ -1,4 +1,5 @@
 import { Breadcrumbs } from '@/features'
+import { getBonus } from '@/shared/api/bonus'
 import { getProductsFromCart } from '@/shared/api/cart'
 import { getProfileData } from '@/shared/api/user'
 import { ICartGetProducts } from '@/shared/types/cart'
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 export default async function OrderPage() {
 	const cartData: ICartGetProducts = await getProductsFromCart()
 	const profileData: UserProfileDTO = await getProfileData();
+	const bonusData = await getBonus()
   return (
 		<main>
 			<Section>
@@ -22,8 +24,7 @@ export default async function OrderPage() {
 							doCount={false}
 							title='Оформление заказа'
 						/>
-			<OrderPageTemplate cartData={cartData.success} profileData={profileData}/>
-
+			<OrderPageTemplate cartData={cartData.success} profileData={profileData} bonusData={bonusData.success}/>
 			</Section>
 		</main>
 	)

@@ -4,12 +4,13 @@ import { formatPrice } from '@/shared/utils/common'
 import ProductAvailable from '@/widgets/Products/ProductAvailable'
 import Image from 'next/image'
 import Link from 'next/link'
+import slug from 'slug'
 import s from './CatalogCardItem.module.scss'
 
 
 
 export const CatalogCardItem = ({ item }: any) => {
-  const {id, name, price, images, colors, sizes} = item;
+  let {id, name, category, price, images, colors, sizes, isNew, isBestseller, articleNumber, isInStock} = item;
   async function onSubmit() {
           const data = {
             productId: id,
@@ -23,18 +24,29 @@ export const CatalogCardItem = ({ item }: any) => {
           const error = await addProductToCart(data)
           // setError(error)
         }
+        console.log(item)
+        console.log(colors[0].label)
+const nameSlug = slug(name)     
+    colors = slug(colors[0].label)
+    sizes = sizes[0].label
+    console.log(images)
+    console.log(colors)
+    console.log(colors)
+    images = images[`${colors}`][0].url
+    category = slug(category[0].label)
+     
 
   return (
         <li className={s.Item}>
-          {item.isNew || item.isBestseller  ? (
+          {isNew || isBestseller  ? (
             <span
               className={`${s.Label} ${
-                item.isNew
+                isNew
                   ? s.New
                   : s.Bestseller
               }`}
             >
-              { item.isNew
+              {isNew
                 ? 'Новинка'
                 : 'Хит'}
             </span>
@@ -42,20 +54,20 @@ export const CatalogCardItem = ({ item }: any) => {
             <></>
           )} 
           <Link
-            href={`/catalog/${item.categorySlug}/${item.id}?color=${item.colors[0]}`}
+            href={`/catalog/${category}/${nameSlug}?color=${colors}`}
             className={s.Img}
           >
-            <Image src={`/${item.images.black[0]}`} alt={''} fill style={{objectFit:'scale-down'}} />
+            <Image src={images} alt={name} fill style={{objectFit:'scale-down'}} />
           </Link>
           <div className={s.Inner}>
             <h3 className={s.Title}>
-              <Link href={`/catalog/${item.categorySlug}/${item.id}?color=${item.colors[0]}`}>
-                {'Товар ' + item.bandName}
+              <Link href={`/catalog/${category}/${nameSlug}?color=${colors}`}>
+                {name}
               </Link>
             </h3>
             <ProductAvailable
-              vendorCode={item.articleNumber}
-              isInStock = {item.isInStock}
+              vendorCode={articleNumber}
+              isInStock = {isInStock}
             />
             <span className={s.Price}>
               {formatPrice(+price)} ₽

@@ -9,7 +9,8 @@ const generatePathParts = (pathStr: string) => {
   return pathWithoutQuery.split('/').filter((v) => v.length > 0)
 }
 
-export const Breadcrumbs = () => {
+
+export const Breadcrumbs = ({name}: {name?: string}) => {
   const pathname = usePathname() as string
   const paths = generatePathParts(pathname)
   const matchStr: any = {
@@ -84,6 +85,8 @@ export const Breadcrumbs = () => {
 
   }
 
+  // const isProductName =
+
   return (
     <div>
       <ul className='list-reset breadcrumbs'>
@@ -99,6 +102,7 @@ export const Breadcrumbs = () => {
                 href={matchStr[crumb] ? matchStr[crumb].href : crumb}
                 key={idx}
                 last={idx === paths.length - 1}
+                name = {name ? name : null}
               />
             </li>
         )}

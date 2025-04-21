@@ -1,16 +1,21 @@
 'use client'
 import { CartItem } from '@/shared/types/cart'
+import { orderStatusTypes } from '@/shared/types/user'
+import { OrderDb } from '@/shared/types/validation/order'
 import { formatPrice } from '@/shared/utils/common'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale/ru'
 import Image from 'next/image'
 import { translate } from '../Product/ProductColorsItem'
 import s from './OrderCartItem.module.scss'
 
 interface Props{
+  main: OrderDb,
 	item: CartItem,
 	position: number
 }
 
-const OrderCartItem = ({ item, position }: Props) => {
+const OrderCartItem = ({ main, item, position }: Props) => {
 	const colorTranslated = translate(item.color)?.toUpperCase() as string
   return (
         <li className={s.list__item}>
@@ -18,7 +23,7 @@ const OrderCartItem = ({ item, position }: Props) => {
             {position}.
           </span>
           <div className={s.list__item__img}>
-            <Image src={'/' + item.image} alt={item.name} fill style={{objectFit:'cover'}}/>
+            <Image src={item.image} alt={item.name} fill style={{objectFit:'cover'}}/>
           </div>
           <div className={s.list__item__inner}>
             <span className={s.list__item__name}>
@@ -42,6 +47,18 @@ const OrderCartItem = ({ item, position }: Props) => {
             <span className={s.list__item__info}>
               <span>Сумма: </span>
               <span className={s.SelectedFilter}>{formatPrice(+item.price * +item.quantity)} ₽</span>
+            </span>
+            <span className={s.list__item__info}>
+              <span> Статус заказа: </span>
+              <span className={s.SelectedFilter}>{orderStatusTypes.filter((el) => el.value === main.status)[0].label}</span>
+            </span>
+        {main.trackNumber ? (  <span className={s.list__item__info}>
+              <span> Трек номер: </span>
+              <span className={s.SelectedFilter}>{main.trackNumber}</span>
+            </span>) : <></>}
+            <span className={s.list__item__info}>
+              <span> Заказ оформлен: </span>
+              <span className={s.SelectedFilter}>{format(main.createdAt,"d.MM.yyyy h:mm ", {locale: ru})}</span>
             </span>
           </div>
         </li>
