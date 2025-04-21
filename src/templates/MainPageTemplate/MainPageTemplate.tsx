@@ -5,6 +5,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { AdvantagesSection } from './AdvantagesSection'
 import { CarouselSection } from './BestsellersSection'
 import { HeroSection } from './HeroSection'
+import CatalogSection from './Sections/CatalogSection/CatalogSection'
 
 export function MainPageTemplate(){
 		const banners = getHeroBanners()
@@ -15,6 +16,7 @@ export function MainPageTemplate(){
 			<Suspense fallback={<Skeleton count={7}/>}>
 			<HeroSection data={banners}/>
 			</Suspense>
+			<CatalogSection/>
 			<Suspense fallback={<Skeleton count={7}/>}>
 				<CarouselSection title='Новинки' data={news}/>
 			</Suspense>

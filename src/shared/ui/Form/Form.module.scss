@@ -1,6 +1,17 @@
 .FormContainer{
 	background-color: #fff;
 	padding: 16px;
+  -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+}
+
+.FormSubmit{
+  background-color: var(--t-color);
+  padding: 1.5rem 2.5rem;
+  min-width: 200px;
+  color:#fff;
+  border-radius: 24px;
 }
 
 .FormTitle{

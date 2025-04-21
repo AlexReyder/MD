@@ -28,6 +28,7 @@ import { PromocodeAdd, PromocodeAddSchema, PromocodeDb } from '@/shared/types/va
 import { cn } from '@/shared/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from "date-fns"
+import { ru } from 'date-fns/locale/ru'
 import { Calendar as CalendarIcon } from "lucide-react"
 import { useForm } from 'react-hook-form'
 import toast, { Toaster } from 'react-hot-toast'
@@ -159,7 +160,7 @@ export function PromoActionDialog({ currentRow, open, onOpenChange }: Props) {
                               )}
                             >
                               {field.value ? (
-                                format(field.value, "PPP")
+                                format(field.value, "PPP",{locale: ru})
                               ) : (
                                 <span>Выбрать дату</span>
                               )}

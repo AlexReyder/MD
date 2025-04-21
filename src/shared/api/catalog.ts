@@ -19,7 +19,10 @@ export async function getAllProducts(selected: number = 1){
 }
 
 export async function getProductsByCategory(slug: string, selected: number){
-	const products = await prisma.shoppingCard.findMany({where:{categorySlug: slug},skip:(selected - 1) * 12, take: 12});
+	console.log(slug)
+	// const category = await prisma.category.findFirst({where:{slug}})
+	const products = await prisma.shoppingCard.findMany();
+
 	const categoryName = await prisma.category.findFirst({where: {slug}, select:{name: true}})
 	return {
 		success: {products,

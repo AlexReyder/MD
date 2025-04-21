@@ -1,6 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
+import s from './Form.module.scss'
 interface Props{
 	title: string
 	isDisabled: boolean
@@ -10,7 +10,7 @@ interface Props{
 export const FormSubmit = ({title, isDisabled, isSubmitting}: Props) =>{
 			return (
 							<button 
-								className='inner__btn' 
+								className={s.FormSubmit} 
 								type='submit' 
 								disabled={isDisabled}
 							>

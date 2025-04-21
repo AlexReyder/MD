@@ -106,7 +106,7 @@ export function FileUploader(props: FileUploaderProps) {
   const [files, setFiles] = useState<IImagesData | {}>(props.value)
   
   useEffect(() => {}, [props.diff, files])
-  const onDrop = 
+  const onDrop = React.useCallback(
     async (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFiles === 1 && acceptedFiles.length > 1) {
         toast.error('Cannot upload more than 1 file at a time');
@@ -159,7 +159,7 @@ export function FileUploader(props: FileUploaderProps) {
       // }
 
       
-    }
+    }, [files])
 
 
   async function onRemove(file: IUploadedFile) {

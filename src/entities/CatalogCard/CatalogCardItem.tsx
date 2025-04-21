@@ -11,30 +11,26 @@ import s from './CatalogCardItem.module.scss'
 
 export const CatalogCardItem = ({ item }: any) => {
   let {id, name, category, price, images, colors, sizes, isNew, isBestseller, articleNumber, isInStock} = item;
+  const nameSlug = slug(name)     
+  colors = slug(colors[0].label)
+  sizes = sizes[0].label
+  images = images[`${colors}`][0].url
+  category = slug(category[0].label)
+  
   async function onSubmit() {
           const data = {
             productId: id,
             name,
             price: `${price}`,
-            color: colors[0],
-            size: sizes[0],
-            image:images[colors[0]][0],
+            color: item.colors[0].label,
+            size: sizes,
+            image:images,
             quantity: '1'
           }
+          console.log(data)
           const error = await addProductToCart(data)
           // setError(error)
         }
-        console.log(item)
-        console.log(colors[0].label)
-const nameSlug = slug(name)     
-    colors = slug(colors[0].label)
-    sizes = sizes[0].label
-    console.log(images)
-    console.log(colors)
-    console.log(colors)
-    images = images[`${colors}`][0].url
-    category = slug(category[0].label)
-     
 
   return (
         <li className={s.Item}>

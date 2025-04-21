@@ -52,6 +52,7 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 						price: `${price}`,
 						image:images[selectedColor][0].url,
 						color: selectedColor,
+						// color:  matchColor(colors, getColor),
 						size: selectedSize,
 						quantity: `${count}`
 					}

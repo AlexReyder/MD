@@ -1,4 +1,4 @@
-import OrderCartItem from '@/entities/Order/OrderCartItem'
+import HistoryOrderItem from '@/entities/ProfileHistoryOrder/HistoryOrderItem'
 import { getOrderHistory } from '@/shared/api/order'
 import { Section } from '@/shared/ui'
 import { notFound } from 'next/navigation'
@@ -20,7 +20,7 @@ export default async function ProfileOrderHistoryPage() {
 					<div key={i} className={s.OrderDiv}>
 					{	product.map((j, z) => {
 					return(
-						<OrderCartItem
+						<HistoryOrderItem
 						key={j.productId + j.color + j.size}
 						main = {item}
 						item={j}

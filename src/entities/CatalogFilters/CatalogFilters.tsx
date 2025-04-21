@@ -22,9 +22,17 @@ export const CatalogFilters =  ({data, error}: Props) => {
 			<input type="checkbox" name="catalog-filters" id='open-filters' className={s.OpenCatalogFilters} defaultChecked/>
 			<label htmlFor='open-filters' className={s.OpenBtn}>Фильтры</label>
 			<div className={s.Box}>
+
 			<FilterAccordion title='Группы' id='panel-1'>
-			<FilterEntity data={data.bands} name='bands' isObj={true}/>
+			<FilterEntity data={data.bands} name='bands'/>
 			</FilterAccordion>
+			<FilterAccordion title='Жанр' id='panel-4'>
+			<FilterEntity data={data.genre} name='genre'/>
+			</FilterAccordion>
+			<FilterAccordion title='Производители' id='panel-23'>
+			<FilterEntity data={data.manufacturer} name='manufacturer'/>
+			</FilterAccordion>
+
 			<FilterAccordion title='Цвета'  id='panel-2'>
 						<FilterEntity data={data.colors} name='colors'/>
 			</FilterAccordion>

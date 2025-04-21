@@ -2,7 +2,6 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { translate } from '../Product/ProductColorsItem'
 import s from './CatalogFilters.module.scss'
 
 const FilterEntity = ({data, name, isObj = false}: {data:[], name: string, isObj?: boolean}) => {
@@ -60,7 +59,7 @@ const FilterEntity = ({data, name, isObj = false}: {data:[], name: string, isObj
 			// 		prop: false,
 			// 	}))
 			// }
-
+console.log(data)
 	return(
 	<div>
 			{data && (
@@ -70,7 +69,7 @@ const FilterEntity = ({data, name, isObj = false}: {data:[], name: string, isObj
 				return (
 					<div key={rendered} className={s.FilterContainer}>
 						<input type="checkbox" name={rendered} id={rendered} className={s.FilterInput} onChange={(e) => handleChange(e, rendered)} checked={inputs[`${rendered}`]}/>
-						<label htmlFor={rendered} className={s.FilterText}>{name === 'colors' ? translate(rendered) : rendered}</label>
+						<label htmlFor={rendered} className={s.FilterText}>{name === 'colors' ? rendered : rendered}</label>
 					</div>
 				)
 			})
