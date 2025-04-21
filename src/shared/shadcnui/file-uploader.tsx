@@ -236,7 +236,7 @@ export function FileUploader(props: FileUploaderProps) {
           </div>
         )}
       </Dropzone>
-
+      {Array.isArray(files[diff]) ? (
         <ScrollArea className='h-fit w-full px-3'>
           <div className='max-h-48  flex flex-wrap gap-8 items-center'>
             {files[diff].map((file, index) => (
@@ -248,7 +248,7 @@ export function FileUploader(props: FileUploaderProps) {
             ))}
           </div>
         </ScrollArea>
-
+      ) : null}
     </div>
   );
 }
