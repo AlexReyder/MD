@@ -1,4 +1,5 @@
 import { verifySession } from '@/shared/api/session'
+import { isAdmin } from '@/shared/api/user'
 import AppSidebar from '@/shared/shadcnui/layouts/app-sidebar'
 import HeaderAdmin from '@/shared/shadcnui/layouts/header'
 import { SidebarInset, SidebarProvider } from '@/shared/shadcnui/ui/sidebar'
@@ -32,6 +33,7 @@ export default async function AdminRootLayout({
 }>) {
 	const cookieStore = await cookies();
   const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true';
+	await isAdmin()
 	const {userName} = await verifySession()
 	return (
 		<html lang="ru">

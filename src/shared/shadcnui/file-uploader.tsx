@@ -9,10 +9,9 @@ import Dropzone, {
 import { toast } from 'sonner'
 
 import { Button } from '@/shared/shadcnui/ui/button'
-import { ScrollArea } from '@/shared/shadcnui/ui/scroll-area'
 import { cn } from '@/shared/utils'
 import { formatBytes } from '@/shared/utils/common'
-import { useEffect, useState } from 'react'
+import { useState, useTransition } from 'react'
 import { deleteFile, optimazeUploadedFiles } from '../api/admin/upload'
 import { IImagesData, IUploadedFile } from '../types/file'
 
@@ -104,10 +103,17 @@ export function FileUploader(props: FileUploaderProps) {
 
   
   const [files, setFiles] = useState<IImagesData | {}>(props.value)
+  const [previews, setPreviews] = useState([])
+  const [isPending, startTransition] = useTransition();
   
-  useEffect(() => {}, [props.diff, files])
-  const onDrop = React.useCallback(
-    async (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+  // useEffect(() => {
+  //   if(files.hasOwnProperty(diff)){
+  //     console.log(previews)
+  //     setPreviews(files[diff])
+  //   }
+  // }, [files[diff], files[diff]?.length, props.diff,])
+
+  const onDrop = async (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFiles === 1 && acceptedFiles.length > 1) {
         toast.error('Cannot upload more than 1 file at a time');
         return;
@@ -121,46 +127,17 @@ export function FileUploader(props: FileUploaderProps) {
 
       const dataServer = await optimazeUploadedFiles(acceptedFiles, diff)
       const data = JSON.parse(dataServer)
-      // console.log('ITS DATA: ', data)
-      //   const response = await Promise.all( 
-      // data.resizedFiles.map(async (buffer, i) => {
-      //   const fetched = await fetch(data.presignedUrls[i], {
-      //               method: "PUT",
-      //               body: buffer,
-      //             });
-      //    console.log(fetched)         
-      // }))
       const prevState = props.value;
       if(prevState.hasOwnProperty(diff)){
         prevState[diff] = prevState[diff].concat(data.output[diff])
       } else {
         prevState[diff] = data.output[diff]
       }
-      console.log(data.output)
-      console.log(prevState)
-      // if(Object.keys(prevState).length === 0) {
-      //   setFiles(data.output)
-      //   onValueChange?.(data.output)
-      // } else {
-      //   let currentState = null;
-      //   for (const prop in prevState) {
-      //     if(data.output.hasOwnProperty(prop)){
-      //       currentState = prevState[diff].concat(data.output[diff!])
-      //     }
-      //   }
-      //   if(!currentState){
-      //     prevState[diff] = data.output[diff]
-      //     currentState = prevState
-      //   }
-
-        // const result = prevState[diff!].concat(data.output[diff!])
+        startTransition(() => {
         setFiles(prevState)
         onValueChange?.(prevState)
-      // }
-
-      
-    }, [files])
-
+      });  
+    }
 
   async function onRemove(file: IUploadedFile) {
     if (!files) return;
@@ -174,8 +151,6 @@ export function FileUploader(props: FileUploaderProps) {
   }
 
 
-  const isDisabled = disabled || (files?.length ?? 0) >= maxFiles;
-
   return (
     <div className='relative flex flex-col gap-6 overflow-hidden'>
       <Dropzone
@@ -184,7 +159,6 @@ export function FileUploader(props: FileUploaderProps) {
         maxSize={maxSize}
         maxFiles={maxFiles}
         multiple={maxFiles > 1 || multiple}
-        disabled={isDisabled}
       >
         {({ getRootProps, getInputProps, isDragActive }) => (
           <div
@@ -193,7 +167,6 @@ export function FileUploader(props: FileUploaderProps) {
               'group border-muted-foreground/25 hover:bg-muted/25 relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-2 border-dashed px-5 py-2.5 text-center transition',
               'ring-offset-background focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-hidden',
               isDragActive && 'border-muted-foreground/50',
-              isDisabled && 'pointer-events-none opacity-60',
               className
             )}
             {...dropzoneProps}
@@ -236,8 +209,8 @@ export function FileUploader(props: FileUploaderProps) {
           </div>
         )}
       </Dropzone>
-      {Array.isArray(files[diff]) ? (
-        <ScrollArea className='h-fit w-full px-3'>
+      {files.hasOwnProperty(diff) ? (
+        // <ScrollArea className='h-fit w-full px-3'>
           <div className='max-h-48  flex flex-wrap gap-8 items-center'>
             {files[diff].map((file, index) => (
               <FileCard
@@ -245,10 +218,10 @@ export function FileUploader(props: FileUploaderProps) {
                 file={file}
                 onRemove={() => onRemove(file)}
               />
-            ))}
+            )) }
           </div>
-        </ScrollArea>
-      ) : null}
+        // </ScrollArea>
+       ) : null}
     </div>
   );
 }

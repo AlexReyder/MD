@@ -5,11 +5,11 @@ import { PromocodeSchema } from './promocode'
 
 export const OrderDbSchema = z.object({
 	id: z.string(),
-	User: z.any(),
+	User: z.any().nullable(),
 	userId: z.string(),
 	payment:z.nativeEnum(PaymentEnum),
 	delivery:z.nativeEnum(DeliveryEnum),
-	products:z.object({}).array(),
+	products:z.any().array(),
 	details:z.object({
 		name:z.string(),
 		surname:z.string(),
@@ -18,12 +18,12 @@ export const OrderDbSchema = z.object({
 		comment:z.string(),
 	}),
 	amount: z.number(),
-	trackNumber: z.string().optional(),
+	trackNumber: z.string().nullish(),
 	status: z.nativeEnum(OrderStatus),
-	Promocode: PromocodeSchema.optional(),
-	promocodeId: z.string().optional(),
-	createdAt: z.coerce.date(),
-	updatedAt: z.coerce.date(),
+	Promocode: PromocodeSchema.nullish(),
+	promocodeId: z.string().nullish(),
+	createdAt: z.coerce.string(),
+	updatedAt: z.coerce.string(),
 })
 export type OrderDb = z.infer<typeof OrderDbSchema>
 export const ValidateOrderDbSchema = z.array(OrderDbSchema)

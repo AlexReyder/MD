@@ -2,9 +2,16 @@ import { getAllOrders } from '@/shared/api/admin/orders'
 import OrdersProvider from '@/shared/context/orders-context'
 import { ErrorTemplate } from '@/shared/shadcnui/layouts/error-template'
 import { Main } from '@/shared/shadcnui/layouts/main'
+import { OrdersDialogs } from '@/shared/shadcnui/order-table/dialogs/orders-dialogs'
 import { columns } from '@/shared/shadcnui/order-table/order-columns'
 import { OrdersTable } from '@/shared/shadcnui/order-table/order-table'
 import { ValidateOrderDbSchema } from '@/shared/types/validation/order'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: "Заказы"
+};
+
 
 export default async function AdminDashboardPage() {
 	const ordersData = await getAllOrders()
@@ -28,6 +35,7 @@ export default async function AdminDashboardPage() {
 							<OrdersTable data={data} columns={columns} />
 					</div>
 					</Main>
+					<OrdersDialogs/>
 			</OrdersProvider>
 			:
 			<ErrorTemplate/>

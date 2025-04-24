@@ -17,6 +17,9 @@ export const ProfileAside = () => {
 			<li className={s.Item}>
 				<Link href='/profile/orders' className={`${s.Link} ${path==='/profile/orders' ? s.Selected: ''}`}>История заказов</Link>
 				</li>
+				<li className={s.Item}>
+				<Link href='/profile/bonus' className={`${s.Link} ${path==='/profile/bonus' ? s.Selected: ''}`}>Программа лояльности</Link>
+				</li>	
 		</ul>
 	)
 }

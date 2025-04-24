@@ -1,41 +1,30 @@
 "use client"
-import { getSearchParamsUrl, updateSearchParam } from '@/shared/utils/common'
 import styles from '@/styles/catalog/index.module.scss'
-import { redirect, usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { parseAsInteger, useQueryState } from 'nuqs'
 import ReactPaginate from 'react-paginate'
-
+import s from './CatalogPagination.module.scss'
 interface Props {
 	productsCount: number
-	queryPage: number
 }
 
-export const CatalogPagination = ({productsCount, queryPage}: Props) => {
-		const [currentPage, setCurrentPage] = useState<number>(queryPage)
+export const CatalogPagination = ({productsCount}: Props) => {
+		const [offset, setOffset] = useQueryState('offset', parseAsInteger.withDefault(1).withOptions({shallow: false}))
 		const pagesCount = Math.ceil((productsCount || 12) / 12)
 		const paginationProps = {
-				// disableInitialCallback:true,
-				// initialPage:1,
-				containerClassName: `${styles.catalog__bottom__list}`,
-				pageClassName: `catalog-pagination-item ${styles.catalog__bottom__list__item}`,
-				pageLinkClassName: styles.catalog__bottom__list__item__link,
+				containerClassName: `${s.ContainerClassName}`,
+				pageClassName: `${s.PageClassName}`,
+				pageLinkClassName: s.PageLinkClassName,
 				previousClassName: `catalog-pagination-prev ${styles.catalog__bottom__list__prev}`,
 				nextClassName: `catalog-pagination-next ${styles.catalog__bottom__list__next}`,
 				breakClassName: styles.catalog__bottom__list__break,
 				breakLinkClassName: styles.catalog__bottom__list__break__link,
 				breakLabe: '...',
 				pageCount: pagesCount,
-				forcePage: currentPage - 1,
+				forcePage: offset - 1,
 		}
-		const pathname = usePathname()
 
 		const handlePageChange = ({ selected }: { selected: number }) => {
-			 const urlParams = getSearchParamsUrl()
-			 urlParams.delete('offset')
-			 const path =  updateSearchParam('offset', selected + 1, pathname)
-			 setCurrentPage(selected + 1)
-			 redirect(path)
-
+			 setOffset(selected + 1)
 			}
 		
 

@@ -2,6 +2,7 @@ import { Header } from '@/widgets'
 import { Footer } from '@/widgets/Footer/Footer'
 import type { Metadata, Viewport } from "next"
 import { Manrope } from "next/font/google"
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import './globalStyles/breadcrumbs.css'
 import './globalStyles/globals.css'
 
@@ -38,10 +39,12 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={`${manrope.variable}`}>
+      <NuqsAdapter>
         <Header/>
         {modals}
         {children}
         <Footer/>
+      </NuqsAdapter>
       </body>
     </html>
   );

@@ -8,7 +8,7 @@ import { prisma } from '../prismaInstance'
 export async function getNotifies(){
 	try{
 		const notifies = await prisma.notifyProducts.findMany({include: 
-			{ User: true , Product: true }})
+			{ User: true}})
 
 		return {
 			success: notifies,

@@ -38,6 +38,7 @@ export function OrderUpdateDialog({ currentRow, open, onOpenChange }: Props) {
 		defaultValues: 
 				{
 					...currentRow,
+					trackNumber: currentRow?.trackNumber ?? ''
 				}
 	})
 

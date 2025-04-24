@@ -1,65 +1,56 @@
 "use client"
 import { showCountMessage } from '@/shared/ui'
-import { calculateBonusDiscount } from '@/shared/utils/common'
-import styles from '@/styles/order-block/index.module.scss'
 import Link from 'next/link'
+import s from './OrderInfoBlock.module.scss'
 
 const OrderInfoBlock = ({
   cartData,
   isOrderPage,
   bonusType,
-  bonusStatus,
   bonus,
   promocode
 }: {
   cartData: any,
   isOrderPage: any,
   bonusType?:any
-  bonusStatus?: any
   bonus?: any
   promocode?: any
 }) => {
   let itemsQuantity = getItemsQuantity(cartData)
-  let itemsTotalPrice = getItemsTOtalPrice(isOrderPage, cartData, bonusStatus, bonus, promocode)
-
-  // useEffect(() => {
-  //   itemsQuantity = getItemsQuantity(cartData)
-  //   itemsTotalPrice = getItemsTOtalPrice(cartData, bonusStatus, bonus, promocode)
-  // }, [promocode])
-
+  let itemsTotalPrice = getItemsTOtalPrice(isOrderPage, cartData, bonus, promocode)
 
   return (
-    <div className={styles.order_block}>
-      <div className={styles.order_block__inner}>
-        <p className={styles.order_block__info}>
+    <div className={s.Container}>
+      <div className={s.Inner}>
+        <p className={s.Info}>
           {itemsQuantity} 
           {' '}
           {showCountMessage(`${itemsQuantity}`)}
           {' '}
           на сумму
-          <span className={styles.order_block__info__text}>
+          <span className={s.InfoText}>
             {itemsTotalPrice} ₽
           </span>
         </p>
         {isOrderPage && (
           <>
-            <p className={styles.order_block__info}>
-              <span className={styles.order_block__info__text}>
+            <p className={s.Info}>
+              <span className={s.InfoText}>
                 Программа лояльности: {bonusType}
               </span>
-             {bonus > 0 ? ( <span className={styles.order_block__info__text}>
+             {bonus > 0 ? ( <span className={s.InfoText}>
                 Списано бонусов: {bonus}
               </span>) : <></>}
               {
                 promocode.discount > 0 ?
-                (<span className={styles.order_block__info__text}>
+                (<span className={s.InfoText}>
                   Промокод: Активирован
                  </span>) : <></>
               }
             </p>
-            <p className={styles.order_block__info}>
+            <p className={s.Info}>
               {/* {translations[lang].order.payment}:{' '} */}
-              <span className={styles.order_block__info__text}>
+              <span className={s.InfoText}>
                 {/* {onlinePaymentTab
                   ? translations[lang].order.online_payment
                   : translations[lang].order.upon_receipt} */}
@@ -67,15 +58,15 @@ const OrderInfoBlock = ({
             </p>
           </>
         )}
-        <p className={styles.order_block__total}>
+        <p className={s.Total}>
           <span>Итого: </span>
-          <span className={styles.order_block__total__price}>
+          <span className={s.Price}>
            {itemsTotalPrice} ₽
           </span>
         </p>
         {isOrderPage ? (
           <button
-            className={` ${styles.order_block__btn}`}
+            className={` ${s.Button}`}
             type='submit'
             // disabled={
             //   !isUserAgree || !currentCartByAuth.length || paymentSpinner
@@ -87,7 +78,7 @@ const OrderInfoBlock = ({
         ) : (
           <Link
             href='/order'
-            className={styles.order_block__btn} 
+            className={s.Button} 
             // ${
               // !isUserAgree || !currentCartByAuth.length ? styles.disabled : ''
             
@@ -96,9 +87,9 @@ const OrderInfoBlock = ({
            Оформить заказ
           </Link>
         )}
-        <label className={styles.order_block__agreement}>
+        <label className={s.Agreement}>
           <input
-            className={styles.order_block__agreement__input}
+            className={s.AgreementInput}
             type='checkbox'
             tabIndex={-1}
             defaultChecked
@@ -106,17 +97,17 @@ const OrderInfoBlock = ({
             // onChange={handleAgreementChange}
             // checked={isUserAgree}
           />
-          <span className={styles.order_block__agreement__mark} />
+          <span className={s.Agreement__Mark} />
           <span
-            className={styles.order_block__agreement__checkbox}
+            className={s.AgreementCheckbox}
             tabIndex={0}
             // onKeyDown={handleTabCheckbox}
           />
-          <span className={styles.order_block__agreement__text}>
+          <span className={s.AgreementText}>
           Нажимая на кнопку «Оформить заказ», вы даете согласие на обработку 
             <Link
               href='/privacy'
-              className={styles.order_block__agreement__link}
+              className={s.AgreementLink}
             > персональных данных
             </Link>
           </span>
@@ -136,13 +127,13 @@ function getItemsQuantity(arr: any[]){
   return quantity;
 }
 
-function getItemsTOtalPrice(isOrderPage: boolean, arr: any[], status?: any, bonus: any = 0, promocode?:any){
+function getItemsTOtalPrice(isOrderPage: boolean, arr: any[], bonus: any = 0, promocode?:any){
   let price = 0;
   arr.forEach(item => {
     price+= +item.price * +item.quantity
   })
   if(isOrderPage){
-    let total = calculateBonusDiscount(+price, status, +bonus)
+    let total = price - bonus
     if(promocode.discount > 0){
       total = total - promocode.discount
     }

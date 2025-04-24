@@ -11,7 +11,6 @@ import s from './Header.module.scss'
 export async function Header() {
   const {isAuth, userName} = await verifySession()
   const {success, error} = await getProductsCartLength()
-  // console.log(success)
 	return(
 		  <header className={s.Header}>
           <Logo />

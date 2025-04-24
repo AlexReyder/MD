@@ -73,3 +73,47 @@
     mask-size: 28px 28px;
   }
 }
+
+.Popover{
+  display: none;
+  position: absolute;
+  top: 6rem;
+  right: -1rem;
+  width: 250px;
+  height: 40px;
+  background-color: #fff;
+  border-radius: 24px;
+  z-index: 5;
+
+}
+.Open{
+  display: block;
+  @media only screen and (min-width: 40.625rem) {
+	  display: none;
+	}
+}
+
+.SearchMobile{
+  display: block;
+	background-color: var(--s-color);
+	width: 360px;
+  max-width: 250px;
+	height: 40px;
+  border: 3px solid var(--g-color-1);
+	border-radius: 24px;
+  padding-left: 2rem;
+  font-size: 1.6rem;
+  color: var(--p-color);
+  &::placeholder{
+    font-weight: 500;
+    color: var(--g-color-1);
+  }
+
+  &::-webkit-search-cancel-button{
+    display: none;
+  }
+    
+  &:focus{
+    outline: none;
+  }
+}

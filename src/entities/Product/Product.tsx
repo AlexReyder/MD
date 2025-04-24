@@ -14,7 +14,7 @@ import ProductSpecification from './ProductSpecification'
 import { ProductTable } from './ProductTable'
 
 export const Product = ({product}: any) => {
-  let {id, isBestseller, isNew,name, description, colors, sizes, details, images, price, material, manufacturer, print, country, category} = product
+  let {id, isBestseller, isNew,name, description, colors, sizes, details, images, price, material, manufacturer, print, country, category, articleNumber} = product
   colors = colors.map((color) => `${color.label}`)
   sizes = sizes.map((size) => `${size.label}`)
 
@@ -53,7 +53,7 @@ export const Product = ({product}: any) => {
               isInStock={product.isInStock}
             />
           </div>
-          <ProductForm productId={id} name={name} colors={colors} sizes={sizes} details={details} images={images} price={price} material={material}/>
+          <ProductForm productId={id} name={name} colors={colors} sizes={sizes} details={details} images={images} price={price} material={material} articleNumber={articleNumber}/>
           <div className={s.BottomContainer}>
             <ProductDescription description={description}/>
             <ProductSpecification specifications = {specifications}/>

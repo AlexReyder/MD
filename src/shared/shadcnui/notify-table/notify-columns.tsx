@@ -23,7 +23,7 @@ export const columns: ColumnDef<NotifyProductsDb>[] = [
       <DataTableColumnHeader column={column} title='Товар' />
     ),
     cell: ({ row }) => {
-      const name= row.original.Product.name
+      const name= row.original.name
       return <LongText className='w-full'>{name}</LongText>
     },
     meta: { className: 'w-36' },
@@ -34,7 +34,7 @@ export const columns: ColumnDef<NotifyProductsDb>[] = [
       <DataTableColumnHeader column={column} title='Артикул' />
     ),
     cell: ({ row }) => {
-      const articleNumber= row.original.Product.articleNumber
+      const articleNumber= row.original.articleNumber
       return <LongText className='w-full'>{articleNumber}</LongText>
     },
     meta: { className: 'w-36' },

@@ -7,7 +7,11 @@ import { UsersTable } from '@/shared/shadcnui/user-table/user-table'
 import { columns } from '@/shared/shadcnui/user-table/users-columns'
 import { UsersPrimaryButtons } from '@/shared/shadcnui/users-primary-buttons'
 import { userListSchema } from '@/shared/types/schemas'
+import { Metadata } from 'next'
 
+export const metadata: Metadata = {
+	title: "Пользователи"
+};
 
 export default async function AdminDashboardPage() {
 	const users = await getAllUsers()

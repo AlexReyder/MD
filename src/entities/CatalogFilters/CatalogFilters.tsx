@@ -10,10 +10,6 @@ interface Props{
 
 export const CatalogFilters =  ({data, error}: Props) => {
 
-	function applyFilters(){
-		
-	}
-
 	return(
 	<>
 	{
@@ -27,10 +23,10 @@ export const CatalogFilters =  ({data, error}: Props) => {
 			<FilterEntity data={data.bands} name='bands'/>
 			</FilterAccordion>
 			<FilterAccordion title='Жанр' id='panel-4'>
-			<FilterEntity data={data.genre} name='genre'/>
+			<FilterEntity data={data.genre} name='genres'/>
 			</FilterAccordion>
 			<FilterAccordion title='Производители' id='panel-23'>
-			<FilterEntity data={data.manufacturer} name='manufacturer'/>
+			<FilterEntity data={data.manufacturer} name='manufacturers'/>
 			</FilterAccordion>
 
 			<FilterAccordion title='Цвета'  id='panel-2'>

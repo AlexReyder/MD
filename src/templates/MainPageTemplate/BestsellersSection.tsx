@@ -7,7 +7,7 @@ export const CarouselSection = ({data, title}: {data:Promise<{success: ProductAd
 	return(
 		<>
 		{
-			useData.success ?
+			useData.success?.length > 0 ?
 			<Section className={s.Carousel}>
 			<h2 className={s.Title}>{title}</h2>
 		<Slider data={useData.success}/>

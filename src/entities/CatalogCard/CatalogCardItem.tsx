@@ -1,5 +1,6 @@
 
 import { addProductToCart } from '@/shared/api/cart'
+import { ProductsDb } from '@/shared/types/validation/products'
 import { formatPrice } from '@/shared/utils/common'
 import ProductAvailable from '@/widgets/Products/ProductAvailable'
 import Image from 'next/image'
@@ -9,27 +10,25 @@ import s from './CatalogCardItem.module.scss'
 
 
 
-export const CatalogCardItem = ({ item }: any) => {
-  let {id, name, category, price, images, colors, sizes, isNew, isBestseller, articleNumber, isInStock} = item;
+export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
+  let {id, name, price, images, categoryFilter, colorsFilter, colors, sizes, isNew, isBestseller, articleNumber, isInStock} = item;
+
   const nameSlug = slug(name)     
-  colors = slug(colors[0].label)
-  sizes = sizes[0].label
-  images = images[`${colors}`][0].url
-  category = slug(category[0].label)
-  
+  const categoryName = categoryFilter[0]
+  const firstColor = colorsFilter[0]
+  const previewImage = images[firstColor][0].url
+
   async function onSubmit() {
           const data = {
             productId: id,
             name,
             price: `${price}`,
-            color: item.colors[0].label,
-            size: sizes,
-            image:images,
+            color: colors[0].label,
+            size: sizes[0].label,
+            image: previewImage,
             quantity: '1'
           }
-          console.log(data)
-          const error = await addProductToCart(data)
-          // setError(error)
+          await addProductToCart(data)
         }
 
   return (
@@ -50,14 +49,14 @@ export const CatalogCardItem = ({ item }: any) => {
             <></>
           )} 
           <Link
-            href={`/catalog/${category}/${nameSlug}?color=${colors}`}
+            href={`/catalog/${categoryName}/${nameSlug}?color=${firstColor}`}
             className={s.Img}
           >
-            <Image src={images} alt={name} fill style={{objectFit:'scale-down'}} />
+            <Image src={previewImage} alt={name} fill style={{objectFit:'scale-down'}} />
           </Link>
           <div className={s.Inner}>
             <h3 className={s.Title}>
-              <Link href={`/catalog/${category}/${nameSlug}?color=${colors}`}>
+              <Link href={`/catalog/${categoryName}/${nameSlug}?color=${firstColor}`}>
                 {name}
               </Link>
             </h3>

@@ -6,6 +6,11 @@ import { NotifyDialogs } from '@/shared/shadcnui/notify-table/dialogs/notify-dia
 import { columns } from '@/shared/shadcnui/notify-table/notify-columns'
 import { NotifyTable } from '@/shared/shadcnui/notify-table/notify-table'
 import { ValidateNotifyProductsSchema } from '@/shared/types/validation/notify-products'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: "Уведомления"
+};
 
 export default async function AdminNotifyPage() {
 		const notifiesData = await getNotifies()

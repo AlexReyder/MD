@@ -2,8 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { CreateOrder, CreateOrderSchema } from '../types/validation/order'
-import { calculateBonusDiscount } from '../utils/common'
-import { minusBonus } from './bonus'
+import { addBonus, minusBonus, updateBonusStatus } from './bonus'
 import { removeDbCart } from './cart'
 import { mailOrderConfirm } from './mail'
 import { prisma } from './prismaInstance'
@@ -58,37 +57,47 @@ export async function makeOrder(unsafeData: CreateOrder) {
 			price+= +item.price * +item.quantity
 		})
 
-		let total = calculateBonusDiscount(+price, bonus.status, data.bonusMinusAmount)
+		let total = price - data.bonusMinusAmount
 		if(data.promocodeId.id !== ''){
       total = total - data.promocodeId.discount
     }
 
 		try {
 			const order = await prisma.order.create({
-				data: {
-					userId: userId as string,
-					products: data.products,
-					details: detailsClient,
-					payment: data.payment,
-					delivery: data.delivery,
-					amount: total
-				},
-			});
+					data: {
+							userId: userId as string,
+							products: data.products,
+							details: detailsClient,
+							payment: data.payment,
+							delivery: data.delivery,
+							amount: total
+						},
+					});
 			
 			if(!order){
-				return {
-					success: null,
+					return {
+							success: null,
 					error: 'ORDER_NOT_CREATED'
 				}
 			}
-			
-			await minusBonus(bonus.id, bonus.amount, data.bonusMinusAmount, bonus.history)
+
+			if(data.bonusMinusAmount > 0){
+				await minusBonus(bonus.id, bonus.amount, data.bonusMinusAmount, bonus.history)
+			}
+
 			await updateUserPurchasesAmount(userId as string, existingUser.purchasesAmount, total)
-			await applyPromocode(data.promocodeId.id, userId as string)
 
+			if(data.promocodeId.id !== ''){
+				await applyPromocode(data.promocodeId.id, userId as string)
+			}
 
+			await addBonus(existingUser.id, price)
+			
 			await mailOrderConfirm(existingUser.email, data)
 			await removeDbCart()
+			
+			await updateBonusStatus(existingUser.id)
+			
 			return {
 				success: order.id,
 				error: null

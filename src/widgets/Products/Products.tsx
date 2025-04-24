@@ -7,9 +7,7 @@ export const Products = (products:any) => {
 				{
 					products.products.map((product:any) => {
 						return (
-
-									<CatalogCardItem item={product} key={product.id}/>
-
+							<CatalogCardItem item={product} key={product.id}/>
 						)
 					})
 				} 	

@@ -1,9 +1,13 @@
 "use client"
+import { useOrders } from '@/shared/context/orders-context'
 import LongText from '@/shared/shadcnui/long-text'
 import { DataTableColumnHeader } from '@/shared/shadcnui/order-table/data-table-column-header'
 import { DataTableRowActions } from '@/shared/shadcnui/order-table/data-table-row-actions'
+import { paymentTypeAdminForm } from '@/shared/types/user'
 import { OrderDb } from '@/shared/types/validation/order'
 import { ColumnDef } from '@tanstack/react-table'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale/ru'
 import { Button } from '../ui/button'
 
 export const columns: ColumnDef<OrderDb>[] = [
@@ -14,7 +18,8 @@ export const columns: ColumnDef<OrderDb>[] = [
     ),
     cell: ({ row }) => {
       const name= row.original.payment
-      return <LongText className='max-w-36'>{name}</LongText>
+      const selected = paymentTypeAdminForm.filter((item) => item.value === name)[0].label
+      return <LongText className='max-w-36'>{selected}</LongText>
     },
     
     meta: { className: 'w-36' },
@@ -36,9 +41,14 @@ export const columns: ColumnDef<OrderDb>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Заказанные товары' />
     ),
-    cell: ({ row }) => (
-      <Button variant={'outline'} className='w-fit text-nowrap'>Открыть</Button>
-    ),
+    cell: ({ row }) =>  {
+      const { setOpen, setCurrentRow } = useOrders()
+    return(<Button variant={'outline'} className='w-fit text-nowrap' onClick={() => {
+      setCurrentRow(row.original)
+      setOpen('productsOrder')
+    }}>Открыть</Button>
+  )
+}
     // {row.getValue('products')}
   },
   {
@@ -46,27 +56,34 @@ export const columns: ColumnDef<OrderDb>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Данные заказчика' />
     ),
-    cell: ({ row }) =>  <Button variant={'outline'} className='w-fit text-nowrap'>Открыть</Button>
+    cell: ({ row }) =>  {
+      const { setOpen, setCurrentRow } = useOrders()
+    return(<Button variant={'outline'} className='w-fit text-nowrap' onClick={() => {
+      setCurrentRow(row.original)
+      setOpen('detailsOrder')
+    }}>Открыть</Button>
+  )
+}
   },
-  {
-    id:'promocode',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Промокод' />
-    ),
-    cell: ({ row }) => {
-      const promocode = row.original.Promocode?.value
-      return <LongText className='max-w-36'>{promocode}</LongText>
-    },
-  },
+  // {
+  //   id:'promocode',
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title='Промокод' />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const promocode = row.original.Promocode?.value
+  //     return <LongText className='max-w-36'>{promocode}</LongText>
+  //   },
+  // },
   {
     id:'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Создан' />
     ),
     cell: ({ row }) => {
-      const date = row.getValue('createdAt') as Date
+      const date = row.original.createdAt
       return(
-      <div>{date.toLocaleString('ru-RU',{year: 'numeric', month: '2-digit', day: '2-digit', hour:'numeric', minute:'numeric'})}</div>
+      <div>{format(date,"d.MM.yyyy h:mm ", {locale: ru})}</div>
   )
   },
   },

@@ -7,6 +7,11 @@ import { FAQTable } from '@/shared/shadcnui/faq-table/faq-table'
 import { ErrorTemplate } from '@/shared/shadcnui/layouts/error-template'
 import { Main } from '@/shared/shadcnui/layouts/main'
 import { FAQListSchema } from '@/shared/types/schemas'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: "FAQ"
+};
 
 export default async function AdminFAQPage() {
 	const faqData = await getFAQs()

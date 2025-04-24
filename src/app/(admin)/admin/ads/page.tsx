@@ -7,6 +7,11 @@ import { AdDialogs } from '@/shared/shadcnui/ad-table/dialogs/ad-dialogs'
 import { ErrorTemplate } from '@/shared/shadcnui/layouts/error-template'
 import { Main } from '@/shared/shadcnui/layouts/main'
 import { AdListSchema } from '@/shared/types/schemas'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: "Баннеры"
+};
 
 export default async function AdminAdsPage() {
 	const faqData = await getAds()

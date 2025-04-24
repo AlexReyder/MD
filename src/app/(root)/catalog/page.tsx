@@ -1,54 +1,57 @@
 import { CatalogFilters } from '@/entities/CatalogFilters/CatalogFilters'
 import { CatalogPagination } from '@/entities/CatalogPagination/CatalogPagination'
 import { Breadcrumbs } from '@/features'
-import { getAllProducts } from '@/shared/api/catalog'
-import { getFiltersData } from '@/shared/api/filters'
+import { CatalogSearchParams } from '@/shared/constants/catalog-search-params'
 import { HeadingWithCount, Section } from '@/shared/ui'
 import { ErrorPageTemplate } from '@/templates'
 import { Products } from '@/widgets/Products/Products'
 import { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { Suspense } from 'react'
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import type { SearchParams } from 'nuqs/server'
 import s from './page.module.scss'
 
 export const metadata: Metadata = {
 	title: 'Каталог',
 }
 
-export default async  function CatalogPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
-	const offset = (await searchParams).offset as string | undefined;
-	const selected = offset ? Number.parseInt(offset) : redirect('?offset=1'); 
-	const products = await getAllProducts(selected);
-	const {success, error} = await getFiltersData();
+type PageProps = {
+  searchParams: Promise<SearchParams>
+}
+
+export default async  function CatalogPage({ searchParams }: PageProps) {
+  const { offset, search, bands, genres, manufacturers, colors, sizes } = await CatalogSearchParams(searchParams)
+	const offsetStr = `?offset=${offset}`
+	const searchStr = search ? `&search=${search}` : ''
+	const bandsStr = bands ? `&bands=${bands}` : ''
+	const genresStr = genres ? `&genres=${genres}` : ''
+	const manufacturerssStr = manufacturers ? `&manufacturers=${manufacturers}` : ''
+	const colorsStr = colors ? `&colors=${colors}` : ''
+	const sizesStr = sizes ? `&sizes=${sizes}` : ''
+
+	const productsData = await fetch(`${process.env.SITE_DOMAIN}/api/catalog/${offsetStr}${searchStr}${bandsStr}${genresStr}${manufacturerssStr}${colorsStr}${sizesStr}`)
+	const products = await productsData.json()
+
+	const filtersData = await fetch(`${process.env.SITE_DOMAIN}/api/filters/getFilters`)
+	const filters = await filtersData.json()
+
 	return (
 		<main>
-			{
-				products && products.success? 
-			<>
-			<Section>
-				<Breadcrumbs/>
-				<HeadingWithCount count={products.success.length} title='Каталог'/>
-  {/* </SkeletonTheme> */}
-			</Section>
-			<Section className={s.Container}>
-					<CatalogFilters data={success} error={error}/>
-					<Suspense fallback={<Skeleton count={7}/>}>
-						<Products products={products.success.data}/>
-					</Suspense>
-			</Section>
-			<CatalogPagination productsCount={products.success.length} queryPage={selected} />
-			</>
-				:
-				<ErrorPageTemplate/>
-			}
+			 {
+					products && products.success? 
+				<>
+				<Section>
+					<Breadcrumbs/>
+					<HeadingWithCount count={products.success.length} title='Каталог'/>
+				</Section>
+				<Section className={s.Container}>
+						<CatalogFilters data={filters.success} error={filters.error}/>
+						<Products products={products.success.products}/>
+				</Section>
+				<CatalogPagination productsCount={products.success.length}/>
+				</>
+					:
+					<ErrorPageTemplate/>
+				}
 		</main>
 	);
 }
-
 

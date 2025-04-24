@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 type FormSchema = z.infer<typeof signUpSchema>
-// [data: string]: UserProfileDTO}
   const EditProfile = ({data, className}:{className: any, data: any}) => {
 		const {name, surname, email, phone} = data;
 		const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }} = useForm<FormSchema>({
@@ -23,7 +22,6 @@ type FormSchema = z.infer<typeof signUpSchema>
 		async function onSubmit(data: FormSchema) {
 			const error = await signUp(data)
 			console.log(error)
-			// setError(error)
 		}
 
 
@@ -34,7 +32,7 @@ type FormSchema = z.infer<typeof signUpSchema>
 				<Input registerName='name' register={register} errors={errors.email} type='text' placeholder='name' />
 				<Input registerName='surname' register={register} errors={errors.email} type='text' placeholder='surname' />
 				<Input registerName='email' register={register} errors={errors.email} type='email' placeholder='email' />
-				<Input registerName='phone' register={register} errors={errors.email} type='text' placeholder='phone' />
+				<Input registerName='phone' register={register} errors={errors.email} type='text' placeholder='Номер телефона' />
 					<FormSubmit 
 										title='Сохранить' 
 										isDisabled={!isDirty || isSubmitting}       

@@ -3,6 +3,7 @@ import s from './Product.module.scss'
 export const ProductTable = ({className, category, manufacturer}: {className: string, category: string, manufacturer: string}) =>{
 	const categorySlug = slug(category)
 	const manufacturerSlug = slug(manufacturer)
+	const showTable = categorySlug === 'futbolki' || categorySlug === 'lognslivy'
 	return(
 		<>
 		{categorySlug !== 'flagi' && categorySlug !== 'nashivki' ? 

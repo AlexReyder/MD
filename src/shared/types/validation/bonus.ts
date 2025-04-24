@@ -21,7 +21,9 @@ export const BonusDbMinusSchema = z.object({
 })
 export type BonusDbMinus = z.infer<typeof BonusDbSchema>
 
-
+export interface BonusHistoryItem{
+	type: 'add' | 'minus'
+}
 // export const PromocodeAddSchema = z.object({
 // 	id: z.string().default(''),
 // 	value: z.string().nonempty({message: 'Обязательное поле.'}),

@@ -5,9 +5,15 @@ import { ProductPrimaryButtons } from '@/shared/shadcnui/product-primary-buttons
 import { ProductsDialogs } from '@/shared/shadcnui/product-table/dialogs/product-dialogs'
 import { columns } from '@/shared/shadcnui/product-table/product-columns'
 import { ProductsTable } from '@/shared/shadcnui/product-table/product-table'
+import { Metadata } from 'next'
 import { Suspense } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+
+export const metadata: Metadata = {
+	title: "Товары"
+};
+
 
 export default function AdminDashboardPage() {
 		// await testDb()

@@ -1,9 +1,7 @@
 "use client"
 import { changePassword } from '@/shared/api/user'
 import { profilePassword } from '@/shared/types/schemas'
-import { Form, FormContainer, FormHeader, Input } from '@/shared/ui'
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Form, FormContainer, FormHeader, FormSubmit, Input } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -34,13 +32,10 @@ type FormSchema = z.infer<typeof profilePassword>
 				<Input registerName='confirmPassword' register={register} errors={errors.confirmPassword} type='password' placeholder='Повторите пароль' />
 					<div className='card-body__inner'>
 						<div className='inner__top'>
-							<button className='inner__btn' type='submit' disabled={!isDirty || isSubmitting}>
-								{isSubmitting ? (
-									<FontAwesomeIcon icon={faSpinner} spin />
-								) : (
-									"Сохранить"
-								)}
-							</button>
+							<FormSubmit  title='Сохранить' 
+            isDisabled={!isDirty || isSubmitting}       
+            isSubmitting={isSubmitting}/>
+
 						</div>
 					</div>
 				</Form>

@@ -23,10 +23,11 @@ interface Props{
 	images: any
 	details: any
 	material: string
+	articleNumber: string
 }
 type FormSchema = z.infer<typeof productFormSchema>
 
-const ProductForm = ({productId, name, price, images, colors, sizes, details, material}: Props) => {
+const ProductForm = ({productId, name, price, images, colors, sizes, details, material, articleNumber}: Props) => {
 		const [count, setCount] = useState(0)
 		const [inStock, setInStock] = useState(1)
 		const searchParams = useSearchParams()
@@ -60,10 +61,13 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 				} else {
 					const data = {
 						productId,
+						name: name,
+						articleNumber,
 						color: selectedColor,
 						size: selectedSize,
 					}
 					const {success, error} = await makeNotifyProducts(data)
+					console.log(data)
 					console.log(error)
 				}
 

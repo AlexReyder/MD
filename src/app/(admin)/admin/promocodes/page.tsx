@@ -7,6 +7,12 @@ import { PromoDialogs } from '@/shared/shadcnui/promo-table/dialogs/promo-dialog
 import { columns } from '@/shared/shadcnui/promo-table/promo-columns'
 import { PromoTable } from '@/shared/shadcnui/promo-table/promo-table'
 import { ValidatePromocodeSchema } from '@/shared/types/validation/promocode'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: "Промокоды"
+};
+
 
 export default async function AdminPromocodesPage() {
 		const promoData = await getPromocodes()

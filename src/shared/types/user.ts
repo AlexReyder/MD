@@ -1,4 +1,4 @@
-import { BonusType, OrderStatus, Role } from '@prisma/client'
+import { BonusType, OrderStatus, PaymentType, Role } from '@prisma/client'
 import {
   IconShield,
   IconUsersGroup
@@ -55,18 +55,30 @@ export const bonusStatusAdminForm = [
   {
     label: 'Бронзовый',
     value:BonusType.BRONZE,
+    start: 0,
+    end: 10000,
+    percentage: 1,
   },
   {
     label: 'Серебряный',
     value:BonusType.SILVER,
+    start: 10001,
+    end: 20000,
+    percentage: 3,
   },
   {
     label: 'Золотой',
     value:BonusType.GOLD,
+    start: 20001,
+    end: 50000,
+    percentage: 5,
   },
   {
     label: 'Платиновый',
     value:BonusType.PLATINUM,
+    start: 50001,
+    end: 9999999,
+    percentage: 7,
   },
 ]
 
@@ -128,3 +140,16 @@ export const orderStatusTypes = [
 
 
 ] as const
+
+
+
+export const paymentTypeAdminForm = [
+  {
+    label: 'При получении',
+    value:PaymentType.DEFFERED,
+  },
+  {
+    label: 'Переводом',
+    value:PaymentType.TRANSFER,
+  },
+]

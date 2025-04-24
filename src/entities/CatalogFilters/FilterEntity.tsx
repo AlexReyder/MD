@@ -1,74 +1,47 @@
 "use client"
-
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
+import { ChangeEvent, useEffect, useState } from 'react'
+import slug from 'slug'
 import s from './CatalogFilters.module.scss'
 
-const FilterEntity = ({data, name, isObj = false}: {data:[], name: string, isObj?: boolean}) => {
-	const state = !isObj ? data.reduce((a, v) => ({ ...a, [v]: false}), {}) : data.reduce((a, v) => ({ ...a, [v.name]: false}), {}); 
+const FilterEntity = ({data, name}: {data: string[], name: string}) => {
+	const state: Record<string, boolean> = data.reduce((a, v) => ({ ...a, [v]: false}), {}); 
 
+	const [query, setQuery] = useQueryState(name,
+		parseAsArrayOf(parseAsString, ';').withOptions({ shallow: false }))
 	const [inputs, setInputs] = useState(state)
 
-	useEffect(()=>{
-		handleGenerateQueryPath()
-	},[inputs])
-
-
-
-	const router = useRouter()
-  const searchParams = useSearchParams()
-	const pathname = usePathname()
-
-	function handleChange (e, rendered:any){
+	function handleChange (e: ChangeEvent<HTMLInputElement>, rendered:any){
 		setInputs((prevState) => ({
 					...prevState,
 					[rendered]: e.target.checked,
 				}))
 	}
-		
-	const createQueryString = (name: string, value: string) => {
-				const params = new URLSearchParams(searchParams?.toString())
-				params.set(name, value)
-				params.set('offset', '1')
-				if(value === '') {
-					params.delete(name)
-				} 
 
-				return params.toString()
-			}
-  const handleGenerateQueryPath = () => {
-			const keys = currentAppliedFilters()
-			const path = createQueryString(name, keys);
-			router.push(pathname + '?' + path)
-	}
-
-
-	function currentAppliedFilters(){
-		let keys = ''
-		for (const [key, value] of Object.entries(inputs)) {
-			if(value){
-					keys+=key + ',';
+	function updateQuery(){
+		let state = []
+		for(let prop in inputs){
+			if(inputs[prop]){
+				state.push(slug(prop))
 			}
 		}
-		return keys
+		return state.length > 0 ? state : null
 	}
+
+	useEffect(() => {
+		let state = updateQuery()
+		setQuery(state)
+	}, [inputs])
 	
-			// const set = (prop) => {
-			// 	setInputs((prevState) => ({
-			// 		...prevState,
-			// 		prop: false,
-			// 	}))
-			// }
-console.log(data)
+		
 	return(
 	<div>
 			{data && (
 			data.map((item:any) => {
-				const rendered: any = isObj ? item.name : item;
-				// console.log(inputs[`${rendered}`])
+				const rendered: any = item;
 				return (
 					<div key={rendered} className={s.FilterContainer}>
-						<input type="checkbox" name={rendered} id={rendered} className={s.FilterInput} onChange={(e) => handleChange(e, rendered)} checked={inputs[`${rendered}`]}/>
+						<input type="checkbox" name={rendered} id={rendered} className={s.FilterInput} value={slug(rendered)} onChange={(e) => handleChange(e, rendered)} checked={inputs[`${rendered}`]}/>
 						<label htmlFor={rendered} className={s.FilterText}>{name === 'colors' ? rendered : rendered}</label>
 					</div>
 				)

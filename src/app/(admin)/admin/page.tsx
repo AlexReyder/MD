@@ -1,11 +1,5 @@
-import { Button } from '@/shared/shadcnui/ui/button'
+import { redirect } from 'next/navigation'
 
-export default function AdminMainPage() {
-	
-	return (
-		<>
-			<h2 className='text-3xl font-bold underline'>Admin</h2>
-			<Button variant="default">Button</Button>
-		</>
-	);
+export default  function AdminMainPage() {
+	return redirect('/admin/orders')
 }

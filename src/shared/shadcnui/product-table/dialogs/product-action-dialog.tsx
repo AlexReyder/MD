@@ -34,35 +34,6 @@ import { FileUploader } from '../../file-uploader'
 import { Label } from '../../ui/label'
 import MultipleSelector from '../../ui/multiple-select'
 
-// const formSchema = z
-// 	.object({
-// 			id: z.string().default(''),
-// 			name:z.string().min(6,{message:'Обязательное поле. Минимальная длина 6 символов.'}),
-// 			slug:z.string(),
-// 			isActive:z.boolean().default(true),
-// 			isNew:z.boolean().default(false),
-// 			isBestseller:z.boolean().default(false),
-// 			isInStock:z.boolean().default(true),
-// 			articleNumber:z.string().nonempty({message: 'Обязательно поле'}),
-// 			description:z.string().min(6,{message:'Обязательное поле. Минимальная длина 6 символов.'}),
-// 			adPrice:z.coerce.number().min(1, {message: 'Обязательно поле'}),
-// 			price:z.coerce.number().min(1, {message: 'Обязательно поле'}),
-// 			images:z.any(),
-// 			details:z.any(),
-// 			category: z.any().array().length(1,{message: 'Обязательно поле'}),
-// 			band:z.any().array().min(1,{message: 'Обязательно поле'}),
-// 			genre:z.any().array().min(1,{message: 'Обязательно поле'}),
-// 			manufacturer:z.any().array().length(1,{message: 'Обязательно поле'}),
-// 			colors:z.any().array().min(1,{message: 'Обязательно поле'}),
-// 			sizes:z.any().array().min(1,{message: 'Обязательно поле'}),
-// 			material: z.any(),
-// 			print: z.any(),
-// 			country: z.any(),
-// 			labelAd: z.string().default(''),
-// 	})
-
-// export type ProductAddForm = z.infer<typeof formSchema>
-
 interface Props {
 	currentRow?: ProductsDb
 	open: boolean
@@ -103,7 +74,16 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 			colors:[],
 			material:[],
 			print:[],
-			country:[]
+			country:[],
+			categoryFilter:[],
+			bandFilter:[],
+			genreFilter:[],
+			colorsFilter:[],
+			sizesFilter:[],
+			manufacturerFilter:[],
+			materialFilter:[],
+			printFilter:[],
+			countryFilter:[],
 		},
 	})
 	form.watch('manufacturer')
@@ -111,19 +91,28 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 	form.watch('sizes')
 	form.watch('material')
 	form.watch('print')
-	console.log('IMAGES:' ,images)
-	console.log(form.getValues())
-	
+
+
 	useEffect(() =>{
-			form.setValue('material', [{label:data.manufacturers[0].material.name, value:data.manufacturers[0].material.id}])
-			form.setValue('print', [{label:data.manufacturers[0].print.name, value:data.manufacturers[0].print.id}])
-			form.setValue('country', [{label:data.countries[0].name, value:data.countries[0].id}])
+			form.setValue('material', [{label:data.manufacturers[0].material.name, value:data.manufacturers[0].material.slug}])
+			form.setValue('print', [{label:data.manufacturers[0].print.name, value:data.manufacturers[0].print.slug}])
+			form.setValue('country', [{label:data.countries[0].name, value:data.countries[0].slug}])
 	},[])
 
 	const onSubmit = async (values: ProductsDbAdd) => {
 		values.details = details
 		values.images = images
 		values.labelAd = labelAd
+		values.categoryFilter = values.category.map((item) => item.value)
+		values.bandFilter = values.band.map((item) => item.value)
+		values.genreFilter = values.genre.map((item) => item.value)
+		values.colorsFilter = values.colors.map((item) => item.value)
+		values.sizesFilter = values.sizes.map((item) => item.value)
+		values.manufacturerFilter = values.manufacturer.map((item: any) => item.value)
+		values.materialFilter = values.material.map((item) => item.value)
+		values.printFilter = values.print.map((item) => item.value)
+		values.countryFilter = values.country.map((item) => item.value)
+		console.log(values)
 		const{ success, error} = await addProduct(values)
 		const toastMessage = isEdit ? 'Товар успешно изменен' : 'Товар успешно добавлен'
 					if(success){
@@ -198,18 +187,18 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 								 <FormTemplateField name='manufacturer' form={form} data={data.manufacturers} title='Производитель' placeholder='Выберите промзводителя' isEdit={isEdit} maxSelected={1}/>
 
 								{form.getValues().manufacturer.length > 0 ? 
-										<FormTemplateField name='material' form={form} data={data.materials} title='Материал' placeholder='Выберите материал' isEdit={isEdit} maxSelected={1} defaultValue={ [{label:data.manufacturers[0].material.name, value:data.manufacturers[0].material.id}]}/>
+										<FormTemplateField name='material' form={form} data={data.materials} title='Материал' placeholder='Выберите материал' isEdit={isEdit} maxSelected={1} defaultValue={ [{label:data.manufacturers[0].material.name, value:data.manufacturers[0].material.slug}]}/>
 										: <></>
 								}
 								{
 									form.getValues().manufacturer.length > 0 && (
-										<FormTemplateField name='print' form={form} data={data.prints} title='Принт' placeholder='Выберите принт' isEdit={isEdit} maxSelected={1} defaultValue={ [{label:data.manufacturers[0].print.name, value:data.manufacturers[0].print.id}]}/>
+										<FormTemplateField name='print' form={form} data={data.prints} title='Принт' placeholder='Выберите принт' isEdit={isEdit} maxSelected={1} defaultValue={ [{label:data.manufacturers[0].print.name, value:data.manufacturers[0].print.slug}]}/>
 									)
 								}
 
 								{
 									form.getValues().manufacturer.length > 0 && (
-										<FormTemplateField name='country' form={form} data={data.countries} title='Страна производства' placeholder='Выберите страну производства' isEdit={isEdit} maxSelected={1} defaultValue={isEdit ? form.getValues().country : [{label:data.countries[0].name, value:data.countries[0].id}]}/>
+										<FormTemplateField name='country' form={form} data={data.countries} title='Страна производства' placeholder='Выберите страну производства' isEdit={isEdit} maxSelected={1} defaultValue={isEdit ? form.getValues().country : [{label:data.countries[0].name, value:data.countries[0].slug}]}/>
 									)
 								}
 
@@ -255,7 +244,8 @@ interface FormTemplateFieldP{
 
 const FormTemplateField = ({form, name, data, title, placeholder, isEdit, maxSelected, defaultValue}: FormTemplateFieldP) => {
 	const valueDefault:any = defaultValue ? defaultValue : []
-	const items = data.map((item:any) => {return {label:item.name, value:item.id}})
+	const items = data.map((item:any) => {return {label:item.name, value:item.slug}})
+
 
 	return(
 		<FormField
@@ -271,7 +261,9 @@ const FormTemplateField = ({form, name, data, title, placeholder, isEdit, maxSel
 				<MultipleSelector
 						{...field}
 						value={valueDefault.length > 0 ? valueDefault : field.value}
-						onChange={(e) => field.onChange(e)}
+						onChange={(e) => {
+							field.onChange(e)
+						}}
 						maxSelected={maxSelected ? maxSelected : undefined}
 						defaultOptions={items}
 						placeholder={placeholder}

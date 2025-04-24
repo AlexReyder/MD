@@ -30,6 +30,8 @@ export async function makeNotifyProducts(unsafeData: CreateNotifyProducts){
 		await prisma.notifyProducts.create({
 			data:{
 				color: data.color,
+				name: data.name,
+				articleNumber: data.articleNumber,
 				size: data.size,
 				userId: userId as string,
 				productId: data.productId,

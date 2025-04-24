@@ -1,6 +1,12 @@
 import { BonusType } from '@prisma/client'
 
 export const mergeArrays = (a, b, predicate = (a, b) => a === b) => {
+  console.log('A ', a)
+  console.log('B ', b)
+  if(!a && b.length === 0){
+		return [];
+	}
+
   const c = [...a];
   b.forEach((bItem) => (c.some((cItem) => predicate(bItem, cItem)) ? null : c.push(bItem)))
   return c;

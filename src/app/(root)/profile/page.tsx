@@ -1,3 +1,5 @@
-export default async function ProfilePage() {
-return null
+import { redirect } from 'next/navigation'
+
+export default  function ProfilePage() {
+	return redirect('/profile/general')
 }

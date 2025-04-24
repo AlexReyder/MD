@@ -1,4 +1,5 @@
 "use server"
+import { Role } from '@prisma/client'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { profilePassword } from '../types/schemas'
@@ -77,4 +78,39 @@ export async function updateUserPurchasesAmount(userId: string, currentTotal: nu
 			error: e as string
 		}
 	}
+}
+
+export async function isProtected(){
+		const {isAuth} = await verifySession();
+		if(!isAuth){
+			console.log('FAILDDDDD')
+			redirect('/signin')
+		}
+}
+
+export async function isAdmin(){
+		console.log('ADMIN')
+		const {isAuth, userId} = await verifySession();
+
+		if(!isAuth){
+			console.log('AUTH')
+			redirect('/signin')
+		}
+
+		const user = await prisma.user.findFirst({
+			where:{
+				id: userId as string
+			}
+		})
+	
+		if(!user){
+			redirect('/signin')
+		}
+	
+		if(user.role !== Role.ADMIN){
+			console.log('USER')
+			redirect('/signin')
+		}
+
+
 }

@@ -3,7 +3,7 @@ import useDialogState from '@/shared/hooks/use-dialog-state'
 import React, { useState } from 'react'
 import { OrderDb } from '../types/validation/order'
 
-type DialogType = 'updateOrder'
+type DialogType = 'updateOrder' | 'detailsOrder' | 'productsOrder'
 
 interface OrdersContextType {
 	open: DialogType | null

@@ -123,3 +123,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+.rdp-weekdays{
+  display: flex !important;
+  gap: 1rem !important;
+}

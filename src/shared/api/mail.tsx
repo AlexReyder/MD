@@ -1,6 +1,12 @@
 "use server"
+import { render } from '@react-email/components'
 import nodemailer from 'nodemailer'
 import { z } from 'zod'
+import { BonusEmailFC } from '../emails/bonus'
+import { ConfirmEmailFC } from '../emails/confirm'
+import { NotifyEmailFC } from '../emails/notify'
+import { OrderEmailFC } from '../emails/order'
+import { RecoveryEmailFC } from '../emails/recovery'
 import { recoveryEmail } from '../types/schemas'
 import { CreateOrder } from '../types/validation/order'
 import { prisma } from './prismaInstance'
@@ -10,7 +16,8 @@ const user = process.env.EMAIL_LOGIN
 const pass = process.env.EMAIL_PASS
 
 const transporter = nodemailer.createTransport({
-	host: 'smtp.mail.ru',
+	// host: 'smtp.mail.ru',
+	host: 'smtp.beget.com',
 	port: 465,
 	secure: true,
 	auth: {
@@ -40,11 +47,16 @@ export async function mailPasswordRecovery(unsafeData: z.infer<typeof recoveryEm
 
 	const message = `Для того чтобы восстановить пароль перейдите по следующей ссылке: ${site}/password-recovery/?email=${email}&token=${recoveryToken}`
 
+	const emailHtml = await render(<RecoveryEmailFC url={`${site}/password-recovery/?email=${email}&token=${recoveryToken}`}/>);
+
+	
+
 	const mailOptions = {
 			from: user,
 			to: email,
 			subject: 'Сброс пароля',
 			text: message,
+			html: emailHtml,
 		}
 
 	try {
@@ -70,13 +82,17 @@ export async function mailPasswordRecovery(unsafeData: z.infer<typeof recoveryEm
 
 export async function mailConfirmSignUp(to: string, token: string){
 	const message = `Для того чтобы подтвердить регистрацию перейдите по следующей ссылке: ${site}/email/verify?email=${to}&token=${token}`
+	
+	const emailHtml = await render(<ConfirmEmailFC url={`${site}/email/verify?email=${to}&token=${token}`}/>);
 
 	const mailOptions = {
 			from: user,
 			to,
 			subject: 'Подтверждение регистрации',
 			text: message,
+			html: emailHtml,
 		}
+
 
 	try {
 		 transporter.sendMail(mailOptions, function (error: any, info: any) {
@@ -93,13 +109,16 @@ export async function mailConfirmSignUp(to: string, token: string){
 }
 
 export async function mailOrderConfirm(to: string, details: CreateOrder){
-	const message = 'Заказ создан. '
+	const message = 'Заказ оформлен. '
+
+	const emailHtml = await render(<OrderEmailFC details={details}/>);
 
 	const mailOptions = {
 			from: user,
 			to,
-			subject: 'Заказ создан',
+			subject: 'Заказ оформлен',
 			text: message,
+			html: emailHtml,
 		}
 
 	try {
@@ -118,11 +137,14 @@ export async function mailOrderConfirm(to: string, details: CreateOrder){
 export async function mailBonusEmail(to: string, subject: string, description: string){
 	const message = 'Заказ создан. '
 
+	const emailHtml = await render(<BonusEmailFC title={subject} text={description}/>);
+
 	const mailOptions = {
 			from: user,
 			to,
 			subject,
 			text: description,
+			html: emailHtml
 		}
 
 	try {
@@ -139,13 +161,15 @@ export async function mailBonusEmail(to: string, subject: string, description: s
 }
 
 export async function mailNotifyProduct(to: string, subject: string, description: string){
-	const message = 'Заказ поступил. '
+	
+	const emailHtml = await render(<NotifyEmailFC title={subject} text={description}/>);
 
 	const mailOptions = {
 			from: user,
 			to,
 			subject,
 			text: description,
+			html: emailHtml
 		}
 
 	try {

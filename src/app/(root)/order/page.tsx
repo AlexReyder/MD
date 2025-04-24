@@ -1,7 +1,7 @@
 import { Breadcrumbs } from '@/features'
 import { getBonus } from '@/shared/api/bonus'
 import { getProductsFromCart } from '@/shared/api/cart'
-import { getProfileData } from '@/shared/api/user'
+import { getProfileData, isProtected } from '@/shared/api/user'
 import { ICartGetProducts } from '@/shared/types/cart'
 import { UserProfileDTO } from '@/shared/types/user'
 import { HeadingWithCount, Section } from '@/shared/ui'
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function OrderPage() {
+	await isProtected()
 	const cartData: ICartGetProducts = await getProductsFromCart()
 	const profileData: UserProfileDTO = await getProfileData();
 	const bonusData = await getBonus()

@@ -3,13 +3,11 @@ import { z } from 'zod'
 // ADMIN
 export const NotifyProductsSchema = z.object({
 	id: z.string(),
-	User: z.any(),
+	User: z.any().optional(),
 	userId: z.string(),
 	isNotified: z.boolean(),
-	Product:z.object({
-		name: z.string(),
-		articleNumber: z.string()
-	}),
+	name: z.string(),
+	articleNumber:z.string(),
 	productId: z.string(),
 	color: z.string(),
 	size: z.string(),
@@ -34,6 +32,8 @@ export const ValidateNotifyProductsMail = z.array(NotifyProductsMailSchema)
 
 export const CreateNotifyProductsSchema = z.object({
 	productId: z.string(),
+	name: z.string(),
+	articleNumber:z.string(),
 	color: z.string(),
 	size: z.string(),
 })

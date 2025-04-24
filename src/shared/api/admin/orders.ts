@@ -5,7 +5,7 @@ import { prisma } from '../prismaInstance'
 
 export async function getAllOrders(){
 	try{
-		const orders = await prisma.order.findMany({include:{Promocode: true}})
+		const orders = await prisma.order.findMany({include:{Promocode: true, User: true}})
 		return {
 			success: orders,
 			error: null

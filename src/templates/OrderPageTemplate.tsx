@@ -25,7 +25,6 @@ interface Props{
 	profileData: UserProfileDTO 
   bonusData: BonusDb
 }
-// type FormSchema = z.infer<typeof makeOrderSchema>
 
 const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
   const [promocodeValue, setPromocodeValue] = useState({id:'', discount:0})
@@ -144,7 +143,7 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
             </div>
             <div className={styles.order__inner__right}>
               <div className={styles.order__inner__right__order}>
-                <OrderInfoBlock cartData={cartData} isOrderPage={true} bonus={bonuses} bonusType={bonusType} bonusStatus={bonusData.status}
+                <OrderInfoBlock cartData={cartData} isOrderPage={true} bonus={bonuses} bonusType={bonusType}
                 promocode={promocodeValue} />
               </div>
             </div>

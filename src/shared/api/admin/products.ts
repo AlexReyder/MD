@@ -1,6 +1,6 @@
 "use server"
 
-import { ProductAddForm } from '@/shared/shadcnui/product-table/dialogs/product-action-dialog'
+import { ProductsDbAdd } from '@/shared/types/validation/products'
 import { revalidatePath } from 'next/cache'
 import slug from 'slug'
 import { prisma } from '../prismaInstance'
@@ -45,7 +45,7 @@ export async function getAllProducts(){
 
 }
 
-export async function addProduct(data: ProductAddForm){
+export async function addProduct(data: ProductsDbAdd){
 	try{
 		const product =	await prisma.shoppingCard.upsert({
 			where: {
@@ -73,6 +73,15 @@ export async function addProduct(data: ProductAddForm){
 				material: data.material,
 				print: data.print,
 				country: data.country,
+				categoryFilter: data.categoryFilter,
+				bandFilter: data.bandFilter,
+				genreFilter: data.genreFilter,
+				colorsFilter: data.colorsFilter,
+				sizesFilter: data.sizesFilter,
+				manufacturerFilter: data.manufacturerFilter,
+				materialFilter: data.materialFilter,
+				printFilter: data.printFilter,
+				countryFilter: data.countryFilter,
 			},
 			update:{
 				name: data.name,
@@ -96,6 +105,15 @@ export async function addProduct(data: ProductAddForm){
 				material: data.material,
 				print: data.print,
 				country: data.country,
+				categoryFilter: data.categoryFilter,
+				bandFilter: data.bandFilter,
+				genreFilter: data.genreFilter,
+				colorsFilter: data.colorsFilter,
+				sizesFilter: data.sizesFilter,
+				manufacturerFilter: data.manufacturerFilter,
+				materialFilter: data.materialFilter,
+				printFilter: data.printFilter,
+				countryFilter: data.countryFilter,
 			}
 		})
 		revalidatePath('/admin/products')

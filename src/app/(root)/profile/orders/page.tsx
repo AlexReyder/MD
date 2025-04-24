@@ -1,15 +1,18 @@
 import HistoryOrderItem from '@/entities/ProfileHistoryOrder/HistoryOrderItem'
 import { getOrderHistory } from '@/shared/api/order'
-import { Section } from '@/shared/ui'
+import { isProtected } from '@/shared/api/user'
+import { FormHeader, Section } from '@/shared/ui'
 import { notFound } from 'next/navigation'
 import s from '../styles.module.scss'
 export default async function ProfileOrderHistoryPage() {
+	await isProtected()
 	const {success, error} = await getOrderHistory()
 	if(error && error !== 'EMPTY_ORDERS'){
 		notFound()
 	}
 	return (
 		<Section className={s.Wrapper}>
+				<FormHeader title='История заказов' description=''/>
 			{
 				error && error  === 'EMPTY_ORDERS' ? (<h3>У вас пока нет заказов.</h3>) : null
 			}
