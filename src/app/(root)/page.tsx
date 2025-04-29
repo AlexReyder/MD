@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Главная"
 };
 
-export default  function MainPage() {
+export default async function MainPage() {
   return (
     <main>
       <MainPageTemplate/>

@@ -1,5 +1,13 @@
 import { BonusType } from '@prisma/client'
 
+
+export function gResponse(success: [] | {} | null, error: string | null){
+	return {
+		success,
+		error
+	}
+}
+
 export const mergeArrays = (a, b, predicate = (a, b) => a === b) => {
   console.log('A ', a)
   console.log('B ', b)

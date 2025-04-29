@@ -16,8 +16,9 @@ export const EmailTemplate: React.FC<Readonly<Props>> = ({preview, children}) =>
 							<Section style={logo}>
 								<Img
 									width={114}
+									// m1IXNDMo**R%
 									// src={`${baseUrl}/public/maldito.svg`}
-									src={'https://maldito.ru/img/logo/maldito.svg'}
+									src={'https://maldito.ru/img/logo/maldito.png'}
 									alt="Maldito"
 									style={logoImg}
 								/>

@@ -18,28 +18,28 @@ export async function getAllProducts(selected: number = 1){
 	}
 }
 
-export async function getProductsByCategory(slug: string, selected: number){
-	console.log(slug)
-	// const category = await prisma.category.findFirst({where:{slug}})
-	// const products = await prisma.shoppingCard.findMany({
-	// 	where: {
-	// 		category: {
-	// 			path:["cherniy"],
-	// 			array_contains:[]
+// export async function getProductsByCategory(slug: string, selected: number){
+// 	console.log(slug)
+// 	// const category = await prisma.category.findFirst({where:{slug}})
+// 	// const products = await prisma.shoppingCard.findMany({
+// 	// 	where: {
+// 	// 		category: {
+// 	// 			path:["cherniy"],
+// 	// 			array_contains:[]
 				
-	// 		},
-	// 	},
-	// })
+// 	// 		},
+// 	// 	},
+// 	// })
 
-	const categoryName = await prisma.category.findFirst({where: {slug}, select:{name: true}})
-	return {
-		success: {products,
-			length: products.length,
-			categoryName
-		},
-		error: null
-	}
-}
+// 	const categoryName = await prisma.category.findFirst({where: {slug}, select:{name: true}})
+// 	return {
+// 		success: {products,
+// 			length: products.length,
+// 			categoryName
+// 		},
+// 		error: null
+// 	}
+// }
 
 export async function getOneProduct(productId: string,){
 	const product = await prisma.shoppingCard.findFirst({where:{slug:productId}})
@@ -55,43 +55,43 @@ export async function getOneProduct(productId: string,){
 	}
 }
 
-export async function getHeroBanners(){
-	const banners = await prisma.banner.findMany();
-	if(banners){
-		return {
-			success: banners,
-			error: null
-		}
-	}
-	return {
-		success:null,
-		error: 'EMPTY'
-	}
-}
+// export async function getHeroBanners(){
+// 	const banners = await prisma.banner.findMany();
+// 	if(banners){
+// 		return {
+// 			success: banners,
+// 			error: null
+// 		}
+// 	}
+// 	return {
+// 		success:null,
+// 		error: 'EMPTY'
+// 	}
+// }
 
-export async function getProductsByIsBestseller(){
-	const products = await prisma.shoppingCard.findMany({where:{isBestseller: true}});
-	if(products){
-		return {
-			success: products,
-			error: null
-		}
-	}
-	return {
-		success:null,
-		error: 'EMPTY'
-	}
-}
-export async function getProductsByIsNew(){
-	const products = await prisma.shoppingCard.findMany({where:{isNew: true}});
-	if(products){
-		return {
-			success: products,
-			error: null
-		}
-	}
-	return {
-		success:null,
-		error: 'EMPTY'
-	}
-}
+// export async function getProductsByIsBestseller(){
+// 	const products = await prisma.shoppingCard.findMany({where:{isBestseller: true}});
+// 	if(products){
+// 		return {
+// 			success: products,
+// 			error: null
+// 		}
+// 	}
+// 	return {
+// 		success:null,
+// 		error: 'EMPTY'
+// 	}
+// }
+// export async function getProductsByIsNew(){
+// 	const products = await prisma.shoppingCard.findMany({where:{isNew: true}});
+// 	if(products){
+// 		return {
+// 			success: products,
+// 			error: null
+// 		}
+// 	}
+// 	return {
+// 		success:null,
+// 		error: 'EMPTY'
+// 	}
+// }
