@@ -67,51 +67,6 @@ const AuthPopupLogin = ({includeHeading = true, className = ''}: {includeHeading
       </FormContainer>
 
   )
-  // return (
-  //   <div className='card-back'>
-  //     <div className='card-body wow-bg'>
-  //       <h3 className='card-body__title'>
-  //       Войти
-  //       </h3>
-  //       <p className='card-body__description'>
-  //       Войти в свой аккаунт
-  //       </p>
-  //       <form onSubmit={handleSubmit(onSubmit)}>
-  //          <Input registerName='email' register={register} errors={errors.email} type='email' placeholder='email' />
-  //          <Input registerName='password' register={register} errors={errors.password} type='password' placeholder='password' />
-  //         <div className='card-body__inner'>
-  //           <div className='inner__top'>
-  //             <button className='inner__btn' type='submit' disabled={!isDirty || isSubmitting}>
-  //               {isSubmitting ? (
-  //                 <FontAwesomeIcon icon={faSpinner} spin />
-  //               ) : (
-  //                "Войти"
-  //               )}
-  //             </button>
-  //             <Link
-  //               href='/auth/recovery'
-  //               className='inner__reset'
-  //             >
-  //               Восстановить пароль
-  //             </Link>
-  //           </div>
-  //           <div className='inner__bottom'>
-  //             <span className='inner__bottom__text'>
-  //             Еще нет аккаунта?
-  //             </span>
-  //             <button
-  //               type='button'
-  //               className='btn-reset inner__switch'
-  //               // onClick={toggleAuth}
-  //             >
-  //               Зарегистрироваться!
-  //             </button>
-  //           </div>
-  //         </div>
-  //       </form>
-  //     </div>
-  //   </div>
-  // )
 }
 
 export default AuthPopupLogin

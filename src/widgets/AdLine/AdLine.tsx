@@ -5,7 +5,7 @@ export default async function AdLine(){
 	return (
 		<>
 		{
-			content?.success?.html ? 
+			content && content?.success?.html ? 
 			<div className={`ql-editor ${s.Wrapper}`} dangerouslySetInnerHTML={{__html:content.success.html}}> 
 			</div>
 			: 

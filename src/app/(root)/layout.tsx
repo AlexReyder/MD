@@ -1,5 +1,4 @@
 import { Header } from '@/widgets'
-import AdLine from '@/widgets/AdLine/AdLine'
 import { Footer } from '@/widgets/Footer/Footer'
 import type { Metadata, Viewport } from "next"
 import { Manrope } from "next/font/google"
@@ -42,7 +41,6 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`${manrope.variable}`}>
       <NuqsAdapter>
-        <AdLine/>
         <Header/>
         {modals}
         {children}

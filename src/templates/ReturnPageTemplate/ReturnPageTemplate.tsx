@@ -8,7 +8,7 @@ export const ReturnPageTemplate = async () => {
 	return(
 		<Section className={s.Wrapper}>
 			{
-				content.success ? (
+				content && content.success ? (
 					<div className="ql-editor" dangerouslySetInnerHTML={{__html:content.success?.html}}>
 					</div>
 				) 

@@ -5,6 +5,7 @@ import { getProductsCartLength } from '@/shared/api/cart'
 import { verifySession } from '@/shared/api/session'
 import { Logo } from '@/shared/ui'
 import { Suspense } from 'react'
+import AdLine from '../AdLine/AdLine'
 import { Menu } from '../Menu/Menu'
 import s from './Header.module.scss'
 
@@ -12,7 +13,9 @@ export async function Header() {
   const {isAuth, userName} = await verifySession()
   const {success, error} = await getProductsCartLength()
 	return(
-		  <header className={s.Header}>
+		  <header >
+        <AdLine/>
+        <div className={s.Header}>
           <Logo />
           <ul className={s.HeaderLinks}>
             <li className={s.HeaderItem}>
@@ -30,6 +33,7 @@ export async function Header() {
             </li>
           </ul>
           <Menu/>
+        </div>
         {/* </Section> */}
     </header>
 
