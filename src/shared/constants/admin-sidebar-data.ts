@@ -123,12 +123,38 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
-    title: 'FAQ',
-    url: '/admin/faq',
-    icon: 'faq',
-    shortcut: ['p', 'p'],
-    isActive: false,
-    items: [] // No child items
+    title: 'Контент',
+    url: '#', // Placeholder as there is no direct link for the parent
+    icon: 'content',
+    isActive: true,
+
+    items: [
+      {
+        title: 'О компании',
+        url: '/admin/content/about',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Доставка/Оплата',
+        url: '/admin/content/delivery-payment',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Обмен/Возврат',
+        url: '/admin/content/exchange-return',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'FAQ',
+        url: '/admin/content/faq',
+        shortcut: ['m', 'm']
+      },
+      {
+        title: 'Рекламная строка',
+        url: '/admin/content/ad-line',
+        shortcut: ['m', 'm']
+      },
+    ]
   },
 ];
 

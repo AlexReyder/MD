@@ -5,6 +5,7 @@ import {
 	IconBrandProducthunt,
 	IconBubblePlus,
 	IconDiscount,
+	IconEdit,
 	IconFilter,
 	IconLayoutDashboard,
 	IconProps,
@@ -24,5 +25,6 @@ export const Icons = {
 	ad: IconAd,
 	faq:IconBubblePlus,
 	promocodes: IconDiscount,
-	notify: IconBellRinging
+	notify: IconBellRinging,
+	content: IconEdit,
 };

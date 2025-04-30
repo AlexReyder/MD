@@ -1,40 +1,19 @@
 import { Section } from '@/shared/ui'
 import s from './DeliveryPageTemplate.module.scss'
 
-export const DeliveryPageTemplate = () => {
+export const DeliveryPageTemplate = async () => {
+	const deliveryData = await fetch(`${process.env.SITE_DOMAIN}/api/delivery-payment`)
+	const content = await deliveryData.json()
 	return(
 		<Section className={s.Wrapper}>
-				<div className={s.Contact}>
-					<div className={s.Entity_1}>
-						<h3 className={s.Title}>Доставка и оплата</h3>
-						<p className={s.Text}>...</p>
+		{
+				content.success ? (
+					<div className="ql-editor" dangerouslySetInnerHTML={{__html:content.success?.html}}>
 					</div>
-				</div>
-				{/* <div className={s.Office}>
-					<div className={s.Entity_2}>
-						<h3 className={s.Title}>Обмен товара</h3>
-						<p className={s.Text}>
-						Если вещь не подошла по цвету, размеру,  фасону или габаритам, мы готовы обменять ее в течение 14 дней. Для этого необходимо:
-						</p>
-						<ul className={s.List}>
-							<li>Отправить письмо на адрес электронной почты - razrab@bk.ru с указанием причины обмена, а так же указать артикул и размер товара, на который хотите произвести обмен. </li>
-							<li>Далее следует процедура возврата товара (смотри ниже)</li>
-							<li>После получения не подошедшего вам товара, в течение 10 дней мы вышлем вам другой. Если в момент получения нами почтового отправления нужного товара не окажется на складе, то покупатель вправе потребовать возврат денег или замены на другой аналогичный товар.</li>
-						</ul>
-						<p className={s.Text}>* Стоимость услуг по доставке оплачивается заказчиком</p>
-					</div>
-				</div>
-				<div className={s.Requisites}>
-					<div className={s.Entity_3}>
-					<h3 className={s.Title}>Возврат товара</h3>
-						<ul className={s.List}>
-							<li>Вам необходимо отправить письмо на адрес электронной почты - razrab@bk.ru с указанием причины возврата.</li>
-							<li>Наш менеджер свяжется с Курьерской Службой и Вам сообщит, когда приедет курьер для забора товара на возврат.</li>
-							<li>Как только мы получим товар, будет начата процедура возврата денежных средств. В течение 10 рабочих дней Вам будет возвращена вся сумма за товар.</li>
-						</ul>
-						<p className={s.Text}>Стоимость услуг по доставке оплачивается Покупателем.</p>
-					</div>
-				</div> */}
+				) 
+				: 
+				<span></span>
+			}
 		</Section>
 	)
 }

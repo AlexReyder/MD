@@ -7,6 +7,7 @@ import type { Metadata, Viewport } from "next"
 import { Manrope } from "next/font/google"
 import { cookies } from 'next/headers'
 import './globals-admin.css'
+import './quill.css'
 const manrope = Manrope({
 	variable: "--font-manrope",
 	subsets: ["latin", "cyrillic"],

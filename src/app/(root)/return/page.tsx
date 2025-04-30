@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 	title: 'Обмен / Возврат',
 }
 
-export default function ReturnPage() {
+export default async function ReturnPage() {
 	return (
 		<main>
 			<Section>

@@ -268,3 +268,47 @@ model Banner {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model DeliveryInfo {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  html      String
+  json      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("delivery_info")
+}
+
+model ReturnInfo {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  html      String
+  json      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("return_info")
+}
+
+model AboutInfo {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  html      String
+  json      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("about_info")
+}
+
+model AdLineInfo {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  html      String
+  json      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ad_line_info")
+}

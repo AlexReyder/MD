@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 	title: 'Доставка / Оплата',
 }
 
-export default function DeliveryPage() {
+export default async function DeliveryPage() {
 	return (
 		<main>
 			<Section>
