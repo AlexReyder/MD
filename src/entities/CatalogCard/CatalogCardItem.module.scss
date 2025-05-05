@@ -101,10 +101,35 @@
 	}
 }
 
+.PriceBlock{
+	display: flex;
+	flex-direction: column-reverse;
+	align-items: start;
+	gap: 0.5rem;
+	@media (max-width: 590px) {
+		flex-direction: row;
+		align-items: center;
+		gap: 1.5rem;
+	}
+}
+
 .Price {
 	color: var(--p-color);
 	font-size: 2.4rem;
 	font-weight: 500;
+}
+
+.Adprice{
+	color: var(--g-color-1);
+	font-size: 1.8rem;
+	font-weight: 500;
+	text-decoration: line-through;
+	position: relative;
+	left: 3rem;
+	@media (max-width: 590px) {
+		font-size: 2.4rem;
+		left: 0;
+	}
 }
 
 .Cart {

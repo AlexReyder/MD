@@ -1,12 +1,12 @@
 "use client"
-import { parseAsArrayOf, parseAsString, useQueryState } from 'nuqs'
+import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from 'nuqs'
 import { ChangeEvent, useEffect, useState } from 'react'
 import slug from 'slug'
 import s from './CatalogFilters.module.scss'
 
 const FilterEntity = ({data, name}: {data: string[], name: string}) => {
 	const state: Record<string, boolean> = data.reduce((a, v) => ({ ...a, [v]: false}), {}); 
-
+	const [offset, setOffset] = useQueryState('offset', parseAsInteger.withDefault(1))
 	const [query, setQuery] = useQueryState(name,
 		parseAsArrayOf(parseAsString, ';').withOptions({ shallow: false }))
 	const [inputs, setInputs] = useState(state)
@@ -31,6 +31,7 @@ const FilterEntity = ({data, name}: {data: string[], name: string}) => {
 	useEffect(() => {
 		let state = updateQuery()
 		setQuery(state)
+		setOffset(1)
 	}, [inputs])
 	
 		

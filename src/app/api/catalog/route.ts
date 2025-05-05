@@ -6,8 +6,7 @@ import { NextRequest } from 'next/server'
 export async function GET(request: NextRequest) {
 		const {Tsquery} = require('pg-tsquery');
 		const parser = new Tsquery();
-		console.log(parser.parse('Товар 31').toString())
-
+	
 		const searchParams = request.nextUrl.searchParams
 		const search = searchParams.get('search') as string
 		const offset = searchParams.get('offset') as string
@@ -19,7 +18,7 @@ export async function GET(request: NextRequest) {
 		const skip = ( +offset - 1) * 12
 		const take = 12
 		const where: any = {}
-		console.log(search)
+
 		if(search){
 			where.OR = [
 				{name: {
@@ -64,7 +63,7 @@ export async function GET(request: NextRequest) {
 			}
 	);
 		const { data } = await ValidateProductsDbSchema.safeParseAsync(products)
-		const productsCount = data?.length;
+		const productsCount = await prisma.shoppingCard.count()
 	
 		const result = {
 			success: {

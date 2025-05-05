@@ -10,8 +10,8 @@ export const CatalogPagination = ({productsCount}: Props) => {
 		const [offset, setOffset] = useQueryState('offset', parseAsInteger.withDefault(1).withOptions({shallow: false}))
 		const pagesCount = Math.ceil((productsCount || 12) / 12)
 		const paginationProps = {
-				containerClassName: `${s.ContainerClassName}`,
-				pageClassName: `${s.PageClassName}`,
+				containerClassName: s.ContainerClassName,
+				pageClassName: s.PageClassName,
 				pageLinkClassName: s.PageLinkClassName,
 				previousClassName: `catalog-pagination-prev ${s.BottomList__prev}`,
 				nextClassName: `catalog-pagination-next ${s.BottomList__next}`,
@@ -20,6 +20,8 @@ export const CatalogPagination = ({productsCount}: Props) => {
 				breakLabe: '...',
 				pageCount: pagesCount,
 				forcePage: offset - 1,
+				activeClassName: s.Active
+				
 		}
 
 		const handlePageChange = ({ selected }: { selected: number }) => {

@@ -53,13 +53,13 @@
 
     a {
       position: relative;
-      color: #E8E9EA;
+      color: var(--p-color);
       text-decoration: none;
       transition: color .2s ease-in-out;
       cursor: pointer;
 
       &::before {
-        background-color: #E8E9EA;
+        background-color: var(--p-color);
         content: '';
         height: 100%;
         width: 100%;
@@ -72,12 +72,12 @@
       }
 
       &:hover {
-        color: #9466FF;
+        color: var(--t-color);
         transition: color .2s ease-in-out;
       }
 
       &:hover::before {
-        background-color: #9466FF;
+        background-color: var(--t-color);
         transition: background-color .2s ease-in-out;
       }
     }
@@ -119,5 +119,12 @@
     justify-content: center;
     color: #E8E9EA;
     text-decoration: none;
+  }
+}
+
+.Active{
+  background-color: var(--t-color);
+  & > a {
+    color: #fff;
   }
 }

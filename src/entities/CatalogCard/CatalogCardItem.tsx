@@ -11,7 +11,7 @@ import s from './CatalogCardItem.module.scss'
 
 
 export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
-  let {id, name, price, images, categoryFilter, colorsFilter, colors, sizes, isNew, isBestseller, articleNumber, isInStock} = item;
+  let { id, name, price, images, categoryFilter, colorsFilter, colors, sizes, isNew, isBestseller, articleNumber, isInStock, adPrice } = item;
 
   const isImages =  Object.keys(images).length > 0
   const nameSlug = slug(name)     
@@ -66,9 +66,16 @@ export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
               vendorCode={articleNumber}
               isInStock = {isInStock}
             />
+            <div className={s.PriceBlock}>
             <span className={s.Price}>
               {formatPrice(firstPrice)} ₽
             </span>
+            {adPrice > 0 ? (
+               <span className={s.Adprice}>
+               {formatPrice(adPrice)} ₽
+             </span>
+            ) : null}
+            </div>
           </div>
             <button
               className={` ${s.Cart}`}
