@@ -1,16 +1,16 @@
-import styles from '@/styles/product-list-item/index.module.scss'
+import s from './ProductAvailable.module.scss'
 
 const ProductAvailable = ({ vendorCode, isInStock }: any) => {
   return (
-    <div className={styles.product}>
+    <div className={s.Product}>
       <span
-        className={`${styles.product__stock} ${
-          isInStock ? styles.product__stock__green : styles.product__stock__red
+        className={`${s.Stock} ${
+          isInStock ? s.Stock__green : s.Stock__red
         }`}
       >
         {isInStock ? 'В наличии' : 'Под заказ'}
       </span>
-      <span className={styles.product__code}>
+      <span className={s.Code}>
         Артикул
         .: {vendorCode}
       </span>

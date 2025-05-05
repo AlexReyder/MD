@@ -20,3 +20,14 @@
 			label:'Роль'
 		},
 	]
+
+	export const productTableColumns = [
+		{
+			column:'name',
+			label:'Название'
+		},
+		{
+			column:'articleNumber',
+			label:'Артикул'
+		},
+	]

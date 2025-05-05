@@ -1,4 +1,4 @@
-import styles from '@/styles/product/index.module.scss'
+import s from './Product.module.scss'
 
 interface Props{
 	isBestseller?: boolean
@@ -10,14 +10,14 @@ const ProductAttentionLabel = ({isBestseller, isNew}: Props) => {
 	return (
 		<>
 		{(isBestseller || isNew) && (
-            <div className={styles.product__top__label}>
+            <div className={s.ProductAvailableLabel}>
               {isNew && (
-                <span className={styles.product__top__label__new}>
+                <span className={s.ProductAvailableLabel__new}>
                   Новинка
                 </span>
               )}
               {isBestseller && (
-                <span className={styles.product__top__label__bestseller}>
+                <span className={s.ProductAvailableLabel__bestseller}>
                   Хит
                 </span>
               )}

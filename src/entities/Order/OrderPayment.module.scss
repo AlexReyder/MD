@@ -1,0 +1,55 @@
+.Payment {
+	padding: 24px;
+	padding-bottom: 0;
+
+	@media (max-width: 580px) {
+		padding: 16px;
+	}
+
+	@media (max-width: 400px) {
+		padding: 16px 0;
+	}
+
+	&__inner {
+		min-height: 249px;
+		margin-bottom: 40px;
+		padding-bottom: 24px;
+		border-bottom: 1px solid #2a323f;
+
+		@media (max-width: 580px) {
+			border-bottom: none;
+			padding-bottom: 0;
+			min-height: 212px;
+		}
+	}
+
+	&__content {
+		&__advice {
+			margin: 0;
+			margin-bottom: 24px;
+			color: #222;
+			line-height: 24px;
+
+			@media (max-width: 580px) {
+				font-size: 14px;
+				margin-bottom: 12px;
+			}
+
+			a {
+				text-decoration: none;
+				color: #9466FF;
+			}
+		}
+	}
+}
+
+.DeliveryInputBlock{
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+}
+.DeliveryPrice{
+	color: var(--g-color-1);
+	font-size: 1.6rem;
+	font-weight: 500;
+}

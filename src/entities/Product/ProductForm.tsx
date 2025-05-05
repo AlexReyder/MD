@@ -19,26 +19,33 @@ interface Props{
 	name: string
 	colors: string[],
 	sizes: string[],
-	price: string
+	price: Record <string, number>
 	images: any
 	details: any
-	material: string
+	material: string | null
 	articleNumber: string
+	oColors: any
 }
 type FormSchema = z.infer<typeof productFormSchema>
 
-const ProductForm = ({productId, name, price, images, colors, sizes, details, material, articleNumber}: Props) => {
+const ProductForm = ({productId, name, price, images, colors, sizes, details, material, articleNumber, oColors}: Props) => {
+
 		const [count, setCount] = useState(0)
 		const [inStock, setInStock] = useState(1)
+		const [colorError, setColorError] = useState('')
+		const [sizeError, setSizeError] = useState('')
+		const [quantityError, setQauntityError] = useState('')
 		const searchParams = useSearchParams()
 		const selectedColor = getQueryParamValue(searchParams, 'color') as string
 		const selectedSize = getQueryParamValue(searchParams, 'size') as string
+		const colorsArray = Object.keys(images)
+		const isImages = colorsArray.length > 0
+	console.log(oColors)
 		useEffect(()=>{
 			setCount(0)
 			if(selectedSize !== null) {
-				let index = details.findIndex((el) => Object.keys(el)[0] === selectedColor)
-				const totalCount = details[index][selectedColor][selectedSize]
-				setInStock(+totalCount)
+				const totalCount = details[selectedColor][selectedSize]
+				setInStock(totalCount)
 			}
 
 		},[selectedColor, selectedSize])
@@ -46,18 +53,33 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 		const {handleSubmit, formState:{ isSubmitting }} = useForm<FormSchema>()
 
 			async function onSubmit() {
-				if(inStock !== 0 ){
+				if(!selectedColor){
+					setColorError('Выберите цвет')
+				}
+
+				if(!selectedSize){
+					setSizeError('Выберите размер')
+				}
+
+				if(count === 0) {
+					setQauntityError('Выберите количество')
+				}
+
+				if(inStock !== 0 && count !== 0 && selectedColor && selectedSize){
 					const data = {
 						productId,
 						name,
-						price: `${price}`,
-						image:images[selectedColor][0].url,
-						color: selectedColor,
+						price: price[selectedSize],
+						image: isImages ? images[selectedColor]["overviews"][0].url : '/img/no-image.png',
+						color: oColors.filter((el: any) => el.value === selectedColor)[0].label,
 						// color:  matchColor(colors, getColor),
 						size: selectedSize,
-						quantity: `${count}`
+						quantity: count
 					}
 					const cart = await addProductToCart(data)
+					setColorError('')
+					setSizeError('')
+					setQauntityError('')
 				} else {
 					const data = {
 						productId,
@@ -75,9 +97,9 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 
 	return (
 		<Form action={handleSubmit(onSubmit)}>
-			<ProductFiltersLabel label='Материал' selected={material}/>
-			<ProductColor colors={colors} images={images}/>
-			<ProductSize sizes={sizes} details={details}/>
+			{material ? <ProductFiltersLabel label='Материал' selected={material}/> : null}
+			<ProductColor colors={colors} images={images} error={colorError}/>
+			<ProductSize sizes={sizes} details={details} error={sizeError}/>
 			{
 				inStock !== 0 ? (
 					<div>
@@ -88,6 +110,9 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 									totalCount={inStock}
 									setCount={setCount}
 								/>
+								{quantityError ? (
+												<p className={s.ErrorProductMessage}>{quantityError}</p>
+											) : null}
 								<AddToCartBtn		className={s.AddToCart}
 																text='В корзину'
 																handleAddToCart={() => {}}

@@ -106,13 +106,6 @@ export function FileUploader(props: FileUploaderProps) {
   const [previews, setPreviews] = useState([])
   const [isPending, startTransition] = useTransition();
   
-  // useEffect(() => {
-  //   if(files.hasOwnProperty(diff)){
-  //     console.log(previews)
-  //     setPreviews(files[diff])
-  //   }
-  // }, [files[diff], files[diff]?.length, props.diff,])
-
   const onDrop = async (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFiles === 1 && acceptedFiles.length > 1) {
         toast.error('Cannot upload more than 1 file at a time');
@@ -129,7 +122,13 @@ export function FileUploader(props: FileUploaderProps) {
       const data = JSON.parse(dataServer)
       const prevState = props.value;
       if(prevState.hasOwnProperty(diff)){
-        prevState[diff] = prevState[diff].concat(data.output[diff])
+        for(let prop in data.output[diff]){
+          if(prevState[diff].hasOwnProperty(prop)){
+            prevState[diff][prop] = prevState[diff][prop].concat(data.output[diff][prop])
+          } else {
+            prevState[diff][prop] = data.output[diff][prop]
+          }
+        }
       } else {
         prevState[diff] = data.output[diff]
       }
@@ -139,12 +138,19 @@ export function FileUploader(props: FileUploaderProps) {
       });  
     }
 
-  async function onRemove(file: IUploadedFile) {
+  async function onRemove(file: IUploadedFile, color) {
     if (!files) return;
-    await deleteFile(file)
-    const remainField = files[diff].filter((f, i) => JSON.stringify(f) !== JSON.stringify(file));
+    const filesz = [file.name];
+    const findIndex = files[color].thumbnails.findIndex((el) => el.name === file.name )
+    filesz.push(files[color].overviews[findIndex].name)
+    filesz.push(files[color].originals[findIndex].name)
+    await Promise.all( filesz.map(async(file) => {
+      await deleteFile(file)
+    }))
     const copyPrevState = JSON.parse(JSON.stringify(files));
-    copyPrevState[diff] = remainField;
+    copyPrevState[color].thumbnails.splice(findIndex, 1)
+    copyPrevState[color].originals.splice(findIndex, 1)
+    copyPrevState[color].overviews.splice(findIndex, 1)
 
     setFiles(copyPrevState);
     onValueChange?.(copyPrevState)
@@ -212,11 +218,11 @@ export function FileUploader(props: FileUploaderProps) {
       {files.hasOwnProperty(diff) ? (
         // <ScrollArea className='h-fit w-full px-3'>
           <div className='max-h-48  flex flex-wrap gap-8 items-center'>
-            {files[diff].map((file, index) => (
+            {files[diff].thumbnails.map((file, index) => (
               <FileCard
                 key={index}
                 file={file}
-                onRemove={() => onRemove(file)}
+                onRemove={() => onRemove(file, diff)}
               />
             )) }
           </div>

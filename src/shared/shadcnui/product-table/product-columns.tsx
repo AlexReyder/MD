@@ -27,7 +27,20 @@ export const columns: ColumnDef<ProductsDb>[] = [
       const name= row.original.name
       return <LongText className='max-w-36'>{name}</LongText>
     },
-    
+    enableSorting: false,
+    meta: { className: 'w-36' },
+  },
+  {
+    accessorKey:'articleNumber',
+    id: 'articleNumber',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Артикул' />
+    ),
+    cell: ({ row }) => {
+      const name= row.original.articleNumber
+      return <LongText className='max-w-36'>{name}</LongText>
+    },
+    enableSorting: false,
     meta: { className: 'w-36' },
   },
   {
@@ -43,7 +56,6 @@ export const columns: ColumnDef<ProductsDb>[] = [
     meta: { className: 'w-36' },
   },
   {
-    accessorKey:'category',
     id: 'category',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Категория' />
@@ -73,7 +85,7 @@ export const columns: ColumnDef<ProductsDb>[] = [
     ),
     cell: ({ row }) => {
       const price = row.original.price
-      return <LongText className='max-w-36'>{price}</LongText>
+      return <LongText className='max-w-36'>{JSON.stringify(price)}</LongText>
     },
     meta: { className: 'w-36' },  
   },
@@ -109,7 +121,7 @@ export const columns: ColumnDef<ProductsDb>[] = [
       <DataTableColumnHeader column={column} title='Производитель' />
     ),
     cell: ({ row }) => {
-      const manufacturer = row.original.manufacturer[0].label
+      const manufacturer = row.original.manufacturer.length > 0 ? row.original.manufacturer[0].label : ''
       return <LongText className='max-w-36'>{manufacturer}</LongText>
     },
     meta: { className: 'w-36' },  
@@ -146,7 +158,7 @@ export const columns: ColumnDef<ProductsDb>[] = [
       <DataTableColumnHeader column={column} title='Материал' />
     ),
     cell: ({ row }) => {
-      const material = row.original.material[0].label
+      const material = row.original.material.length > 0 ? row.original.material[0].label : ''
       return <LongText className='max-w-36'>{material}</LongText>
     },
     meta: { className: 'w-36' },  
@@ -157,7 +169,7 @@ export const columns: ColumnDef<ProductsDb>[] = [
       <DataTableColumnHeader column={column} title='Принт' />
     ),
     cell: ({ row }) => {
-      const print = row.original.print[0].label
+      const print = row.original.print.length > 0 ? row.original.print[0].label : ''
       return <LongText className='max-w-36'>{print}</LongText>
     },
     meta: { className: 'w-36' },  

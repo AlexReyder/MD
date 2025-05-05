@@ -4,6 +4,7 @@ import { ProductsDbAdd } from '@/shared/types/validation/products'
 import { revalidatePath } from 'next/cache'
 import slug from 'slug'
 import { prisma } from '../prismaInstance'
+import { deleteFiles } from './upload'
 
 export async function getAvailableSpecsAndFilters(){
 	const categories = await prisma.category.findMany()
@@ -60,8 +61,8 @@ export async function addProduct(data: ProductsDbAdd){
 				isInStock: true,
 				articleNumber: data.articleNumber,
 				description: data.description,
-				price: +data.price,
-				adPrice: +data.adPrice,
+				price: data.price,
+				adPrice: data.adPrice,
 				category: data.category,
 				images: data.images,
 				details: data.details,
@@ -92,8 +93,8 @@ export async function addProduct(data: ProductsDbAdd){
 				isInStock: true,
 				articleNumber: data.articleNumber,
 				description: data.description,
-				price: +data.price,
-				adPrice: +data.adPrice,
+				price: data.price,
+				adPrice: data.adPrice,
 				category: data.category,
 				images: data.images,
 				details: data.details,
@@ -132,7 +133,24 @@ export async function addProduct(data: ProductsDbAdd){
 
 
 export async function removeProduct(id: string){
-	try{
+	try {
+		const product = await prisma.shoppingCard.findFirst({
+			where: {
+				id
+			}
+		})
+		if(!product) {
+			return {
+				success: null,
+				error: 'NOT FOUND'
+			}
+		}
+		const productImages = product.images as Record<string, []>
+		const images: string[] = []
+		for(let color in productImages){
+			productImages[color].forEach((item: any) => images.push(item.url))
+		}
+		await deleteFiles(images)
 		const deletedProduct = await prisma.shoppingCard.delete({where:{id}})
 		revalidatePath('/admin/products')
 		return {

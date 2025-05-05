@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import slug from 'slug'
 import s from './Product.module.scss'
 
-const ProductColorsItem = ({color, image, selectedColor}: {color: string, image: string, selectedColor: string | null}) => {
+const ProductColorsItem = ({color, image, selectedColor}: {color: string, image: string | null, selectedColor: string | null}) => {
 
 	const colorSlug = slug(color)
 	const searchParams = useSearchParams()
@@ -20,7 +20,7 @@ const ProductColorsItem = ({color, image, selectedColor}: {color: string, image:
 
 	return (
 		<button onClick={handle} type='button' className={`${s.ColorFilter} ${colorSlug === selectedColor ? s.ColorFilter__selected : ''}`}>
-			<Image src={image} alt={color} fill style={{objectFit:'cover'}}/>
+			{image ? (<Image src={image} alt={color} fill style={{objectFit:'cover'}}/>) : (<span>{color[0]}</span>)}
 		</button>
 	)
 }

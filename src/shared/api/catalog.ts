@@ -1,5 +1,6 @@
 "use server"
 import { ValidateProductsDbAdd } from '../types/validation/products'
+import { gResponse } from '../utils/common'
 import { prisma } from './prismaInstance'
 
 
@@ -41,57 +42,23 @@ export async function getAllProducts(selected: number = 1){
 // 	}
 // }
 
-export async function getOneProduct(productId: string,){
-	const product = await prisma.shoppingCard.findFirst({where:{slug:productId}})
+export async function getOneProduct(productId: string){
+	try {
 
-	if(!product) return {
-		success: null,
-		error: 'Товар не найден'
+		const product = await prisma.shoppingCard.findFirst({where:{slug:productId}})
+
+		if(!product) return {
+			success: null,
+			error: 'Товар не найден'
+		}
+
+		return gResponse(product, null)
+
+	} catch(e) {
+		return gResponse(null, e as  string)
 	}
 
-	return {
-		success: product,
-		error: null
-	}
+
 }
 
-// export async function getHeroBanners(){
-// 	const banners = await prisma.banner.findMany();
-// 	if(banners){
-// 		return {
-// 			success: banners,
-// 			error: null
-// 		}
-// 	}
-// 	return {
-// 		success:null,
-// 		error: 'EMPTY'
-// 	}
-// }
 
-// export async function getProductsByIsBestseller(){
-// 	const products = await prisma.shoppingCard.findMany({where:{isBestseller: true}});
-// 	if(products){
-// 		return {
-// 			success: products,
-// 			error: null
-// 		}
-// 	}
-// 	return {
-// 		success:null,
-// 		error: 'EMPTY'
-// 	}
-// }
-// export async function getProductsByIsNew(){
-// 	const products = await prisma.shoppingCard.findMany({where:{isNew: true}});
-// 	if(products){
-// 		return {
-// 			success: products,
-// 			error: null
-// 		}
-// 	}
-// 	return {
-// 		success:null,
-// 		error: 'EMPTY'
-// 	}
-// }

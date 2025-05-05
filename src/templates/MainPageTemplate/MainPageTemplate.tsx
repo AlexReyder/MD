@@ -1,7 +1,7 @@
-import { AdvantagesSection } from './AdvantagesSection'
-import { CarouselSection } from './BestsellersSection'
-import { HeroSection } from './HeroSection'
+import { AdvantagesSection } from './Sections/AdvantagesSection/AdvantagesSection'
 import CatalogSection from './Sections/CatalogSection/CatalogSection'
+import { FiltredProductsSection } from './Sections/FiltredProductsSection/FiltredProductsSection'
+import { HeroSection } from './Sections/HeroSection/HeroSection'
 
 export async function MainPageTemplate(){
 		const bannersData = await fetch(`${process.env.SITE_DOMAIN}/api/hero/getBanners`)
@@ -12,12 +12,25 @@ export async function MainPageTemplate(){
 
 		const newsData = await fetch(`${process.env.SITE_DOMAIN}/api/hero/getNew`)
 		const news = await newsData.json()
+
 	return(
 		<>
+		{
+			bannersData.ok ? 
 			<HeroSection data={banners}/>
+			: null	
+		}
 			<CatalogSection/>
-			<CarouselSection title='Новинки' data={news}/>
-			<CarouselSection title='Хиты' data={bestsellers}/>
+		{
+			bestsellersData.ok ? 
+			<FiltredProductsSection title='Новинки' data={news}/>
+			: null
+		}
+		{
+			newsData.ok ? 
+			<FiltredProductsSection title='Хиты' data={bestsellers}/>
+			: null
+		}
 			<AdvantagesSection title='Нас выбирают'/>
 		</>
 	)

@@ -29,11 +29,11 @@ export const recoveryEmail = z.object({
 export const productFormSchema = z.object({
   productId: z.string(),
   name: z.string(),
-  price: z.string(),
+  price: z.number(),
   image: z.string(),
   color: z.string(),
   size: z.string(),
-  quantity: z.string(),
+  quantity: z.number(),
 })
 
 // type PaymentType = 'TRANSFER' | 'DEFFERED'

@@ -6,7 +6,9 @@ import s from './Product.module.scss'
 import ProductColorsItem from './ProductColorsItem'
 import ProductFiltersLabel from './ProductFiltersLabel'
 
-const ProductColor = ( {colors, images}: {colors: string[], images: any}) => {
+const ProductColor = ( {colors, images, error}: {colors: string[], images: any, error: string}) => {
+	const colorsArray = Object.keys(images)
+  const isImages = colorsArray.length > 0
 	const searchParams = useSearchParams()
 	const getColor = getQueryParamValue(searchParams, 'color') as string
 	const selectedColor = getColor ? matchColor(colors, getColor): 'Не выбран'
@@ -19,12 +21,15 @@ const ProductColor = ( {colors, images}: {colors: string[], images: any}) => {
 								colors.map((color: string, i: number) => 
 									{
 										return(
-											<ProductColorsItem color={color} selectedColor={getColor} key={i} image={images[slug(color)][0].url}/>
+											<ProductColorsItem color={color} selectedColor={getColor} key={i} image={isImages ? images[slug(color)]["thumbnails"][0].url : null}/>
 												)
 									}
 							)}
 			</div>
 			)}
+			{error ? (
+				<p className={s.ErrorProductMessage}>{error}</p>
+			) : null}
 		</div>
   )
 }

@@ -13,20 +13,22 @@ import s from './CatalogCardItem.module.scss'
 export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
   let {id, name, price, images, categoryFilter, colorsFilter, colors, sizes, isNew, isBestseller, articleNumber, isInStock} = item;
 
+  const isImages =  Object.keys(images).length > 0
   const nameSlug = slug(name)     
   const categoryName = categoryFilter[0]
   const firstColor = colorsFilter[0]
-  const previewImage = images[firstColor][0].url
+  const previewImage = isImages ? images[firstColor]["overviews"][0].url : '/img/no-image.png'
+  const firstPrice = price[sizes[0].label]
 
   async function onSubmit() {
           const data = {
             productId: id,
             name,
-            price: `${price}`,
+            price: price[sizes[0].label],
             color: colors[0].label,
             size: sizes[0].label,
             image: previewImage,
-            quantity: '1'
+            quantity: 1
           }
           await addProductToCart(data)
         }
@@ -65,7 +67,7 @@ export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
               isInStock = {isInStock}
             />
             <span className={s.Price}>
-              {formatPrice(+price)} ₽
+              {formatPrice(firstPrice)} ₽
             </span>
           </div>
             <button

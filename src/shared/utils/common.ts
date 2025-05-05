@@ -1,7 +1,7 @@
 import { BonusType } from '@prisma/client'
 
 
-export function gResponse(success: [] | {} | null, error: string | null){
+export function gResponse(success: any, error: any){
 	return {
 		success,
 		error
@@ -113,4 +113,25 @@ export  function calculateBonusDiscount(total: number, status: BonusType, minus:
   }
 
   return discount;
+}
+
+
+export function addProps(obj, arr, val) {
+
+  if (typeof arr == 'string')
+      arr = arr.split(".");
+
+  obj[arr[0]] = obj[arr[0]] || {};
+
+  var tmpObj = obj[arr[0]];
+
+  if (arr.length > 1) {
+      arr.shift();
+      addProps(tmpObj, arr, val);
+  }
+  else
+      obj[arr[0]] = val;
+
+  return obj;
+
 }

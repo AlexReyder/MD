@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation'
 import s from './Product.module.scss'
 import ProductFiltersLabel from './ProductFiltersLabel'
 import ProductSizesItem from './ProductSizesItem'
-const ProductSize = ({sizes, details}: {sizes: string[], details: any}) => {
+const ProductSize = ({sizes, details, error}: {sizes: string[], details: any, error: string}) => {
 		const searchParams = useSearchParams()
 		const selectedColor = getQueryParamValue(searchParams, 'color')
 		const selectedSize = getQueryParamValue(searchParams, 'size')
@@ -28,18 +28,21 @@ const ProductSize = ({sizes, details}: {sizes: string[], details: any}) => {
 						</ul>
 					</>
 				)}
+					{error ? (
+				<p className={s.ErrorProductMessage}>{error}</p>
+			) : null}
 		</div>
 	)
 }
 export default ProductSize
 
 export function checkIfInStock(
-	stock: any[], 
+	stock: any, 
 	selectedColor: string | null, 
 	currentSize : string){
 	if(selectedColor === null){
 		return false
 	}
-		let index = stock.findIndex((el) => Object.keys(el)[0] === selectedColor)
-		return stock[index][selectedColor][currentSize] !== 0
+		// let index = stock.findIndex((el) => Object.keys(el)[0] === selectedColor)
+		return stock[selectedColor][currentSize] !== 0
 }

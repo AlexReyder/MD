@@ -1,6 +1,104 @@
+.ProductTitle{
+	margin: 0;
+	color: var(--p-color);
+	font-size: 42px;
+	font-weight: 700;
+	margin-bottom: 20px;
+	@media (max-width: 520px) {
+		font-size: 24px;
+		margin-bottom: 24px;
+	}
+}
+
+.ProductPriceBlock{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+
+	@media (max-width: 520px) {
+		margin-bottom: 24px;
+	}
+	&__adprice{
+		justify-content: flex-start;
+		gap: 2rem;
+	}
+}
+
+.ProductPrice{
+	margin: 0;
+	color: var(--t-color);
+	font-size: 32px;
+	font-weight: 500;
+	margin-bottom: 0;
+
+	@media (max-width: 520px) {
+		font-size: 28px;
+	}
+}
+
+.ProductAdprice{
+	margin: 0;
+	color: var(--g-color-1);
+	font-size: 32px;
+	font-weight: 500;
+	margin-bottom: 0;
+	text-decoration:line-through;
+	@media (max-width: 520px) {
+		font-size: 28px;
+	}
+}
+
+.ProductAvailable{
+	margin-bottom: 26px;
+
+	@media (max-width: 520px) {
+		margin-bottom: 16px;
+
+		span {
+			font-size: 10px;
+		}
+	}
+}
+
+.ProductAvailableLabel{
+
+		margin-bottom: 16px;
+
+		span {
+			text-align: center;
+			font-size: 14px;
+			font-weight: 500;
+			padding: 2px 8px;
+		}
+
+		&__new, &__bestseller {
+			color: #FFF;
+		}
+
+		&__new {
+			margin-right: 8px;
+			background-color: #FF5E2D;
+		}
+
+		&__bestseller {
+			background-color: #16D9A6;
+		}
+	
+}
+
 .ProductFilterHeadings{
 	margin-bottom: 1rem;
 }
+
+
+.ErrorProductMessage{
+	color: red;
+	font-weight: 600;
+	margin-bottom: 1.5rem;
+}
+
+
 .FiltersList{
 	display: flex;
 	align-items: center;
@@ -87,6 +185,12 @@
 	}
 	&__selected{
 	border: 2px solid var(--t-color);
+	}
+	& > span{
+		font-size: 1.6rem;
+		font-weight: 700;
+		text-align: center;
+		width: 100%;
 	}
 }
 

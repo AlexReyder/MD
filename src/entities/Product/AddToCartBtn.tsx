@@ -1,4 +1,3 @@
-import { IAddToCartBtnProps } from '@/shared/types/goods'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -8,7 +7,7 @@ const AddToCartBtn = ({
   text,
   btnDisabled = false,
   className,
-}: IAddToCartBtnProps) => (
+}) => (
   <button
     className={`${className}`}
     disabled={btnDisabled}

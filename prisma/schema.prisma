@@ -197,8 +197,7 @@ model ShoppingCard {
   articleNumber      String         @unique @map("article_number")
   description        String?
   adPrice            Int
-  price              Int
-  images             Json
+  price              Json
   details            Json
   category           Json[]
   categoryFilter     String[]
@@ -220,6 +219,7 @@ model ShoppingCard {
   countryFilter      String[]
   CategoryTable      Category[]
   ManufacturerTable  Manufacturer[]
+  images             Json
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
 
@@ -311,4 +311,14 @@ model AdLineInfo {
   updatedAt DateTime @updatedAt
 
   @@map("ad_line_info")
+}
+
+model DeliveryPrice {
+  id        String       @id @default(uuid())
+  deliver   DeliveryType
+  price     String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("delivery_price")
 }

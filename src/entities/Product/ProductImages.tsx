@@ -10,19 +10,18 @@ import { Gallery, Item } from 'react-photoswipe-gallery'
 import s from './ProductSlider.module.scss'
 
 
-const ProductImages = ({images, className}: {images:any, className: string}) => {
-  const [activeThumb, setActiveThumb] = useState()
+const ProductImages = ({images, className}: {images: any, className: string}) => {
+  const colorsArray = Object.keys(images)
+  const isImages = colorsArray.length > 0
 	const searchParams = useSearchParams()
 	const colorFromUrl = getQueryParamValue(searchParams, 'color') as string
-  const color = colorFromUrl ? colorFromUrl : 'chernyj';
-  // const slides = images[color].length;
+  const color = colorFromUrl ? colorFromUrl : colorsArray[0];
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel()
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
       containScroll: 'keepSnaps',
       dragFree: true
     })
-
 
     const onThumbClick = useCallback(
         (index: number) => {
@@ -32,13 +31,13 @@ const ProductImages = ({images, className}: {images:any, className: string}) => 
         [emblaMainApi, emblaThumbsApi]
       )
     
-      const onSelect = useCallback(() => {
+    const onSelect = useCallback(() => {
         if (!emblaMainApi || !emblaThumbsApi) return
         setSelectedIndex(emblaMainApi.selectedScrollSnap())
         emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap())
       }, [emblaMainApi, emblaThumbsApi, setSelectedIndex])
     
-      useEffect(() => {
+    useEffect(() => {
         if (!emblaMainApi) return
         onSelect()
     
@@ -50,20 +49,21 @@ const ProductImages = ({images, className}: {images:any, className: string}) => 
 	return(
 
       <div className={`${s.embla} ${className}`}>
-        <div className="embla__viewport" ref={emblaMainRef}>
+        <div className={s.embla__viewport} ref={emblaMainRef}>
+          {isImages ? (
           <Gallery>
           <div className={s.embla__container}>
-            {images[color].map((item:IUploadedFile) => (
+            {images[color]["overviews"].map((item:IUploadedFile, i: number) => (
               <div className={s.Slide} key={item.url + 'overview'}>
                 <div className={s.SlideWrapper}>
                 <Item
-                  original={item.url}
+                  original={images[color]["originals"][i].url}
                   thumbnail={item.url}
-                  width={item.dimension.width}
-                  height={item.dimension.height}
+                  width={images[color]["originals"][i].dimension.width}
+                  height={images[color]["originals"][i].dimension.height}
                  >   
                   {({ ref, open }) => (
-                      <Image src={item.url} alt={item.url} fill 
+                      <Image src={item.url} alt={item.url} fill
                       style={{objectFit:'scale-down'}}
                       onClick={open}
                       ref={ref}
@@ -75,23 +75,30 @@ const ProductImages = ({images, className}: {images:any, className: string}) => 
             ))}
           </div>
           </Gallery>
+          ) : (
+            <Image src='/img/no-image.png' alt='Изображения не найдены' height={400} width={300} style={{objectFit:'contain'}}/>
+          )}
         </div>
-  
-        <div className="embla-thumbs">
-          <div className="embla-thumbs__viewport" ref={emblaThumbsRef}>
-            <div className={s.ThumbWrapper}>
-              {images[color].map((item: IUploadedFile, i: number) => (
-                <Thumb
-                  key={item.url}
-                  onClick={() => onThumbClick(i)}
-                  selected={i === selectedIndex}
-                  index={i}
-                  image={item.url}
-                />
-              ))}
+        {
+          isImages ? (
+            <div className="embla-thumbs">
+            <div className="embla-thumbs__viewport" ref={emblaThumbsRef}>
+              <div className={s.ThumbWrapper}>
+                {images[color]["thumbnails"].map((item: IUploadedFile, i: number) => (
+                  <Thumb
+                    key={item.url}
+                    onClick={() => onThumbClick(i)}
+                    selected={i === selectedIndex}
+                    index={i}
+                    image={item.url}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
+            </div>
+          ) : null
+        }
+
 
       </div>
 	)

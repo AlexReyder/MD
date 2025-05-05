@@ -42,7 +42,12 @@ const CartListItem = ({ item }: { item: CartItem }) => {
         <div
           className={`${s.Item__name} ${s.Item__block}`}
         >
-          {productId}
+          {name}
+        </div>
+        <div
+          className={`${s.Item__size} ${s.Item__block}`}
+        >
+          Цвет: {color}
         </div>
         <div
           className={`${s.Item__size} ${s.Item__block}`}

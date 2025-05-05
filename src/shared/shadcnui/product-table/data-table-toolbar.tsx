@@ -1,5 +1,5 @@
 "use client"
-import { userTableColumns } from '@/shared/constants/admin-tables'
+import { productTableColumns } from '@/shared/constants/admin-tables'
 import { Button } from "@/shared/shadcnui/ui/button"
 import {
   Command,
@@ -29,7 +29,7 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
 	const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState("")
-  const [value, setValue] = useState(userTableColumns[0].column)
+  const [value, setValue] = useState(productTableColumns[0].column)
   // (event) => table.getColumn(value)?.setFilterValue(event.target.value)
   const filterItems = (event:ChangeEvent<HTMLInputElement>) =>{
     setInputValue(event.target.value)
@@ -55,7 +55,7 @@ export function DataTableToolbar<TData>({
           className="w-[200px] lg:w-[250px] h-8 justify-between"
         >
           {value
-            ? userTableColumns.find((framework) => framework.column === value)?.label
+            ? productTableColumns.find((framework) => framework.column === value)?.label
             : "Выбрать фильтр"}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -65,7 +65,7 @@ export function DataTableToolbar<TData>({
           <CommandList>
             <CommandEmpty>Не выбрано.</CommandEmpty>
             <CommandGroup>
-              {userTableColumns.map((framework) => (
+              {productTableColumns.map((framework) => (
                 <CommandItem
                   key={framework.column}
                   value={framework.column}

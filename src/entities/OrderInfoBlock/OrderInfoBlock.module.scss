@@ -1,4 +1,7 @@
 .Inner{
+	background-color: #222;
+	// border-radius: 7px;
+	padding: 1rem;
 	p {
 		&:not(:last-child) {
 			margin-bottom: 12px;

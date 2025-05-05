@@ -12,7 +12,6 @@ import { bonusStatusAdminForm, UserProfileDTO } from '@/shared/types/user'
 import { BonusDb } from '@/shared/types/validation/bonus'
 import { CreateOrder, CreateOrderSchema } from '@/shared/types/validation/order'
 import { Form, Input, Section } from '@/shared/ui'
-import styles from '@/styles/order/index.module.scss'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DeliveryType, PaymentType } from '@prisma/client'
 import { useRouter } from 'next/navigation'
@@ -65,16 +64,16 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
 		<main>
 		<Section className={s.Order}>
         <Form className='container' action={handleSubmit(onSubmit)}>
-          <div className={styles.order__inner}>
-            <div className={styles.order__inner__left}>
-              <ul className={`list-reset ${styles.order__list}`}>
-                <li className={styles.order__list__item}>
+          <div className={s.Inner}>
+            <div>
+              <ul className={ s.OrdersList}>
+                <li className={s.OrdersItem}>
                   <OrderTitle
                     orderNumber='1'
                     text='Заказ'
                   />
                     <ul
-                      className={`list-reset ${styles.order__list__item__list}`}
+                      className={s.OrdersInnerList}
                     >
                       {cartData.map((item, i: number) => (
                         <OrderCartItem
@@ -86,33 +85,33 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
                     </ul>
 
                 </li>
-                <li className={`${styles.order__list__item} order-block`}>
+                <li className={s.OrdersItem}>
 								<OrderTitle
                     orderNumber='2'
                     text='Оплата'
                   />
 									 <OrderPayment register={register} />
                 </li>
-                <li className={styles.order__list__item}>
+                <li className={s.OrdersItem}>
                   <OrderTitle
                     orderNumber='3'
                     text='Доставка'
                   />
                   <OrderDelivery register={register}/>
                 </li>
-                <li className={`${styles.order__list__item} details-block`}>
+                <li className={s.OrdersItem}>
                   <OrderTitle
                     orderNumber='4'
                     text='Данные получателя'
                   />
-                  <div className={styles.order__list__item__details}>
-                    <p className={styles.order__list__item__details__title}>
-										Ввведите данные получателя заказа
+                  <div className={s.OrderDetails}>
+                    <p className={s.OrderDetailsTitle}>
+										Введите данные получателя заказа
                     </p>
                     <OrderDetailsForm register={register} errors={errors}/>
                   </div>
                 </li>
-								<li className={styles.order__list__item}>
+								<li className={s.OrdersItem}>
                   <OrderTitle
                     orderNumber='5'
                     text='Программа лояльности'
@@ -132,7 +131,7 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
                     <label className={s.BonusMinusLabel} htmlFor='minusBonusIn'>Списать бонусы:</label>
                     <Input id='minusBonusIn' registerName='bonusMinusAmount' register={register} errors={errors.name} type='number' placeholder='Списать бонусы' className={s.BonusMinus} min={0} max={bonusData.amount} />
                 </li>
-								<li className={styles.order__list__item}>
+								<li className={s.OrdersItem}>
                   <OrderTitle
                     orderNumber='6'
                     text='Промокод'
@@ -141,8 +140,8 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
                 </li>
               </ul>
             </div>
-            <div className={styles.order__inner__right}>
-              <div className={styles.order__inner__right__order}>
+            <div className={s.OrderMakeDetails}>
+              <div className={s.OrderMakeDetails__order}>
                 <OrderInfoBlock cartData={cartData} isOrderPage={true} bonus={bonuses} bonusType={bonusType}
                 promocode={promocodeValue} />
               </div>

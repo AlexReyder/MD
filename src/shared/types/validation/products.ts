@@ -1,5 +1,18 @@
 import { z } from 'zod'
 
+export const ProductsPricesSchema = z.record(z.string(), z.coerce.number().min(1, 'Обязательное поле'))
+
+export const ProductsDetailsSchema = z.record(z.string(), z.record(z.string(), z.coerce.number()))
+
+export const ProductImagesSchema = z.object({
+	id: z.string(),
+	productId: z.string(),
+	originals: z.string().array(),
+	overviews: z.string().array(),
+	thumbnails: z.string().array(),
+	preview: z.string(),
+})
+
 export const FiltersNSpecsDbSchema = z.object({
 	label: z.string(),
 	value: z.string()
@@ -31,9 +44,9 @@ export const ProductsDbSchema = z.object({
 	articleNumber: z.string(),
 	description: z.string(),
 	adPrice: z.coerce.number(),
-	price: z.coerce.number(),
+	price: ProductsPricesSchema,
 	images:z.any(),
-	details:z.any(),
+	details: ProductsDetailsSchema,
 	category: FiltersNSpecsDbSchema,
 	categoryFilter:z.string().array(),
 	bandFilter:z.string().array(),
@@ -70,10 +83,10 @@ export const ProductsDbAddSchema = z.object({
 				isInStock:z.boolean().default(true),
 				articleNumber:z.string().nonempty({message: 'Обязательно поле'}),
 				description:z.string().nonempty({message:'Обязательное поле.'}),
-				adPrice:z.coerce.number().min(1, {message: 'Обязательно поле'}),
-				price:z.coerce.number().min(1, {message: 'Обязательно поле'}),
-				images:z.any(),
-				details:z.any(),
+				adPrice:z.coerce.number(),
+				price: ProductsPricesSchema,
+				images: z.any(),
+				details:ProductsDetailsSchema,
 				categoryFilter:z.string().array(),
 				bandFilter:z.string().array(),
 				genreFilter:z.string().array(),
@@ -86,11 +99,11 @@ export const ProductsDbAddSchema = z.object({
 				category: FiltersNSpecsDbSchema.length(1,{message: 'Обязательно поле'}),
 				band:FiltersNSpecsDbSchema.min(1,{message: 'Обязательно поле'}),
 				genre:FiltersNSpecsDbSchema.min(1,{message: 'Обязательно поле'}),
-				manufacturer:z.any().array().length(1,{message: 'Обязательно поле'}),
+				manufacturer:z.any().array(),
 				colors:FiltersNSpecsDbSchema.min(1,{message: 'Обязательно поле'}),
 				sizes:FiltersNSpecsDbSchema.min(1,{message: 'Обязательно поле'}),
-				material: FiltersNSpecsDbSchema.min(1,{message: 'Обязательно поле'}),
-				print: FiltersNSpecsDbSchema.min(1,{message: 'Обязательно поле'}),
+				material: FiltersNSpecsDbSchema,
+				print: FiltersNSpecsDbSchema,
 				country: FiltersNSpecsDbSchema.min(1,{message: 'Обязательно поле'}),
 				labelAd: z.string().default('none'),
 })

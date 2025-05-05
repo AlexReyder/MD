@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 
 
 export default function AdminDashboardPage() {
-		// await testDb()
 		const tableDataRaw = getAllProducts()
 		const availableFS = getAvailableSpecsAndFilters()
 		return (

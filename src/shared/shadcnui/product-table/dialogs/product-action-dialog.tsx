@@ -23,10 +23,9 @@ import { Switch } from '@/shared/shadcnui/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/shadcnui/ui/tabs"
 import { Textarea } from '@/shared/shadcnui/ui/textarea'
 import { IImagesData } from '@/shared/types/file'
-import { ProductAdmin } from '@/shared/types/schemas'
-import { ProductsDb, ProductsDbAdd, ProductsDbAddSchema } from '@/shared/types/validation/products'
+import { FiltersNSpecDb, ProductsDb, ProductsDbAdd, ProductsDbAddSchema } from '@/shared/types/validation/products'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 import { useForm, UseFormReturn } from 'react-hook-form'
 import toast, { Toaster } from 'react-hot-toast'
 import slug from 'slug'
@@ -43,12 +42,22 @@ interface Props {
 
 export function ProductActionDialog({currentRow, open, onOpenChange, data}: Props) {
 	const isEdit = !!currentRow
-	const colorsDetails = isEdit ? currentRow.details: data.colors.map((color) => {return {[color.slug]:{}}});
 	const loadImages = isEdit ? currentRow.images : {}
-	const [details, setDetails] = useState(colorsDetails)
 	const [images, setImages] = useState<IImagesData | {}>(loadImages)
 	const labelAdState = currentRow?.isNew ? 'new' : currentRow?.isBestseller ? 'bestseller' : 'none'
 	const [labelAd, setLabelAd] = useState(labelAdState)
+	const [appropriateMaterial, setAppropriateMaterial] = useState<any>(undefined) 
+	const [appropriatePrint, setAppropriatePrint] = useState<any>(undefined) 
+	const [isPending, startTransition] = useTransition();
+
+	const createDefaultPrices = useCallback(() => {
+		return data.sizes.reduce((acc: any, cur: any) => ({ ...acc, [cur.name]: 0 }), {})
+	}, [])
+
+	const createDefaultDetails = useCallback(() => {
+		return data.colors.reduce((acc: any, cur: any) => ({...acc, [cur.slug]: createDefaultPrices()}), {})
+	}, [])
+
 	const form = useForm<ProductsDbAdd>({
 		resolver: zodResolver(ProductsDbAddSchema),
 		defaultValues: isEdit
@@ -63,9 +72,9 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 			articleNumber: '',
 			description: '',
 			adPrice: 0,
-			price: 0,
+			price: createDefaultPrices(),
 			images,
-			details,
+			details: createDefaultDetails(),
 			category:[],
 			band:[],
 			manufacturer:[],
@@ -86,21 +95,70 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 			countryFilter:[],
 		},
 	})
-	form.watch('manufacturer')
-	form.watch('colors')
-	form.watch('sizes')
-	form.watch('material')
-	form.watch('print')
 
+	const formColors = form.watch('colors')
+	const formSizes = form.watch('sizes')
+	const formDetails = form.watch('details')
+	console.log(form.getValues())
+	const formManufacturer = form.watch('manufacturer')
 
 	useEffect(() =>{
-			form.setValue('material', [{label:data.manufacturers[0].material.name, value:data.manufacturers[0].material.slug}])
-			form.setValue('print', [{label:data.manufacturers[0].print.name, value:data.manufacturers[0].print.slug}])
-			form.setValue('country', [{label:data.countries[0].name, value:data.countries[0].slug}])
-	},[])
+		const formValues = form.getValues()
+			if(formValues.country.length === 0){
+				form.setValue('country', [{label:data.countries[0].name, value:data.countries[0].slug}])
+			}
+
+			if(form.getValues().manufacturer.length > 0) {
+				const manufacturer = data.manufacturers.filter((manufacturer: any) => manufacturer.name === formManufacturer[0].label)
+				startTransition(() => {
+				setAppropriateMaterial(manufacturer[0].material)
+				setAppropriatePrint(manufacturer[0].print)
+				const getValues = form.getValues()
+				if(getValues.material.length === 0 && 
+					 getValues.print.length === 0  
+					//  getValues.country.length === 0
+					) {
+							form.setValue('material', [
+								{
+									label:manufacturer[0].material.name,
+									value:manufacturer[0].material.slug}
+							])
+			
+							form.setValue('print', [
+								{
+									label:manufacturer[0].print.name,
+									value:manufacturer[0].print.slug}
+							])
+			
+					 }
+				})
+			}
+
+			if(form.getValues().manufacturer.length === 0){
+				setAppropriateMaterial(undefined)
+				setAppropriatePrint(undefined)
+				form.setValue('material', [])
+				form.setValue('print', [])
+			}
+
+			if(form.getValues().sizes.length > 0){
+				startTransition(() => {
+					const nonZeroPrices = form.getValues().sizes.reduce((acc, cur) => ({ ...acc, [cur.label]: form.getValues().price?.[cur.label] ?? 0 }), {});
+					form.setValue('price', nonZeroPrices)
+				})
+			}
+
+			if( formValues.colors.length > 0 && formValues.sizes.length > 0) {
+				startTransition(() => {
+					const nonZeroDetails = form.getValues().colors.reduce((accColor, curColor) => ({ ...accColor, [slug(curColor.label)]: form.getValues().sizes.reduce((accSize, curSize) => ({ ...accSize, [curSize.label]: form.getValues().details?.[slug(curColor.label)]?.[curSize.label] ?? 0 }), {}) }), {});
+					form.setValue('details', nonZeroDetails)
+				})
+			}
+
+
+	},[formManufacturer, formColors, formSizes, formDetails])
 
 	const onSubmit = async (values: ProductsDbAdd) => {
-		values.details = details
 		values.images = images
 		values.labelAd = labelAd
 		values.categoryFilter = values.category.map((item) => item.value)
@@ -126,16 +184,6 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 	 onOpenChange(false)		
 	}
 
-	const setDataDetails = (e: any) => {
-		const color = e.target.attributes['data-color'].nodeValue;
-		const currentSize = e.target.name;
-		const currentSizeValue = e.target.value
-		const prevState = [...details];
-		const colorIndex = prevState.findIndex(obj => obj.hasOwnProperty(color));
-		prevState[colorIndex][color][currentSize] = currentSizeValue
-		setDetails(prevState);
-	}
-
 	return (
 		<>
 		<Dialog
@@ -145,11 +193,11 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 				onOpenChange(state)
 			}}
 		>
-			<DialogContent className='sm:max-w-5xl max-h-9/10 h-full'>
+			<DialogContent className='sm:max-w-19/20 max-w-19/20  h-19/20 overflow-y-auto'>
 				<DialogHeader className='text-left'>
 					<DialogTitle className="scroll-m-20 text-2xl font-semibold tracking-tight">{isEdit ? 'Изменить товар' : 'Добавить новый товар'}</DialogTitle>
 				</DialogHeader>
-				<div className='-mr-4 h-full w-full overflow-y-auto py-1 pr-4'>
+				<div className='-mr-4 h-full w-full  py-1 pr-4'>
 					<Form {...form}>
 						<form
 							id='product-form'
@@ -164,52 +212,67 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 							<ProductDescription form={form}/>
 							<ProductArticle form={form}/>
 							<ProductAdPrice form={form}/>
-							<ProductPrice form={form}/>
+							{/* <ProductPrice form={form}/> */}
 							<ProductLabelAd state={labelAd} setState={setLabelAd}/>
 
 							<h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left my-12">
 									Фильтры:
    						</h4>
-														<FormTemplateField name='category' form={form}data={data.categories} title='Категория' placeholder='Выберите категорию товара' isEdit={isEdit} maxSelected={1}/>
+							<FormTemplateField name='category' form={form}data={data.categories} title='Категория' placeholder='Выберите категорию товара' isEdit={isEdit} maxSelected={1}/>
 								
-														<FormTemplateField name='band' form={form} data={data.bands} title='Музыкальная группа' placeholder='Выберите музыкальную группу' isEdit={isEdit}/>
+							<FormTemplateField name='band' form={form} data={data.bands} title='Музыкальная группа' placeholder='Выберите музыкальную группу' isEdit={isEdit}/>
 
-														<FormTemplateField name='genre' form={form} data={data.genres} title='Музыкальный стиль' placeholder='Выберите музыкальный стиль' isEdit={isEdit}/>
+							<FormTemplateField name='genre' form={form} data={data.genres} title='Музыкальный стиль' placeholder='Выберите музыкальный стиль' isEdit={isEdit}/>
 
-														<FormTemplateField name='colors' form={form} data={data.colors} title='Доступные цвета' placeholder='Выберите доступные цвета' isEdit={isEdit}/>
+							<FormTemplateField name='colors' form={form} data={data.colors} title='Доступные цвета' placeholder='Выберите доступные цвета' isEdit={isEdit}/>
 
-														<FormTemplateField name='sizes' form={form} data={data.sizes} title='Доступные размеры' placeholder='Выберите доступные размеры' isEdit={isEdit}/>
+							<FormTemplateField name='sizes' form={form} data={data.sizes} title='Доступные размеры' placeholder='Выберите доступные размеры' isEdit={isEdit}/>
+							{
+								form.getValues().sizes.length > 0 && (
+									<>
+										<h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left my-12">
+										Стоимость:
+										</h4>
+										<ProductPrices form={form}/>
+									</>
+								)
+							}
+
 												
-								<h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left my-12">
+							<h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left my-12">
 									Спецификация:
-   							</h4>
+   						</h4>
 
-								 <FormTemplateField name='manufacturer' form={form} data={data.manufacturers} title='Производитель' placeholder='Выберите промзводителя' isEdit={isEdit} maxSelected={1}/>
+							<FormTemplateField name='manufacturer' form={form} data={data.manufacturers} title='Производитель' placeholder='Выберите промзводителя' isEdit={isEdit} maxSelected={1}/>
 
-								{form.getValues().manufacturer.length > 0 ? 
-										<FormTemplateField name='material' form={form} data={data.materials} title='Материал' placeholder='Выберите материал' isEdit={isEdit} maxSelected={1} defaultValue={ [{label:data.manufacturers[0].material.name, value:data.manufacturers[0].material.slug}]}/>
-										: <></>
+								{appropriateMaterial && (
+									<FormTemplateField name='material' form={form} data={data.materials} title='Материал' placeholder='Выберите материал' isEdit={isEdit} maxSelected={1} defaultValue={ [{label:appropriateMaterial?.name, value:appropriateMaterial?.slug}]}/>
+								)
+										
 								}
 								{
-									form.getValues().manufacturer.length > 0 && (
-										<FormTemplateField name='print' form={form} data={data.prints} title='Принт' placeholder='Выберите принт' isEdit={isEdit} maxSelected={1} defaultValue={ [{label:data.manufacturers[0].print.name, value:data.manufacturers[0].print.slug}]}/>
+									appropriatePrint && (
+										<FormTemplateField name='print' form={form} data={data.prints} title='Принт' placeholder='Выберите принт' isEdit={isEdit} maxSelected={1} defaultValue={ [{label:appropriatePrint?.name, value:appropriatePrint?.slug}]}/>
 									)
 								}
 
+								<FormTemplateField name='country' form={form} data={data.countries} title='Страна производства' placeholder='Выберите страну производства' isEdit={isEdit} maxSelected={1} defaultValue={isEdit ? form.getValues().country : [{label:data.countries[0].name, value:data.countries[0].slug}]}/>
+									
 								{
-									form.getValues().manufacturer.length > 0 && (
-										<FormTemplateField name='country' form={form} data={data.countries} title='Страна производства' placeholder='Выберите страну производства' isEdit={isEdit} maxSelected={1} defaultValue={isEdit ? form.getValues().country : [{label:data.countries[0].name, value:data.countries[0].slug}]}/>
-									)
+								form.getValues().colors.length > 0 && form.getValues().sizes.length > 0 ? (
+									<>
+										<h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left my-12">
+										Остатки:
+									</h4>
+										<ProductDetails form={form}/>
+										<h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left my-12">
+										Фотографии:
+									</h4>	
+									<ProductImages form={form} images={images} setImages={setImages}/>
+									</>
+								) : null
 								}
 
-								<h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left my-12">
-									Остатки:
-   							</h4>
-									<ProductDetails form={form} setDetails={setDataDetails} details={details}/>
-									<h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-left my-12">
-									Фотографии:
-   							</h4>	
-								<ProductImages form={form} images={images} setImages={setImages}/>
 						</form>
 					</Form>
 				</div>
@@ -235,7 +298,7 @@ interface FormTemplateFieldP{
 	title: string
 	placeholder: string
 	name: string
-	form: any
+	form: UseFormReturn<ProductsDbAdd, any, ProductsDbAdd>
 	data: any
 	isEdit: boolean
 	maxSelected?: number
@@ -245,7 +308,6 @@ interface FormTemplateFieldP{
 const FormTemplateField = ({form, name, data, title, placeholder, isEdit, maxSelected, defaultValue}: FormTemplateFieldP) => {
 	const valueDefault:any = defaultValue ? defaultValue : []
 	const items = data.map((item:any) => {return {label:item.name, value:item.slug}})
-
 
 	return(
 		<FormField
@@ -260,7 +322,8 @@ const FormTemplateField = ({form, name, data, title, placeholder, isEdit, maxSel
 					<div className='col-span-4'>
 				<MultipleSelector
 						{...field}
-						value={valueDefault.length > 0 ? valueDefault : field.value}
+						value={valueDefault.length > 0 ? !field.value ? valueDefault : field.value : field.value}
+						// value={valueDefault.length > 0 ? valueDefault : field.value}
 						onChange={(e) => {
 							field.onChange(e)
 						}}
@@ -384,33 +447,6 @@ const ProductAdPrice = (form: {form: any
 	/>
 	)
 }
-const ProductPrice = (form: {form: any
-}) => {
-	return (
-		<FormField
-		//@ts-ignore:next-lnie
-		control={form.control}
-		name='price'
-		render={({ field }) => (
-			<FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
-				<FormLabel className='col-span-2 text-right'>
-				 Цена товара со скидкой
-				</FormLabel>
-				<FormControl>
-					<Input
-						type='text'
-						placeholder='Цена товара со скидкой'
-						className='col-span-4'
-						autoComplete='off'
-						{...field}
-					/>
-				</FormControl>
-				<FormMessage className='col-span-4 col-start-3' />
-			</FormItem>
-		)}
-	/>
-	)
-}
 const ProductLabelAd = ({state,setState}:{state: any, setState:any
 }) => {
 	const onChange = (e) => {
@@ -465,52 +501,60 @@ const IsProductActive = (form: {form: any
 		/>
 	)
 }
-const ProductDetails = ({details, form, setDetails}: {form: UseFormReturn<ProductAdmin, any>, setDetails: any, details:any
+const ProductDetails = ({form}: {form:UseFormReturn<ProductsDbAdd, any, ProductsDbAdd>
 }) => {
 	const colorFields = form.getValues().colors;
 	const sizeFields = form.getValues().sizes;
-	const defValue = (color, size) =>{
-		const colorIndex = details.findIndex(obj => obj.hasOwnProperty(color));
-		const currentColor = details[colorIndex][color]
-		if(currentColor.hasOwnProperty(size)) return currentColor[size]
-		return ''
-	}
+	console.log(form.formState.errors.details)
 	return(
 		<Tabs  className="w-full">
-			<TabsList>
-				{colorFields.length > 0 ? colorFields.map((color) => <TabsTrigger value={color.value} key={color.value}>{color.label}</TabsTrigger>) : null}
+			<TabsList className='mb-4 border'>
+				{colorFields.length > 0 ? colorFields.map((color) => <TabsTrigger value={color.value} key={color.value} className='data-[state=active]:bg-black data-[state=active]:text-white'>{color.label} цвет</TabsTrigger>) : null}
 			</TabsList>
 			{colorFields.length > 0 ? colorFields.map((color) => <TabsContent value={color.value} key={color.label}>
 				{
 					sizeFields.map((size) => {
-						return(
-							<div key={size.value} className='col-span-6 flex gap-2 mb-2'>
-								<Label className='text-right font-bold' htmlFor={size.value}>{size.label}</Label>
-								<Input
-											type='text'
-											autoComplete='off'
-											data-color={slug(color.label)}
-											id={size.value}
-											name={size.label}
-											value={defValue(slug(color.label), size.label)}
-											onChange={setDetails}
-									/>
+						const currentSize = size.label
+						const currentColor = slug(color.label)
+						return (
+							<div key={size.value} className='grid grid-cols-6 items-baseline gap-x-4 gap-y-1 space-y-0'>
+								<Label className='text-right col-span-2' htmlFor={size.value}>Количество для <span className='font-bold'>{size.label}</span> размера:</Label>
+									<FormField 
+									control={form.control}
+									name={`details.${currentColor}.${currentSize}` as any}
+									render={({ field }) => (
+									<FormItem className='col-span-4 mb-4 flex flex-col'>
+											<FormControl>
+													<Input
+																type='text'
+																autoComplete='off'
+																{...field}
+														/>
+											</FormControl>	
+											<FormMessage className='col-span-4 col-start-3' />
+											</FormItem>
+												)}
+										>
+							</FormField>
+
 							</div>
 						)
 					})
 				}
 			</TabsContent>
 		) : null}
+		<span className='text-destructive text-sm '>{form.formState.errors.details ? 'Не все поля заполены' : ''}</span>
 	</Tabs>
 	)
 }
-	const ProductImages = ({form, images, setImages}: {form: UseFormReturn<ProductAdmin, any>, images:any, setImages: any
+const ProductImages = ({form, images, setImages}: {form: UseFormReturn<ProductsDbAdd, any, ProductsDbAdd>, images:any, setImages: any
 	}) =>{
 		const colorFields = form.getValues().colors;
+
 		return(
 			<Tabs className="w-full">
-			<TabsList>
-			{colorFields.length > 0 ? colorFields.map((color) => <TabsTrigger value={color.value} key={color.value}>{color.label}</TabsTrigger>) : null}
+			<TabsList className='mb-4 border'>
+			{colorFields.length > 0 ? colorFields.map((color) => <TabsTrigger value={color.value} key={color.value} className='data-[state=active]:bg-black data-[state=active]:text-white'>{color.label}</TabsTrigger>) : null}
 			</TabsList>
 			{colorFields.length > 0 ? colorFields.map((color) => <TabsContent value={color.value} key={color.label}>
 				<div>
@@ -527,4 +571,44 @@ const ProductDetails = ({details, form, setDetails}: {form: UseFormReturn<Produc
 
 	</Tabs>
 		)
-	}
+}
+
+const ProductPrices = 
+({form}: {form: UseFormReturn<ProductsDbAdd, any, ProductsDbAdd>}) =>{
+	const sizesFields = form.getValues().sizes;
+	const isSizesAvailable = sizesFields && sizesFields.length > 0
+	return(
+			<div>
+			{
+			isSizesAvailable ? 
+			( 
+				sizesFields.map((size: FiltersNSpecDb[0]) => 
+					<div key={size.value} className='grid grid-cols-6 items-baseline gap-x-4 gap-y-1 space-y-0'>
+							<Label className='text-right col-span-2' htmlFor={size.value}>
+												Цена для <span className='font-bold'>{size.label}</span> размера: 
+							</Label>
+							<FormField 
+									control={form.control}
+									name={`price.${size.label}` as any}
+									render={({ field }) => (
+									<FormItem className='col-span-4 mb-4 flex flex-col'>
+													<FormControl>
+															<Input
+																		type='text'
+																		autoComplete='off'
+																		{...field}
+																/>
+													</FormControl>	
+											<FormMessage className='col-span-4 col-start-3' />
+											</FormItem>
+												)}
+										>
+							</FormField>		
+					</div>
+			 )
+			)
+			: 
+			null}
+			</div>
+	)
+}

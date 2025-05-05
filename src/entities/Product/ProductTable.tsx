@@ -1,9 +1,10 @@
 import slug from 'slug'
 import s from './Product.module.scss'
-export const ProductTable = ({className, category, manufacturer}: {className: string, category: string, manufacturer: string}) =>{
+export const ProductTable = ({className, category, manufacturer}: {className: string, category: string, manufacturer: string | null}) =>{
 	const categorySlug = slug(category)
-	const manufacturerSlug = slug(manufacturer)
-	const showTable = categorySlug === 'futbolki' || categorySlug === 'lognslivy'
+	const manufacturerSlug = manufacturer ? slug(manufacturer) : ''
+	console.log(categorySlug)
+	console.log(manufacturerSlug)
 	return(
 		<>
 		{categorySlug !== 'flagi' && categorySlug !== 'nashivki' ? 

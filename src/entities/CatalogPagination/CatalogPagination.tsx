@@ -1,5 +1,4 @@
 "use client"
-import styles from '@/styles/catalog/index.module.scss'
 import { parseAsInteger, useQueryState } from 'nuqs'
 import ReactPaginate from 'react-paginate'
 import s from './CatalogPagination.module.scss'
@@ -14,10 +13,10 @@ export const CatalogPagination = ({productsCount}: Props) => {
 				containerClassName: `${s.ContainerClassName}`,
 				pageClassName: `${s.PageClassName}`,
 				pageLinkClassName: s.PageLinkClassName,
-				previousClassName: `catalog-pagination-prev ${styles.catalog__bottom__list__prev}`,
-				nextClassName: `catalog-pagination-next ${styles.catalog__bottom__list__next}`,
-				breakClassName: styles.catalog__bottom__list__break,
-				breakLinkClassName: styles.catalog__bottom__list__break__link,
+				previousClassName: `catalog-pagination-prev ${s.BottomList__prev}`,
+				nextClassName: `catalog-pagination-next ${s.BottomList__next}`,
+				breakClassName: s.Break,
+				breakLinkClassName: s.Break__link,
 				breakLabe: '...',
 				pageCount: pagesCount,
 				forcePage: offset - 1,
@@ -29,7 +28,7 @@ export const CatalogPagination = ({productsCount}: Props) => {
 		
 
 	return(
-		<div className={styles.catalog__bottom}>
+		<div className={s.Botton}>
 		<ReactPaginate
 			{...paginationProps}
 			nextLabel={<span>Дальше</span>}
