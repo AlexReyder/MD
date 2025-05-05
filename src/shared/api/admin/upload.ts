@@ -191,12 +191,25 @@ export async function getPresignedUrl(filename: string){
 				.then( async (img) => {
 					const dimension = imageSize(img.data)
 					const filename =  uuidv4() + '_original' + '.' + dimension.type
+					const presignedUrl = await getSignedUrl(
+						s3Client,
+							new PutObjectCommand({
+									Bucket: bucketName,
+									Key: filename,
+									ContentType:'image/jpeg'
+							}),
+							{ expiresIn: 60 },
+					);
+					await fetch(presignedUrl, {
+						method: "PUT",
+						body: img.data,
+					});
 
-					 await s3Client.send(new PutObjectCommand({
-						Bucket: bucketName,
-						Key: filename,
-						Body: img.data
-					}))
+					//  await s3Client.send(new PutObjectCommand({
+					// 	Bucket: bucketName,
+					// 	Key: filename,
+					// 	Body: img.data
+					// }))
 
 					const data = {
 						url: `https://s3.ru1.storage.beget.cloud/d3f71020d41d-tractable-seth/${filename}`,
@@ -224,11 +237,21 @@ export async function getPresignedUrl(filename: string){
 				.then( async (img) => {
 					const dimension = imageSize(img.data)
 					const filename =  uuidv4() + '_overview' + '.' + dimension.type
-					 await s3Client.send(new PutObjectCommand({
-						Bucket: bucketName,
-						Key: filename,
-						Body: img.data
-					}))
+
+					const presignedUrl = await getSignedUrl(
+						s3Client,
+							new PutObjectCommand({
+									Bucket: bucketName,
+									Key: filename,
+									ContentType:'image/jpeg'
+							}),
+							{ expiresIn: 60 },
+					);
+					await fetch(presignedUrl, {
+						method: "PUT",
+						body: img.data,
+					});
+
 					const data = {
 						url: `https://s3.ru1.storage.beget.cloud/d3f71020d41d-tractable-seth/${filename}`,
 						name: filename,
@@ -257,11 +280,21 @@ export async function getPresignedUrl(filename: string){
 				.then( async (img) => {
 					const dimension = imageSize(img.data)
 					const filename =  uuidv4() + '_thumbnail' + '.' + dimension.type
-					 await s3Client.send(new PutObjectCommand({
-						Bucket: bucketName,
-						Key: filename,
-						Body: img.data
-					}))
+
+						const presignedUrl = await getSignedUrl(
+						s3Client,
+							new PutObjectCommand({
+									Bucket: bucketName,
+									Key: filename,
+									ContentType:'image/jpeg'
+							}),
+							{ expiresIn: 60 },
+					);
+					await fetch(presignedUrl, {
+						method: "PUT",
+						body: img.data,
+					});
+
 					const data = {
 						url: `https://s3.ru1.storage.beget.cloud/d3f71020d41d-tractable-seth/${filename}`,
 						name: filename,
