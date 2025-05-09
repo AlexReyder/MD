@@ -3,6 +3,7 @@
 import { AdAdmin, adAdminSchema } from '@/shared/types/schemas'
 import { revalidatePath } from 'next/cache'
 import { prisma } from '../prismaInstance'
+import { removeAdBanner } from './upload'
 
 export async function getAds(){
 	try{
@@ -35,11 +36,13 @@ export async function upsertAd(unsafeData: AdAdmin){
 					alt: data.alt,
 					link: data.link,
 					url: data.url,
+					mobileUrl: data.mobileUrl,
 				},
 				update:{
 					alt: data.alt,
 					link: data.link,
 					url: data.url,
+					mobileUrl: data.mobileUrl,
 				}
 			})
 			revalidatePath('/admin/ads')
@@ -57,8 +60,10 @@ export async function upsertAd(unsafeData: AdAdmin){
 	
 }
 
-export async function deleteAd(id: string){
+export async function deleteAd(id: string, desktopUrl: string, mobileUrl: string){
 	try{
+		await removeAdBanner(desktopUrl)
+		await removeAdBanner(mobileUrl)
 		const ad = await prisma.banner.delete({where:{id}})
 		revalidatePath('/admin/ads')
 		return {

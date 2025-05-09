@@ -49,6 +49,15 @@ export const navItems: NavItem[] = [
     items: [] // No child items
   },
   {
+    title: 'Цены на доставку',
+    slug:'delivery',
+    url: '/admin/delivery-prices',
+    icon: 'delivery',
+    shortcut: ['p', 'p'],
+    isActive: false,
+    items: [] // No child items
+  },
+  {
     title: 'Фильтры',
     url: '#', // Placeholder as there is no direct link for the parent
     icon: 'filter',

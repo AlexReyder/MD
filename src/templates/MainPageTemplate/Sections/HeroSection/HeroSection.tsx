@@ -1,7 +1,6 @@
 "use client"
 import Autoplay from 'embla-carousel-autoplay'
 import useEmblaCarousel from 'embla-carousel-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useId } from 'react'
 import s from './HeroSection.module.scss'
@@ -20,7 +19,11 @@ export const HeroSection = ({data}: {data:any}) => {
 					<div className={s.embla__container}>
 						{data.success.map((item:any) => (
 							<div className={s.Slide} key={useId()}>
-								<Image src={item.url} alt={item.alt} fill style={{objectFit:'cover'}}/>
+								{/* <Image src={item.url} alt={item.alt} fill style={{objectFit:'cover'}}/> */}
+								 <picture>
+										<source media="(max-width: 900px)" srcSet={item.mobileUrl} />
+										<img src={item.url} style={{ width: '100%', height: 'auto', objectFit:'cover' }} alt={item.alt} />
+    						 </picture>
 								<Link href={item.link} className={s.Link}></Link>
 							</div>
 						))

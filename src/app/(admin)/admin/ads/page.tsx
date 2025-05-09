@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminAdsPage() {
-	const faqData = await getAds()
-	const data = AdListSchema.parse(faqData.success)
+	const bannersData = await getAds()
+	const data = AdListSchema.parse(bannersData.success)
 	return(
 			<>
-				{faqData.error === null ? 
+				{bannersData.error === null ? 
 					<AdProvider>
 								<Main>
 									<div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
@@ -27,7 +27,7 @@ export default async function AdminAdsPage() {
 															Баннеры
 														</h2>
 														<p className='text-muted-foreground'>
-															Управление баннером главной страницы.
+															Управление рекламным слайдером главной страницы.
 														</p>
 											</div>
 									<AdPrimaryButtons/>

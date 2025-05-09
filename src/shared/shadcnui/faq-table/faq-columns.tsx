@@ -32,6 +32,7 @@ export const columns: ColumnDef<FAQAdmin>[] = [
   
   {
     id: 'createdAt',
+    accessorKey: 'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Создан' />
     ),

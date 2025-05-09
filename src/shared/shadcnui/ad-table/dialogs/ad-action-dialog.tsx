@@ -31,7 +31,8 @@ const formSchema = z
     id: z.string(),
     alt: z.string().min(6, { message: 'Обязательное поле. Минимум 6 символов.' }),
     link: z.string().min(6, { message: 'Обязательное поле. Минимум 6 символов.' }),
-    url: z.string()
+    url: z.string(),
+    mobileUrl: z.string()
   })
 
 export type AdAdminForm = z.infer<typeof formSchema>
@@ -44,6 +45,7 @@ interface Props {
 
 export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
   const [image, setImage] = useState<string>(currentRow?.url ?? '')
+  const [imageMobile, setImageMobile] = useState<string>(currentRow?.mobileUrl ?? '')
   const isEdit = !!currentRow
   const form = useForm<AdAdminForm>({
     resolver: zodResolver(formSchema),
@@ -53,18 +55,20 @@ export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
 					alt: currentRow.alt,
 					link: currentRow.link,
 					url: currentRow.url,
-
+          mobileUrl: currentRow.mobileUrl
         }
       : {
           id: '',
           alt: '',
 					link: '',
 					url: '',
+          mobileUrl: ''
         },
   })
 
   const onSubmit = async (values: AdAdminForm) => {
       values.url = image
+      values.mobileUrl = imageMobile
       const {success, error} = await upsertAd(values)
       form.reset()
       const toastMessage = isEdit ? 'Баннер успешно изменен' : 'Баннер успешно добавлен'
@@ -74,6 +78,8 @@ export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
       if(error){
         toast.error('Произошла ошибка')
       }
+      setImage('')
+      setImageMobile('')
       onOpenChange(false)
   }
 
@@ -89,7 +95,7 @@ export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
         <DialogContent className='sm:max-w-lg'>
           <DialogHeader className='text-left'>
             <DialogTitle>
-              {isEdit? `Изменить ответ` : `Добавить ответ`}
+              {isEdit? `Изменить баннер` : `Добавить баннер`}
             </DialogTitle>
           </DialogHeader>
           <div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
@@ -105,7 +111,7 @@ export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
                   render={({ field }) => (
                     <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
                       <FormLabel className='col-span-2 text-right'>
-                       Заголовок
+                       Заголовок (SEO)
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -125,7 +131,7 @@ export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
                   render={({ field }) => (
                     <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
                       <FormLabel className='col-span-2 text-right'>
-                        Ссылка
+                        Ссылка на рекламу
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -139,7 +145,8 @@ export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
                     </FormItem>
                   )}
                   />
-                <AdsFileUploader value={image} onValueChange={setImage}/>
+                <AdsFileUploader value={image} onValueChange={setImage} text='декстопной версии'/>
+                <AdsFileUploader value={imageMobile} onValueChange={setImageMobile} text='мобильной версии'/>
 
               </form>
   

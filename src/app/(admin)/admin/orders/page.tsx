@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 
-export default async function AdminDashboardPage() {
+export default async function AdminOrdersPage() {
 	const ordersData = await getAllOrders()
 	const data = ValidateOrderDbSchema.parse(ordersData.success)
 

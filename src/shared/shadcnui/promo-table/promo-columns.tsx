@@ -5,6 +5,8 @@ import { DataTableRowActions } from '@/shared/shadcnui/promo-table/data-table-ro
 import { PromocodeDb } from '@/shared/types/validation/promocode'
 import { formatDate } from '@/shared/utils/common'
 import { ColumnDef } from '@tanstack/react-table'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale/ru'
 
 export const columns: ColumnDef<PromocodeDb>[] = [
   {
@@ -37,6 +39,18 @@ export const columns: ColumnDef<PromocodeDb>[] = [
     cell: ({ row }) => {
       const expiresAt= row.original.expiresAt
       return <p>{formatDate(expiresAt)}</p>
+    },
+    meta: { className: 'w-40' },
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'createdAt',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Дата создания' />
+    ),
+    cell: ({ row }) => {
+      const createdAt= row.original.createdAt
+      return <p>{format(createdAt,"d.MM.yyyy h:mm ", {locale: ru})}</p>
     },
     meta: { className: 'w-40' },
   },

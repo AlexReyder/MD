@@ -1,58 +1,21 @@
 import { removeAdBanner, uploadAdBanner } from '@/shared/api/admin/upload'
 import { cn } from '@/shared/utils'
 import { formatBytes } from '@/shared/utils/common'
-import { ScrollArea } from '@radix-ui/react-scroll-area'
 import { IconUpload, IconX } from '@tabler/icons-react'
 import Image from 'next/image'
 import { useCallback, useState } from 'react'
 import Dropzone, { DropzoneProps, FileRejection } from 'react-dropzone'
 import toast from 'react-hot-toast'
 import { Button } from '../ui/button'
+import { Label } from '../ui/label'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
-	/**
-	 * Value of the uploader.
-	 * @type File[]
-	 * @default undefined
-	 * @example value={files}
-	 */
 	value: string;
-
-	/**
-	 * Function to be called when the value changes.
-	 * @type React.Dispatch<React.SetStateAction<File[]>>
-	 * @default undefined
-	 * @example onValueChange={(files) => setFiles(files)}
-	 */
 	onValueChange?: React.Dispatch<React.SetStateAction<string>>;
-
-
-	/**
-	 * Accepted file types for the uploader.
-	 * @type { [key: string]: string[]}
-	 * @default
-	 * ```ts
-	 * { "image/*": [] }
-	 * ```
-	 * @example accept={["image/png", "image/jpeg"]}
-	 */
 	accept?: DropzoneProps['accept'];
-
-	/**
-	 * Maximum file size for the uploader.
-	 * @type number | undefined
-	 * @default 1024 * 1024 * 2 // 2MB
-	 * @example maxSize={1024 * 1024 * 2} // 2MB
-	 */
 	maxSize?: DropzoneProps['maxSize'];
-
-	/**
-	 * Maximum number of files for the uploader.
-	 * @type number | undefined
-	 * @default 1
-	 * @example maxFiles={5}
-	 */
 	maxFiles?: DropzoneProps['maxFiles'];
+	text: string,
 }
 
 export function AdsFileUploader(props: Props) {
@@ -63,6 +26,7 @@ export function AdsFileUploader(props: Props) {
     maxSize = 1024 * 1024 * 2,
     maxFiles = 1,
     className,
+		text,
     ...dropzoneProps
   } = props;
 
@@ -103,6 +67,8 @@ export function AdsFileUploader(props: Props) {
 
  return (
 		<div className='relative flex flex-col gap-6 overflow-hidden'>
+			{file === '' ?
+			(
 			<Dropzone
 			//@ts-ignore:next/line
 				onDrop={onDrop}
@@ -122,19 +88,6 @@ export function AdsFileUploader(props: Props) {
 						{...dropzoneProps}
 					>
 						<input {...getInputProps()} />
-						{isDragActive ? (
-							<div className='flex flex-col items-center justify-center gap-4 sm:px-5'>
-								<div className='rounded-full border border-dashed p-3'>
-									<IconUpload
-										className='text-muted-foreground size-7'
-										aria-hidden='true'
-									/>
-								</div>
-								<p className='text-muted-foreground font-medium'>
-									Перетащите файлы
-								</p>
-							</div>
-						) : (
 							<div className='flex flex-col items-center justify-center gap-4 sm:px-5'>
 								<div className='rounded-full border border-dashed p-3'>
 									<IconUpload
@@ -144,7 +97,9 @@ export function AdsFileUploader(props: Props) {
 								</div>
 								<div className='space-y-px'>
 									<p className='text-muted-foreground font-medium'>
-										Перетащите файлы сюда или нажмите чтобы выбрать
+										Перетащите файлы сюда или нажмите чтобы выбрать картинку для <span className='text-black font-bold'>
+											{text}
+										</span>
 									</p>
 									<p className='text-muted-foreground/70 text-sm'>
 										Вы можете загрузить до
@@ -155,20 +110,24 @@ export function AdsFileUploader(props: Props) {
 									</p>
 								</div>
 							</div>
-						)}
 					</div>
 				)}
 			</Dropzone>
+			)
+			: <></>}
+
+
 			{file ? (
-				<ScrollArea className='h-fit w-full px-3'>
-					<div className='max-h-48  flex flex-wrap gap-8 items-center'>
+					<div className='max-h-48  flex align-start gap-8 items-center'>
+							<Label className='text-right'>
+								Изображение {text}:
+							</Label>
 							<FileCard
 								key={0}
 								file={file}
 								onRemove={() => onRemove(file)}
 							/>
 					</div>
-				</ScrollArea>
 			) : null}
 		</div>
 	);
@@ -189,10 +148,11 @@ function FileCard({ file, onRemove }: FileCardProps) {
 								<Image
 									src={file}
 									alt={file}
-									width={48}
+									width={96}
 									height={48}
 									loading='lazy'
-									className='aspect-square shrink-0 rounded-md object-cover'
+									style={{objectFit:'contain'}}
+									className=' shrink-0 rounded-md object-cover'
 								/>
 						</div>
 						<div className='flex items-start gap-2 self-baseline'>

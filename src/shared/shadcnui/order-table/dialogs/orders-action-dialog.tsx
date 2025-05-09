@@ -24,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import toast, { Toaster } from 'react-hot-toast'
 import { SelectDropdown } from '../../select-dropdown'
+import { Textarea } from '../../ui/textarea'
 
 
 interface Props {
@@ -38,19 +39,20 @@ export function OrderUpdateDialog({ currentRow, open, onOpenChange }: Props) {
 		defaultValues: 
 				{
 					...currentRow,
-					trackNumber: currentRow?.trackNumber ?? ''
+					trackNumber: currentRow?.trackNumber ?? '',
+					mailTitle: '',
+					mailDescription: ''
 				}
 	})
-
-	const onSubmit = async (values: OrderDbUpdate) => {
-			const {success, error} = await updateOrder(values)
-
+	const onSubmit = async (values: OrderDbUpdate,) => {
+			const {success, error} = await updateOrder(values, currentRow?.User.email as string, currentRow?.userId as string, currentRow?.products as any[])
 			if(success){
 				toast.success('Заказ успешно обновлен!')
 			}
 			
 			if(error){
 				toast.error('Произошла ошибка')
+				console.log(error)
 			}
 
 			form.reset()
@@ -66,13 +68,13 @@ export function OrderUpdateDialog({ currentRow, open, onOpenChange }: Props) {
 					onOpenChange(state)
 				}}
 			>
-				<DialogContent className='sm:max-w-lg'>
+				<DialogContent className='sm:max-w-xl h-8/10 '>
 					<DialogHeader className='text-left'>
 						<DialogTitle>
 						Обновить заказ
 						</DialogTitle>
 					</DialogHeader>
-					<div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
+					<div className='w-full overflow-y-auto py-1 pr-4'>
 						<Form {...form}>
 							<form
 								id='order-form'
@@ -90,6 +92,26 @@ export function OrderUpdateDialog({ currentRow, open, onOpenChange }: Props) {
 											<FormControl>
 												<Input
 													placeholder='Трек-номер'
+													className='col-span-4'
+													autoComplete='off'
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage className='col-span-4 col-start-3' />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='deliveryPrice'
+									render={({ field }) => (
+										<FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
+											<FormLabel className='col-span-2 text-left'>
+											 Стоимость доставки
+											</FormLabel>
+											<FormControl>
+												<Input
+													placeholder='Стоимость доставки'
 													className='col-span-4'
 													autoComplete='off'
 													{...field}
@@ -123,6 +145,52 @@ export function OrderUpdateDialog({ currentRow, open, onOpenChange }: Props) {
 										</FormItem>
 									)}
 								/>
+								<h4 className="text-lg font-semibold text-left mt-10">
+									Отправить уведомление на почту при изменении статуса
+   							</h4>
+								 <p className='text-muted-foreground'>
+										Вы можете оставить поля ниже пустыми, тогда сообщение не отправится на почту клиенту.
+									</p>
+									 <FormField
+										control={form.control}
+																	name='mailTitle'
+																	render={({ field }) => (
+																		<FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
+																			<FormLabel className='col-span-2 text-left'>
+																				Заголовок письма
+																			</FormLabel>
+																			<FormControl>
+																				<Input
+																					placeholder='Укажите заголовок письма'
+																					type='text'
+																					className='col-span-4'
+																					{...field}
+																				/>
+																			</FormControl>
+																			<FormMessage className='col-span-4 col-start-3' />
+																		</FormItem>
+										)}
+									/>
+										<FormField
+										control={form.control}
+										name='mailDescription'
+										render={({ field }) => (
+																		<FormItem className='grid grid-cols-6 items-start gap-x-4 gap-y-1 space-y-0'>
+																			<FormLabel className='col-span-2 text-left'>
+																				Тело письма
+																			</FormLabel>
+																			<FormControl>
+																				<Textarea
+																					placeholder='Укажите тело письма'
+																					className='col-span-4'
+																					{...field}
+																				/>
+																			</FormControl>
+																			<FormMessage className='col-span-4 col-start-3' />
+																		</FormItem>
+										)}
+									/>
+
 							</form>
 	
 						</Form>

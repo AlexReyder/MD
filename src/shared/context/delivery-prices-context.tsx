@@ -3,7 +3,7 @@ import useDialogState from '@/shared/hooks/use-dialog-state'
 import React, { useState } from 'react'
 import { DeliveryPricesDb } from '../types/validation/delivery-prices'
 
-type DialogType = 'addDeliver' | 'updateDeliver' | 'deleteDeliver'
+type DialogType = 'updateDeliver' 
 
 interface DeliveryPricesContextType {
 	open: DialogType | null

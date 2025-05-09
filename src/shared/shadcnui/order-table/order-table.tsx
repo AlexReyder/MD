@@ -21,7 +21,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
+  useReactTable
 } from '@tanstack/react-table'
 import { useState } from 'react'
 import { DataTablePagination } from './data-table-pagination'

@@ -11,7 +11,7 @@ import {
 } from '@/shared/shadcnui/ui/dropdown-menu'
 import { DeliveryPricesDb } from '@/shared/types/validation/delivery-prices'
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconEdit } from '@tabler/icons-react'
 import { Row } from '@tanstack/react-table'
 
 interface DataTableRowActionsProps {
@@ -40,21 +40,9 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
               setOpen('updateDeliver')
             }}
           >
-            Изменить
+            Обновить
             <DropdownMenuShortcut>
               <IconEdit size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('deleteDeliver')
-            }}
-          >
-            Удалить
-            <DropdownMenuShortcut>
-              <IconTrash size={16} />
             </DropdownMenuShortcut>
           </DropdownMenuItem>
         </DropdownMenuContent>

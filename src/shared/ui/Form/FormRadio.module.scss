@@ -37,6 +37,7 @@
 	border: 2px solid var(--g-color-1);
 	font-size: 1.8rem;
 	font-weight: 400;
+	transition: all 0.3s;
 
 	@media (max-width: 400px) {
 		min-width: 180px;
@@ -55,6 +56,15 @@
 		font-size: 12px;
 		line-height: 16px;
 	}
+}
+
+.Input:disabled + .Label{
+	background-color: var(--g-color-1);
+}
+
+.Input:disabled:checked+label:before{
+	background-color: var(--g-color-1);
+	border-color: var(--g-color-1);
 }
 
 .Input:checked,

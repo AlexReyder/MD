@@ -2,9 +2,11 @@
 
 import { UserForm } from '@/shared/shadcnui/user-table/dialogs/users-action-dialog'
 import { BonusAdminForm } from '@/shared/shadcnui/user-table/dialogs/users-bonus-dialog'
+import { BonusesTypeEnum, BonusHistoryType, DynamicBonusesType } from '@/shared/types/validation/bonus'
 import { Role } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { hashPassword } from '../auth'
+import { filterBonuses } from '../bonus'
 import { mailBonusEmail } from '../mail'
 import { prisma } from '../prismaInstance'
 
@@ -115,24 +117,59 @@ export async function getUserOrders(userId: string){
 }
 
 export async function addUserBonus(data:BonusAdminForm){
-	const amount = data.amount + data.addNum;
+
 	try{
 
 		const user = await prisma.user.findFirst({where: {id: data.userId}, select:{email: true}})
+
 		if(!user){
 			return {
 				success: null,
 				error: 'Пользователя не существует'
 			}
 		}
-		const bonus = await prisma.bonus.update({
-			where:{id:data.id},
-			data:{
-				amount
+		await filterBonuses(data.userId)
+		const getCurrentBonusData = await prisma.bonus.findFirst({
+			where: {
+				userId: data.userId
 			}
 		})
-		await mailBonusEmail(user.email, data.mailTitle, data.mailDescription)
+
+		if(!getCurrentBonusData){
+			return {
+				success: null,
+				error: 'Бонусы пользователя не существуют'
+			}
+		}
+
+		const currentBonusHistory = [...getCurrentBonusData.history] as unknown as BonusHistoryType[]
+		const currentDynamicsBonuses = [...getCurrentBonusData.dynamicBonuses] as unknown as DynamicBonusesType[]
+
+		const newDynamicBonus: DynamicBonusesType = {
+				amount: data.addNum,
+				title: data.addPurpose,
+				type: BonusesTypeEnum.ADD,
+				expiresAt: data.addExpiresAt,
+				createdAt: new Date()
+		}
+		currentBonusHistory.push(newDynamicBonus)
+		currentDynamicsBonuses.push(newDynamicBonus)
+
+		const bonus = await prisma.bonus.update({
+			where:{
+				id: data.id
+			},
+			data:{
+				history: currentBonusHistory,
+				dynamicBonuses: currentDynamicsBonuses
+			}
+		})
+
+		if(data.mailTitle !== '' && data.mailDescription !== ''){
+			await mailBonusEmail(user.email, data.mailTitle, data.mailDescription)
+		}
 		revalidatePath('/admin/users')
+
 		return {
 			success: bonus,
 			error: null

@@ -8,16 +8,19 @@ const OrderInfoBlock = ({
   isOrderPage,
   bonusType,
   bonus,
-  promocode
+  promocode,
+  deliveryPrice
 }: {
   cartData: any,
   isOrderPage: any,
   bonusType?:any
   bonus?: any
   promocode?: any
+  deliveryPrice?: number 
 }) => {
   let itemsQuantity = getItemsQuantity(cartData)
-  let itemsTotalPrice = getItemsTOtalPrice(isOrderPage, cartData, bonus, promocode)
+  let purePriceTotal = getItemsPurePrice(cartData)
+  let itemsTotalPrice = getItemsTOtalPrice(isOrderPage, cartData, bonus, promocode, deliveryPrice)
 
   return (
     <div className={s.Container}>
@@ -29,7 +32,7 @@ const OrderInfoBlock = ({
           {' '}
           на сумму
           <span className={s.InfoText}>
-            {itemsTotalPrice} ₽
+            {purePriceTotal} ₽
           </span>
         </p>
         {isOrderPage && (
@@ -47,14 +50,12 @@ const OrderInfoBlock = ({
                   Промокод: Активирован
                  </span>) : <></>
               }
-            </p>
-            <p className={s.Info}>
-              {/* {translations[lang].order.payment}:{' '} */}
-              <span className={s.InfoText}>
-                {/* {onlinePaymentTab
-                  ? translations[lang].order.online_payment
-                  : translations[lang].order.upon_receipt} */}
-              </span>
+              {
+                deliveryPrice && deliveryPrice > 0 ?
+                (<span className={s.InfoText}>
+                  Доставка: {deliveryPrice} ₽
+                 </span>) : <></>
+              }
             </p>
           </>
         )}
@@ -127,7 +128,15 @@ function getItemsQuantity(arr: any[]){
   return quantity;
 }
 
-function getItemsTOtalPrice(isOrderPage: boolean, arr: any[], bonus: any = 0, promocode?:any){
+export function getItemsPurePrice(arr: any[]){
+  let price = 0;
+  arr.forEach(item => {
+    price+= +item.price * +item.quantity
+  })
+  return price
+}
+
+function getItemsTOtalPrice(isOrderPage: boolean, arr: any[], bonus: any = 0, promocode?:any, deliveryPrice?:number){
   let price = 0;
   arr.forEach(item => {
     price+= +item.price * +item.quantity
@@ -136,6 +145,9 @@ function getItemsTOtalPrice(isOrderPage: boolean, arr: any[], bonus: any = 0, pr
     let total = price - bonus
     if(promocode.discount > 0){
       total = total - promocode.discount
+    }
+    if(deliveryPrice){
+      total+= deliveryPrice
     }
     return total ;
   }

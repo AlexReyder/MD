@@ -4,6 +4,8 @@ import { DataTableColumnHeader } from '@/shared/shadcnui/notify-table/data-table
 import { DataTableRowActions } from '@/shared/shadcnui/notify-table/data-table-row-actions'
 import { NotifyProductsDb } from '@/shared/types/validation/notify-products'
 import { ColumnDef } from '@tanstack/react-table'
+import { format } from 'date-fns'
+import { ru } from 'date-fns/locale/ru'
 
 export const columns: ColumnDef<NotifyProductsDb>[] = [
   {
@@ -58,6 +60,18 @@ export const columns: ColumnDef<NotifyProductsDb>[] = [
     cell: ({ row }) => {
       const size= row.original.size
       return <LongText className='w-full'>{size}</LongText>
+    },
+    meta: { className: 'w-36' },
+  },
+  {
+    id: 'createdAt',
+    accessorKey: 'createdAt',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Дата уведомления' />
+    ),
+    cell: ({ row }) => {
+      const createdAt= row.original.createdAt as Date
+      return <LongText className='w-full'>{format(createdAt,"d.MM.yyyy h:mm ", {locale: ru})}</LongText>
     },
     meta: { className: 'w-36' },
   },

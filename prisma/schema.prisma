@@ -33,6 +33,7 @@ enum DeliveryType {
   MAILRUSSIA
   YANDEX
   FIVEPOST
+  COURIER
 }
 
 enum BonusType {
@@ -66,32 +67,41 @@ model User {
 }
 
 model Bonus {
-  id        String    @id @default(uuid())
-  amount    Int       @default(0)
-  status    BonusType @default(BRONZE)
-  history   Json[]    @default([])
-  User      User      @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  userId    String
-  isCustom  Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id             String    @id @default(uuid())
+  amount         Int       @default(0)
+  status         BonusType @default(BRONZE)
+  history        Json[]    @default([])
+  dynamicBonuses Json[]    @default([])
+  User           User      @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  userId         String
+  isCustom       Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model BonusHistory {
+  id String @id @default(uuid())
+
+  @@map("bonus_history")
 }
 
 model Order {
-  id          String       @id @default(uuid())
-  User        User         @relation(fields: [userId], references: [id])
-  userId      String
-  payment     PaymentType
-  delivery    DeliveryType
-  products    Json
-  details     Json
-  amount      Int
-  trackNumber String?
-  status      OrderStatus  @default(VERIFICATION)
-  Promocode   Promocode?   @relation(fields: [promocodeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  promocodeId String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id               String       @id @default(uuid())
+  User             User         @relation(fields: [userId], references: [id])
+  userId           String
+  payment          PaymentType
+  delivery         DeliveryType
+  deliveryPrice    Int          @default(0)
+  products         Json
+  details          Json
+  amount           Int
+  bonusMinusAmount Int
+  trackNumber      String?
+  status           OrderStatus  @default(VERIFICATION)
+  Promocode        Promocode?   @relation(fields: [promocodeId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  promocodeId      String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 }
 
 model Promocode {
@@ -263,8 +273,9 @@ model Faq {
 model Banner {
   id        String   @id @default(uuid())
   alt       String
-  url       String
   link      String
+  url       String
+  mobileUrl String   @map("mobile_url")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -314,11 +325,19 @@ model AdLineInfo {
 }
 
 model DeliveryPrice {
-  id        String       @id @default(uuid())
-  deliver   DeliveryType
-  price     String
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id             String   @id @default(uuid())
+  CDEK           Int      @default(0)
+  CDEKdays       String   @default("")
+  MAILRUSSIA     Int      @default(0) @map("mail_russia")
+  MAILRUSSIAdays String   @default("")
+  YANDEX         Int      @default(0)
+  YANDEXdays     String   @default("")
+  FIVEPOST       Int      @default(0)
+  FIVEPOSTdays   String   @default("")
+  COURIER        Int      @default(0)
+  COURIERdays    String   @default("")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@map("delivery_price")
 }

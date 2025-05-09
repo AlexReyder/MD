@@ -2,14 +2,14 @@
 
 import { removeProduct } from '@/shared/api/admin/products'
 import { ConfirmDialog } from '@/shared/shadcnui/confirm-dialog'
-import { ProductAdmin } from '@/shared/types/schemas'
+import { ProductsDb } from '@/shared/types/validation/products'
 import { IconAlertTriangle } from '@tabler/icons-react'
 import toast, { Toaster } from 'react-hot-toast'
 
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
-  currentRow: ProductAdmin
+  currentRow: ProductsDb
 }
 
 export function ProductDeleteDialog({ open, onOpenChange, currentRow }: Props) {

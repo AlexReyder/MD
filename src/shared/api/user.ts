@@ -55,12 +55,27 @@ export async function changePassword(unsafeData: z.infer<typeof profilePassword>
 		}
 }
 
-export async function updateUserPurchasesAmount(userId: string, currentTotal: number, plusAmount: number){
-	const amount = currentTotal + plusAmount
+export async function updateUserPurchasesAmount(userId: string, plusAmount: number){
+
+	const user = await prisma.user.findFirst({
+		where: {
+			id: userId
+		}
+	})
+
+	if(!user){
+		return {
+			success: null,
+			error: 'USER NOT FOUND'
+		}
+	}
+
+	const amount  = user.purchasesAmount + plusAmount;
+
 	try{
 		await prisma.user.update({
 			where:{
-				id:userId
+				id: userId
 			},
 			data:{
 				purchasesAmount: amount,

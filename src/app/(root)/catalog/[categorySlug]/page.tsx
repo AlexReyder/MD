@@ -1,4 +1,5 @@
 import { CatalogFilters } from '@/entities/CatalogFilters/CatalogFilters'
+import { CatalogPagination } from '@/entities/CatalogPagination/CatalogPagination'
 import { Breadcrumbs } from '@/features'
 import { CatalogSearchParams } from '@/shared/constants/catalog-search-params'
 import { HeadingWithCount, Section } from '@/shared/ui'
@@ -46,7 +47,7 @@ export default async  function CatalogCategoryPage({
 			<CatalogFilters data={filters.success} error={filters.error}/>
 			<Products products={products.success.products}/>
 			</Section>
-			{/* <CatalogPagination productsCount={products.success.length} queryPage={selected} /> */}
+			<CatalogPagination productsCount={products.success.length}/>
 		</main>
 	);
 }

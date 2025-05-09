@@ -149,12 +149,14 @@ export async function getPresignedUrl(filename: string){
 	
 	export async function removeAdBanner(filename:string){
 		try{
-			await s3Client.send(
+			const file = filename.split(`${bucketName}/`)[1]
+			const deletedFile = await s3Client.send(
 				new DeleteObjectCommand({
 					Bucket: bucketName,
-					Key: filename,
+					Key: file,
 				}),
 			);
+			console.log(deletedFile)
 			return {
 				success: true,
 				error: null

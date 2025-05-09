@@ -72,6 +72,9 @@ export function NotifyMailDialog({ currentRow, open, onOpenChange }: Props) {
             <DialogTitle>
               Отправить уведомление на почту
             </DialogTitle>
+            <p className='text-muted-foreground'>
+							Вы можете отправить уведомление  на электронную почту клиента о поступлении товара.
+							</p>
           </DialogHeader>
           <div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
             <Form {...form}>
@@ -106,7 +109,7 @@ export function NotifyMailDialog({ currentRow, open, onOpenChange }: Props) {
                   render={({ field }) => (
                     <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
                       <FormLabel className='col-span-2 text-right'>
-                       Сообщение
+                       Тело письма
                       </FormLabel>
                       <FormControl>
                         <Textarea

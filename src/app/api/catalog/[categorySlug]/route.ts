@@ -56,7 +56,7 @@ export async function GET(
 				}
 		);
 	const { data } = await ValidateProductsDbSchema.safeParseAsync(products)
-	const productsCount = data?.length;
+	const productsCount = Object.keys(where).length > 0 ? data?.length : await prisma.shoppingCard.count()
 
 	const result = {
 		success: {

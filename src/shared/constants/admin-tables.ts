@@ -1,5 +1,9 @@
 	export const userTableColumns = [
 		{
+			column:'id',
+			label:'ID'
+		},
+		{
 			column:'name',
 			label:'Имя'
 		},
@@ -15,10 +19,6 @@
 			column:'phone',
 			label:'Номер телефона'
 		},
-		{
-			column:'role',
-			label:'Роль'
-		},
 	]
 
 	export const productTableColumns = [
@@ -29,5 +29,16 @@
 		{
 			column:'articleNumber',
 			label:'Артикул'
+		},
+	]
+
+		export const orderTableColumns = [
+		{
+			column:'id',
+			label:'ID'
+		},
+		{
+			column:'track',
+			label:'Трек-номер'
 		},
 	]

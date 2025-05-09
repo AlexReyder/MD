@@ -43,6 +43,17 @@ const HistoryOrderItem = ({ main, item, position }: Props) => {
 							<span>Количество: </span>
 							<span className={s.SelectedFilter}>{item.quantity} шт.</span>
 						</span>
+
+						<span className={s.list__item__info}>
+							<span>Стоимость доставки: </span>
+							<span className={s.SelectedFilter}>{formatPrice(main.deliveryPrice)} ₽</span>
+						</span>
+
+							<span className={s.list__item__info}>
+							<span>Списано бонусов: </span>
+							<span className={s.SelectedFilter}>{formatPrice(main.bonusMinusAmount)} </span>
+						</span>
+						
 						<span className={s.list__item__info}>
 							<span>Сумма: </span>
 							<span className={s.SelectedFilter}>{formatPrice(+item.price * +item.quantity)} ₽</span>

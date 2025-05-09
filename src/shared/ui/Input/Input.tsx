@@ -3,7 +3,7 @@ import { FieldError } from 'react-hook-form'
 import s from './Input.module.scss'
 
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	registerName: string
 	register: any
 	errors: FieldError | undefined
@@ -11,7 +11,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	onBlur?: any
 }
 
-export const Input = ({ registerName,register, errors, className, onBlur, ...props }: InputProps,) => {
+export const Input = ({ registerName,register, errors, className, onBlur, ...props }: InputProps) => {
 	return (
 		<div className={`${s.Container} ${className}`}>
 			<input

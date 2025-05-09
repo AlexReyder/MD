@@ -2,13 +2,12 @@
 
 import { redirect } from 'next/navigation'
 import { CreateOrder, CreateOrderSchema } from '../types/validation/order'
-import { addBonus, minusBonus, updateBonusStatus } from './bonus'
+import { minusBonus, updateBonusStatus } from './bonus'
 import { removeDbCart } from './cart'
 import { mailOrderConfirm } from './mail'
 import { prisma } from './prismaInstance'
 import { applyPromocode } from './promocode'
 import { verifySession } from './session'
-import { updateUserPurchasesAmount } from './user'
 
 // export async function makeOrder(unsafeData: z.infer<typeof makeOrderSchema>, cart: CartItems) {
 export async function makeOrder(unsafeData: CreateOrder) {
@@ -35,6 +34,7 @@ export async function makeOrder(unsafeData: CreateOrder) {
 		const detailsClient = {
 			name: data.name,
 			surname: data.surname,
+			address: data.address,
 			phone: data.phone,
 			email: data.email,
 			comment: data.comment
@@ -61,7 +61,7 @@ export async function makeOrder(unsafeData: CreateOrder) {
 		if(data.promocodeId.id !== ''){
       total = total - data.promocodeId.discount
     }
-
+		total+= data.deliveryPrice
 		try {
 			const order = await prisma.order.create({
 					data: {
@@ -70,7 +70,10 @@ export async function makeOrder(unsafeData: CreateOrder) {
 							details: detailsClient,
 							payment: data.payment,
 							delivery: data.delivery,
-							amount: total
+							deliveryPrice: data.deliveryPrice,
+							amount: total,
+							bonusMinusAmount: data.bonusMinusAmount,
+							promocodeId: data.promocodeId.id === '' ? null : data.promocodeId.id,
 						},
 					});
 			
@@ -82,16 +85,13 @@ export async function makeOrder(unsafeData: CreateOrder) {
 			}
 
 			if(data.bonusMinusAmount > 0){
-				await minusBonus(bonus.id, bonus.amount, data.bonusMinusAmount, bonus.history)
+				const minusBonusDb = await minusBonus(userId as string, data.bonusMinusAmount)
 			}
-
-			await updateUserPurchasesAmount(userId as string, existingUser.purchasesAmount, total)
 
 			if(data.promocodeId.id !== ''){
 				await applyPromocode(data.promocodeId.id, userId as string)
 			}
 
-			await addBonus(existingUser.id, price)
 			
 			await mailOrderConfirm(existingUser.email, data)
 			await removeDbCart()
@@ -148,3 +148,4 @@ export async function getOrderHistory(){
 	
 
 }
+

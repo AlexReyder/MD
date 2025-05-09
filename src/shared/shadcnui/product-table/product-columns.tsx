@@ -57,6 +57,7 @@ export const columns: ColumnDef<ProductsDb>[] = [
   },
   {
     id: 'category',
+    accessorKey: 'category',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Категория' />
     ),
@@ -64,8 +65,13 @@ export const columns: ColumnDef<ProductsDb>[] = [
       const category= row.original.category[0].label
       return <LongText className='max-w-36'>{category}</LongText>
     },
-    
-    meta: { className: 'w-36' },
+    enableHiding: false,
+    enableSorting: true,
+    enableColumnFilter: true,
+     filterFn: (row, id, value) => {
+      return row.original.category[0].label === value
+    },
+    meta: { className: 'w-36', filterVariant: 'selectProductCategory' },
   },
   {
     id: 'adPrice',
@@ -85,7 +91,9 @@ export const columns: ColumnDef<ProductsDb>[] = [
     ),
     cell: ({ row }) => {
       const price = row.original.price
-      return <LongText className='max-w-36'>{JSON.stringify(price)}</LongText>
+      const strPrice = JSON.stringify(price)
+      const replaceOnePrice = strPrice.replace('{', '').replace('}', '')
+      return <LongText className='max-w-36'>{replaceOnePrice}</LongText>
     },
     meta: { className: 'w-36' },  
   },
@@ -197,7 +205,7 @@ export const columns: ColumnDef<ProductsDb>[] = [
       <div>{date.toLocaleString('ru-RU',{year: 'numeric', month: '2-digit', day: '2-digit', hour:'numeric', minute:'numeric'})}</div>
   )
   },
-    enableSorting: false,
+    enableSorting: true,
   },
   {
     id: 'actions',

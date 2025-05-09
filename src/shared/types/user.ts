@@ -1,7 +1,7 @@
-import { BonusType, OrderStatus, PaymentType, Role } from '@prisma/client'
+import { BonusType, DeliveryType, OrderStatus, PaymentType, Role } from '@prisma/client'
 import {
   IconShield,
-  IconUsersGroup
+  IconUser
 } from '@tabler/icons-react'
 import { UserStatus } from './schemas'
 
@@ -32,24 +32,6 @@ export const callTypes = new Map<UserStatus, string>([
   ],
 ])
 
-// export const bonusStatusAdminForm = [
-//   {
-//     label: 'Бронзовый',
-//     value: {Bonus: {status: BonusType.BRONZE}},
-//   },
-//   {
-//     label: 'Серебряный',
-//     value: {Bonus: {status: BonusType.SILVER}},
-//   },
-//   {
-//     label: 'Золотой',
-//     value: {Bonus: {status: BonusType.GOLD}},
-//   },
-//   {
-//     label: 'Платиновый',
-//     value: {Bonus: {status: BonusType.PLATINUM}},
-//   },
-// ]
 
 export const bonusStatusAdminForm = [
   {
@@ -85,15 +67,15 @@ export const bonusStatusAdminForm = [
 
 export const userTypes = [
   {
-    label: 'ADMIN',
+    label: 'Администратор',
     value: Role.ADMIN,
     icon: IconShield,
   },
 
   {
-    label: 'USER',
+    label: 'Клиент',
     value: Role.USER,
-    icon: IconUsersGroup,
+    icon: IconUser,
   },
 
 ] as const
@@ -112,7 +94,7 @@ export const orderStatusTypes = [
   },
 
   {
-    label: 'В ожидании',
+    label: 'Ожидание оплаты',
     value: OrderStatus.VERIFICATION,
     icon: IconShield,
   },
@@ -141,6 +123,19 @@ export const orderStatusTypes = [
 
 ] as const
 
+export const orderStatusTypesAdmin = new Map<OrderStatus, string>([
+  ['DECLINE', 'bg-teal-100/30 text-teal-900 dark:text-teal-200 border-teal-200'],
+  ['VERIFICATION', 'bg-neutral-300/40 border-neutral-300'],
+  ['ACCEPT', 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300'],
+  [
+    'COLLECT',
+    'bg-destructive/10 dark:bg-destructive/50 text-destructive dark:text-primary border-destructive/10',
+  ],
+  ['DELIVERED', 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300'],
+  ['PAID', 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300'],
+  ['SENT', 'bg-sky-200/40 text-sky-900 dark:text-sky-100 border-sky-300'],
+])
+
 
 
 export const paymentTypeAdminForm = [
@@ -153,3 +148,48 @@ export const paymentTypeAdminForm = [
     value:PaymentType.TRANSFER,
   },
 ]
+
+export const deliverTypeAdminForm = [
+  {
+    label: 'CDEK',
+    value:DeliveryType.CDEK
+  },
+  {
+    label: 'Почта России',
+    value:DeliveryType.MAILRUSSIA
+  },
+  {
+    label: 'Яндекс Доставка',
+    value:DeliveryType.YANDEX
+  },
+  {
+    label: '5POST',
+    value:DeliveryType.FIVEPOST
+  },
+  {
+    label: 'Курьерская доставка',
+    value:DeliveryType.COURIER
+  },
+]
+
+export const productCategoryTypes = [
+  {
+    label: 'Футболки',
+    value: OrderStatus.ACCEPT,
+  },
+
+  {
+    label: 'Лонгсливы',
+    value: OrderStatus.DECLINE,
+  },
+
+  {
+    label: 'Флаги',
+    value: OrderStatus.VERIFICATION,
+  },
+
+  {
+    label: 'Нашивки',
+    value: OrderStatus.COLLECT,
+  },
+] as const

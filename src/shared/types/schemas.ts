@@ -1,5 +1,6 @@
 import { BonusType, Role } from '@prisma/client'
 import { z } from "zod"
+import { BonusDbSchema } from './validation/bonus'
 
 export const signInSchema = z.object({
   email: z.string().email("Неккоректно введен Email.").nonempty("Обязательное поле."),
@@ -47,7 +48,8 @@ export enum DeliveryEnum {
   CDEK = 'CDEK',
   MAILRUSSIA = 'MAILRUSSIA',
   YANDEX = 'YANDEX',
-  FIVEPOST = 'FIVEPOST'
+  FIVEPOST = 'FIVEPOST',
+  COURIER = 'COURIER'
 }
 
 export const makeOrderSchema = z.object({
@@ -85,13 +87,7 @@ export const userSchema = z.object({
   phone: z.string(),
   purchasesAmount: z.number(),
   role: userRoleSchema,
-  Bonus: z.object({
-    id: z.string(),
-    status:z.nativeEnum(BonusType),
-    history: z.any(),
-    amount:z.number(),
-    userId: z.string()
-  }).array(),
+  Bonus: BonusDbSchema.array(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -177,9 +173,10 @@ export const FAQListSchema = z.array(faqAdminSchema)
 
 export const adAdminSchema = z.object({
   id: z.string().optional(),
-  url:z.string(),
-  alt:z.string(),
-  link:z.string(),
+  url: z.string(),
+  mobileUrl: z.string(),
+  alt: z.string(),
+  link: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 })

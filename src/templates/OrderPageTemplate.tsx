@@ -10,6 +10,7 @@ import { makeOrder } from '@/shared/api/order'
 import { CartItems } from '@/shared/types/cart'
 import { bonusStatusAdminForm, UserProfileDTO } from '@/shared/types/user'
 import { BonusDb } from '@/shared/types/validation/bonus'
+import { DeliveryPricesDb } from '@/shared/types/validation/delivery-prices'
 import { CreateOrder, CreateOrderSchema } from '@/shared/types/validation/order'
 import { Form, Input, Section } from '@/shared/ui'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -22,19 +23,22 @@ import s from './Order.module.scss'
 interface Props{
 	cartData: CartItems
 	profileData: UserProfileDTO 
-  bonusData: BonusDb
+  bonusData: {data: BonusDb, currentAmount: number}
+  deliveryPricesData: DeliveryPricesDb | undefined
 }
 
-const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
+const CartPageTemplate = ({cartData, profileData, bonusData, deliveryPricesData}: Props) => {
   const [promocodeValue, setPromocodeValue] = useState({id:'', discount:0})
   const router = useRouter()
   const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }, watch, getValues, setValue} = useForm<CreateOrder>({
         defaultValues: {
           payment: PaymentType.TRANSFER,
           delivery:DeliveryType.CDEK,
+          deliveryPrice: 0,
           products: cartData,
           name: profileData.name ?? "",
           surname: profileData.surname ?? "",
+          address: '',
           phone: profileData.phone ?? "",
           email: profileData.email ?? "",
           promocodeId: promocodeValue,
@@ -43,9 +47,14 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
         resolver: zodResolver(CreateOrderSchema)
       })
   watch('bonusMinusAmount')
+  watch('payment')
+  watch('delivery')
   const bonuses = getValues().bonusMinusAmount    
-  const bonusType = bonusStatusAdminForm.filter((el) => el.value === bonusData.status)[0].label
+  const bonusType = bonusStatusAdminForm.filter((el) => el.value === bonusData.data.status)[0].label
+
   async function onSubmit(data: CreateOrder) {
+            const deliveryPrices = deliveryPricesData ? deliveryPricesData[data.delivery] : 0
+            data.deliveryPrice = deliveryPrices
             const {success, error} = await makeOrder(data)
             if(success){
               router.push(`/order-confirm?order=${success}`)
@@ -59,7 +68,6 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
     setPromocodeValue(data)
     setValue('promocodeId', data)
   }
-
 	return(
 		<main>
 		<Section className={s.Order}>
@@ -97,7 +105,7 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
                     orderNumber='3'
                     text='Доставка'
                   />
-                  <OrderDelivery register={register}/>
+                  <OrderDelivery register={register} deliveryPricesData={deliveryPricesData} disabled={getValues().payment === 'DEFFERED'}/>
                 </li>
                 <li className={s.OrdersItem}>
                   <OrderTitle
@@ -108,7 +116,7 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
                     <p className={s.OrderDetailsTitle}>
 										Введите данные получателя заказа
                     </p>
-                    <OrderDetailsForm register={register} errors={errors}/>
+                    <OrderDetailsForm register={register} errors={errors} deliveryType={getValues().delivery} paymentType={getValues().payment}/>
                   </div>
                 </li>
 								<li className={s.OrdersItem}>
@@ -125,11 +133,11 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
                   <div className={s.BonusBlock}>
                     <p className={s.BonusText}>
                       <span className={s.BonusTitle}>Ваши бонусы: </span>
-                      <span className={s.BonusValue}>{bonusData.amount}</span>
+                      <span className={s.BonusValue}>{bonusData.currentAmount}</span>
                     </p>
                   </div>
                     <label className={s.BonusMinusLabel} htmlFor='minusBonusIn'>Списать бонусы:</label>
-                    <Input id='minusBonusIn' registerName='bonusMinusAmount' register={register} errors={errors.name} type='number' placeholder='Списать бонусы' className={s.BonusMinus} min={0} max={bonusData.amount} />
+                    <Input id='minusBonusIn' registerName='bonusMinusAmount' register={register} errors={errors.name} type='number' placeholder='Списать бонусы' className={s.BonusMinus} min={0} max={bonusData.currentAmount} />
                 </li>
 								<li className={s.OrdersItem}>
                   <OrderTitle
@@ -143,7 +151,7 @@ const CartPageTemplate = ({cartData, profileData, bonusData}: Props) => {
             <div className={s.OrderMakeDetails}>
               <div className={s.OrderMakeDetails__order}>
                 <OrderInfoBlock cartData={cartData} isOrderPage={true} bonus={bonuses} bonusType={bonusType}
-                promocode={promocodeValue} />
+                promocode={promocodeValue} deliveryPrice = {deliveryPricesData ? getValues().payment !== 'DEFFERED' ? deliveryPricesData[getValues().delivery] : 0 : 0} />
               </div>
             </div>
           </div>

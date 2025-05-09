@@ -38,7 +38,7 @@ interface DataTableProps {
   data: DeliveryPricesDb[]
 }
 
-export function FiltersTable({ columns, data }: DataTableProps) {
+export function DeliveryPricesTable({ columns, data }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])

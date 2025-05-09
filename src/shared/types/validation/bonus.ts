@@ -1,11 +1,36 @@
 import { BonusType } from '@prisma/client'
 import { z } from 'zod'
 
+export enum BonusesTypeEnum {
+	ADD = 'ADD',
+	MINUS = 'MINUS',
+}
+
+export const DynamicBonusesSchema = z.object({
+	type:z.nativeEnum(BonusesTypeEnum),
+	title: z.string(),
+	amount:z.number(),
+	expiresAt:z.coerce.date(),
+	createdAt:z.coerce.date()
+})
+
+export const BonusHistorySchema = z.object({
+	type:z.nativeEnum(BonusesTypeEnum),
+	title: z.string(),
+	amount:z.number(),
+	expiresAt:z.coerce.date().nullable(),
+	createdAt:z.coerce.date()
+})
+
+export type BonusHistoryType = z.infer<typeof BonusHistorySchema>
+export type DynamicBonusesType = z.infer<typeof DynamicBonusesSchema>
+
 export const BonusDbSchema = z.object({
 	id: z.string(),
 	amount: z.number(),
 	status: z.nativeEnum(BonusType),
-	history: z.any(),
+	history: BonusHistorySchema.array(),
+	dynamicBonuses: DynamicBonusesSchema.array(),
 	User:z.any(),
 	userId: z.string(),
 	createdAt: z.coerce.date(),

@@ -85,7 +85,7 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 						productId,
 						name: name,
 						articleNumber,
-						color: selectedColor,
+						color: oColors.filter((el: any) => el.value === selectedColor)[0].label,
 						size: selectedSize,
 					}
 					const {success, error} = await makeNotifyProducts(data)

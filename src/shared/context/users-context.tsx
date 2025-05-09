@@ -3,7 +3,7 @@ import useDialogState from '@/shared/hooks/use-dialog-state'
 import { User } from '@/shared/types/schemas'
 import React, { useState } from 'react'
 
-type UsersDialogType = 'bonus' | 'add' | 'edit' | 'delete'
+type UsersDialogType = 'bonus' | 'add' | 'edit' | 'delete' | 'userBonusHistory'
 
 interface UsersContextType {
   open: UsersDialogType | null

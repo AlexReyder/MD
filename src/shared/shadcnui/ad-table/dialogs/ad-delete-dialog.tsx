@@ -15,7 +15,7 @@ interface Props {
 
 export function AdDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const handleDelete = async () => {
-      const {success, error} = await deleteAd(currentRow.id!)
+      const {success, error} = await deleteAd(currentRow.id!, currentRow.url, currentRow.mobileUrl)
       if(success){
           toast.success('Баннер успешно удален')
         }

@@ -146,11 +146,14 @@ export async function removeProduct(id: string){
 			}
 		}
 		const productImages = product.images as Record<string, []>
-		const images: string[] = []
-		for(let color in productImages){
-			productImages[color].forEach((item: any) => images.push(item.url))
+		if(Object.keys(productImages).length > 0){
+					const images: string[] = []
+					for(let color in productImages){
+						productImages[color].forEach((item: any) => images.push(item.url))
+					}
+					await deleteFiles(images)
 		}
-		await deleteFiles(images)
+
 		const deletedProduct = await prisma.shoppingCard.delete({where:{id}})
 		revalidatePath('/admin/products')
 		return {

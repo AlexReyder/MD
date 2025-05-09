@@ -10,6 +10,7 @@ import {
 	IconLayoutDashboard,
 	IconProps,
 	IconShoppingBag,
+	IconTruckDelivery,
 	IconUser
 } from '@tabler/icons-react'
 
@@ -27,4 +28,5 @@ export const Icons = {
 	promocodes: IconDiscount,
 	notify: IconBellRinging,
 	content: IconEdit,
+	delivery: IconTruckDelivery
 };
