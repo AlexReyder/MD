@@ -40,6 +40,11 @@ export const MenuMobile = ({ className }: MenuProps) => {
 								Главная
 							</Link>
 						</li>
+							<li className='nav__list-item'>
+							<Link href='/catalog'  onClick={onToggle}>
+								Каталог
+							</Link>
+						</li>
 						<li className='nav__list-item'>
 							<Link
 								href='/catalog/futbolki'

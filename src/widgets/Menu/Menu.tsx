@@ -5,7 +5,7 @@ import s from './Menu.module.scss'
 export const Menu = () =>{
 	const links = [
     {
-      id: 0,
+      id: 11,
       text: 'Каталог',
       href: '/catalog',
     },

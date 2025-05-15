@@ -83,7 +83,6 @@ export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
             >
 							В корзину
             </button>
-          {/* )} */}
         </li>
   )
 }

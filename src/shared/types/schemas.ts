@@ -11,16 +11,29 @@ export const signUpSchema = z.object({
   email: z.string().email("Неккоректно введен Email").nonempty(),
   name: z.string().min(1).max(30).optional(),
   surname: z.string().min(1).max(30).optional(),
+  patronymic: z.string().min(3).max(30).optional(),
   password: z.string().min(8, "Минимальная длинна пароля 8 символом").max(20,"Максимальная длинна пароля 20 символов").nonempty(),
-  phone:z.string().min(11).max(11).nonempty('Обязательное поле')
+  phone:z.string().min(11).max(11).nonempty('Обязательное поле'),
+  whatsapp: z.boolean().default(false),
+  telegram: z.boolean().default(false)
 })
 
 export const profilePassword = z.object({
-  password: z.string().min(8, "Минимальная длинна пароля 8 символом").max(20,"Максимальная длинна пароля 20 символов").nonempty(),
-  confirmPassword:z.string().min(8).max(20)
+  password: z.string().min(8, {message: 'Минимальная длинна пароля 8'}).max(20, {message: 'Максимальная длинна пароля 20 символов'}).nonempty({message: 'Поле не может быть пустым'}),
+  confirmPassword:z.string().min(8, {message: 'Минимальная длинна пароля 8'}).max(20, {message: 'Максимальная длинна пароля 20 символов'}).nonempty({message: 'Поле не может быть пустым'})
 }).refine((data) => data.password === data.confirmPassword, {
   message:"Пароли не совпадают",
   path:['confirmPassword']
+})
+
+export const updateUserProfileSchema = z.object({
+  email: z.string().email("Неккоректно введен Email").nonempty(),
+  name: z.string().default(''),
+  patronymic: z.string().default(''),
+  surname: z.string().default(''),
+  phone: z.string().min(11, "Минимальная длинна пароля 11 символом").max(20,"Максимальная длинна 20 символов").optional(),
+  whatsapp: z.boolean().default(false),
+  telegram: z.boolean().default(false)
 })
 
 export const recoveryEmail = z.object({
@@ -83,6 +96,7 @@ export const userSchema = z.object({
   id: z.string(),
   name: z.string().nullable(),
   surname: z.string().nullable(),
+  patronymic: z.string().nullable(),
   email: z.string(),
   phone: z.string(),
   purchasesAmount: z.number(),

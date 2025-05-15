@@ -1,7 +1,7 @@
 .ProductTitle{
 	margin: 0;
 	color: var(--p-color);
-	font-size: 42px;
+	font-size: 36px;
 	font-weight: 700;
 	margin-bottom: 20px;
 	@media (max-width: 520px) {
@@ -27,7 +27,7 @@
 
 .ProductPrice{
 	margin: 0;
-	color: var(--t-color);
+	color: var(--price-color);
 	font-size: 32px;
 	font-weight: 500;
 	margin-bottom: 0;
@@ -82,7 +82,7 @@
 		}
 
 		&__bestseller {
-			background-color: #16D9A6;
+			background-color: var(--hit-color);
 		}
 	
 }
@@ -208,8 +208,9 @@
 		font-size: 16px;
 		font-weight: 500;
 		border-radius: 50px;
+		border:none;
 		background-color: var(--t-color);
-		padding: 12px 48px;
+		padding: 16px 48px;
 		transition: background-color .2s ease-in-out;
 		margin-top: 2rem;
 
@@ -247,7 +248,7 @@
 .ProductContainer{
 	display: grid;
 	grid-template-columns: 992px 1fr;
-	grid-template-rows: 732px 1fr;
+	grid-template-rows: 650px 1fr;
 	column-gap: 32px;
 	margin-bottom: 40px;
 	align-items: flex-start;

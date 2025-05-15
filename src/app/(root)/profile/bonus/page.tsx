@@ -3,6 +3,7 @@ import { isProtected } from '@/shared/api/user'
 import { bonusStatusAdminForm } from '@/shared/types/user'
 import { BonusesTypeEnum } from '@/shared/types/validation/bonus'
 import { FormHeader, Section } from '@/shared/ui'
+import { cn } from '@/shared/utils'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale/ru'
 import s from '../styles.module.scss'
@@ -30,8 +31,8 @@ export default async function ProfileBonusPage() {
 						{
 							success?.data.history.map((item) => {
 								return(
-									<li className={s.BonusItem} key={item.createdAt.toString() + item.amount}>
-											<div className={s.BonusListField}>
+									<li className={s.BonusItem} key={item.createdAt.toString() + item.amount + Math.random()}>
+											<div className={cn(s.BonusListField, s.BonusFieldQuantity)}>
 												<p className={s.BonusFieldTitle}>{item.type === BonusesTypeEnum.MINUS ? 'Списано' : 'Начислено'}</p>
 												<p className={s.BonusFieldValue}>{item.amount} бонусов</p>
 											</div>

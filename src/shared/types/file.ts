@@ -7,5 +7,11 @@ export interface IUploadedFile{
 }
 
 export interface IImagesData {
-	[x: string] : IUploadedFile[]
+	overviews: IUploadedFile[],
+	originals: IUploadedFile[],
+	thubnails : IUploadedFile[]
 }
+// export interface IImagesData {
+// 	[iamgeType: string] : IUploadedFile[]
+// }
+

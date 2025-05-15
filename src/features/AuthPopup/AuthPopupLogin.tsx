@@ -12,7 +12,7 @@ import { z } from 'zod'
 
 type FormSchema = z.infer<typeof signInSchema>
 
-const AuthPopupLogin = ({includeHeading = true, className = ''}: {includeHeading?: boolean, className?: string}) => {
+const AuthPopupLogin = ({includeHeading = true, className = '', btnClass = ''}: {includeHeading?: boolean, className?: string, btnClass?: string}) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const router = useRouter()
   const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }} = useForm<FormSchema>({

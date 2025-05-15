@@ -1,22 +1,15 @@
 "use server"
-import { ValidateProductsDbAdd } from '../types/validation/products'
+import { ValidateProductsDbSchema } from '../types/validation/products'
 import { gResponse } from '../utils/common'
 import { prisma } from './prismaInstance'
 
 
 
 export async function getAllProducts(selected: number = 1){
-	// const products = await prisma.shoppingCard.findMany({skip:(selected - 1) * 12, take: 12 });
 	const products = await prisma.shoppingCard.findMany();
-	const {data} = await ValidateProductsDbAdd.safeParseAsync(products)
-	const productsCount = await prisma.shoppingCard.count();
+	const {data} = await ValidateProductsDbSchema.safeParseAsync(products)
 
-	return {
-		success: {data ,
-			length: productsCount
-		},
-		error: null
-	}
+	return data
 }
 
 // export async function getProductsByCategory(slug: string, selected: number){

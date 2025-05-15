@@ -1,6 +1,6 @@
 'use client';
 
-import { IconUpload, IconX } from '@tabler/icons-react'
+import { IconUpload } from '@tabler/icons-react'
 import * as React from 'react'
 import Dropzone, {
   type DropzoneProps,
@@ -8,81 +8,22 @@ import Dropzone, {
 } from 'react-dropzone'
 import { toast } from 'sonner'
 
-import { Button } from '@/shared/shadcnui/ui/button'
 import { cn } from '@/shared/utils'
 import { formatBytes } from '@/shared/utils/common'
 import { useState, useTransition } from 'react'
 import { deleteFile, optimazeUploadedFiles } from '../api/admin/upload'
 import { IImagesData, IUploadedFile } from '../types/file'
+import { ProductImageMover } from './product-table/Form/ProductImageUploader/product-image-mover'
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * Value of the uploader.
-   * @type File[]
-   * @default undefined
-   * @example value={files}
-   */
   value: IUploadedFile[] | [];
-
-
-  /**
-   * Function to be called when the value changes.
-   * @type React.Dispatch<React.SetStateAction<File[]>>
-   * @default undefined
-   * @example onValueChange={(files) => setFiles(files)}
-   */
   onValueChange?: React.Dispatch<React.SetStateAction<IUploadedFile[]>>;
-
-  diff?: string
-  /**
-   * Progress of the uploaded files.
-   * @type Record<string, number> | undefined
-   * @default undefined
-   * @example progresses={{ "file1.png": 50 }}
-   */
+  color: string
   progresses?: Record<string, number>;
-
-  /**
-   * Accepted file types for the uploader.
-   * @type { [key: string]: string[]}
-   * @default
-   * ```ts
-   * { "image/*": [] }
-   * ```
-   * @example accept={["image/png", "image/jpeg"]}
-   */
   accept?: DropzoneProps['accept'];
-
-  /**
-   * Maximum file size for the uploader.
-   * @type number | undefined
-   * @default 1024 * 1024 * 2 // 2MB
-   * @example maxSize={1024 * 1024 * 2} // 2MB
-   */
   maxSize?: DropzoneProps['maxSize'];
-
-  /**
-   * Maximum number of files for the uploader.
-   * @type number | undefined
-   * @default 1
-   * @example maxFiles={5}
-   */
   maxFiles?: DropzoneProps['maxFiles'];
-
-  /**
-   * Whether the uploader should accept multiple files.
-   * @type boolean
-   * @default false
-   * @example multiple
-   */
   multiple?: boolean;
-
-  /**
-   * Whether the uploader is disabled.
-   * @type boolean
-   * @default false
-   * @example disabled
-   */
   disabled?: boolean;
 }
 
@@ -90,7 +31,7 @@ export function FileUploader(props: FileUploaderProps) {
   const {
     value: valueProp,
     onValueChange,
-    diff,
+    color,
     progresses,
     accept = { 'image/*': [] },
     maxSize = 1024 * 1024 * 2,
@@ -103,8 +44,8 @@ export function FileUploader(props: FileUploaderProps) {
 
   
   const [files, setFiles] = useState<IImagesData | {}>(props.value)
-  const [previews, setPreviews] = useState([])
   const [isPending, startTransition] = useTransition();
+  const [updateMount, setUpdateMount] = useState(JSON.stringify(files))
   
   const onDrop = async (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFiles === 1 && acceptedFiles.length > 1) {
@@ -118,30 +59,34 @@ export function FileUploader(props: FileUploaderProps) {
         });
       }
 
-      const dataServer = await optimazeUploadedFiles(acceptedFiles, diff)
+      const dataServer = await optimazeUploadedFiles(acceptedFiles, color)
       const data = JSON.parse(dataServer)
       const prevState = props.value;
-      if(prevState.hasOwnProperty(diff)){
-        for(let prop in data.output[diff]){
-          if(prevState[diff].hasOwnProperty(prop)){
-            prevState[diff][prop] = prevState[diff][prop].concat(data.output[diff][prop])
+      if(prevState.hasOwnProperty(color)){
+        for(let prop in data.output[color]){
+          if(prevState[color].hasOwnProperty(prop)){
+            prevState[color][prop] = prevState[color][prop].concat(data.output[color][prop])
           } else {
-            prevState[diff][prop] = data.output[diff][prop]
+            prevState[color][prop] = data.output[color][prop]
           }
         }
       } else {
-        prevState[diff] = data.output[diff]
+        prevState[color] = data.output[color]
       }
         startTransition(() => {
         setFiles(prevState)
+        setUpdateMount(JSON.stringify(files))
         onValueChange?.(prevState)
       });  
     }
 
-  async function onRemove(file: IUploadedFile, color) {
-    if (!files) return;
-    const filesz = [file.name];
-    const findIndex = files[color].thumbnails.findIndex((el) => el.name === file.name )
+  async function onRemove(file: string, color: string) {
+    const filename = file.split('https://s3.ru1.storage.beget.cloud/d3f71020d41d-tractable-seth/')[1]
+    if (!files || Object.keys(files).length === 0) return;
+    const filesz = [filename];
+    console.log(files)
+    console.log(filename)
+    const findIndex = files[color].thumbnails.findIndex((el) => el.name === filename )
     filesz.push(files[color].overviews[findIndex].name)
     filesz.push(files[color].originals[findIndex].name)
     await Promise.all( filesz.map(async(file) => {
@@ -215,57 +160,7 @@ export function FileUploader(props: FileUploaderProps) {
           </div>
         )}
       </Dropzone>
-      {files.hasOwnProperty(diff) ? (
-        // <ScrollArea className='h-fit w-full px-3'>
-          <div className='max-h-48  flex flex-wrap gap-8 items-center'>
-            {files[diff].thumbnails.map((file, index) => (
-              <FileCard
-                key={index}
-                file={file}
-                onRemove={() => onRemove(file, diff)}
-              />
-            )) }
-          </div>
-        // </ScrollArea>
-       ) : null}
+       <ProductImageMover data={files} setFiles={setFiles} setImages={onValueChange} removeFile={onRemove} color={color} key={JSON.stringify(files)}/>
     </div>
   );
-}
-
-interface FileCardProps {
-  file: IUploadedFile;
-  onRemove: () => void;
-}
-
-function FileCard({ file, onRemove }: FileCardProps) {
-  return (
-    <>
-    {file && (
-          <div className='relative flex items-center space-x-2'>
-            <div className='flex space-x-4 border p-3 shadow-sm'>
-                <img
-                  src={file.url}
-                  alt={file.name}
-                  width={48}
-                  height={48}
-
-                  className='aspect-square shrink-0 rounded-md object-cover'
-                />
-            </div>
-            <div className='flex items-start gap-2 self-baseline'>
-              <Button
-                type='button'
-                variant='default'
-                size='icon'
-                onClick={onRemove}
-                className='size-8 rounded-full'
-              >
-                <IconX className='text-muted-foreground text-white' />
-                <span className='sr-only'>Удалить</span>
-              </Button>
-            </div>
-        </div>
-    )}
-    </>
-  )
 }

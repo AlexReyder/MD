@@ -24,7 +24,8 @@ export default async  function CatalogCategoryPage({
 	const  {categorySlug}  = await params
 	const { offset, bands, genres, manufacturers, colors, sizes } = await CatalogSearchParams(searchParams)
 
-	const offsetStr = `?offset=${offset}`
+
+	const offsetStr = `?offset=${offset ? offset : 1}`
 	const bandsStr = bands ? `&bands=${bands}` : ''
 	const genresStr = genres ? `&genres=${genres}` : ''
 	const manufacturerssStr = manufacturers ? `&manufacturers=${manufacturers}` : ''

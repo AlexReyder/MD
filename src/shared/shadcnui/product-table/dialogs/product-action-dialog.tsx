@@ -99,7 +99,6 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 	const formColors = form.watch('colors')
 	const formSizes = form.watch('sizes')
 	const formDetails = form.watch('details')
-	console.log(form.getValues())
 	const formManufacturer = form.watch('manufacturer')
 
 	useEffect(() =>{
@@ -182,6 +181,13 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 						console.log(error)
 					}
 	 onOpenChange(false)		
+	 resetForm()
+	}
+	
+	function resetForm (){
+		setImages({})
+		setAppropriateMaterial(undefined)
+		setAppropriatePrint(undefined)
 	}
 
 	return (
@@ -190,6 +196,7 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 			open={open}
 			onOpenChange={(state) => {
 				form.reset()
+				resetForm()
 				onOpenChange(state)
 			}}
 		>
@@ -505,7 +512,6 @@ const ProductDetails = ({form}: {form:UseFormReturn<ProductsDbAdd, any, Products
 }) => {
 	const colorFields = form.getValues().colors;
 	const sizeFields = form.getValues().sizes;
-	console.log(form.formState.errors.details)
 	return(
 		<Tabs  className="w-full">
 			<TabsList className='mb-4 border'>
@@ -561,7 +567,7 @@ const ProductImages = ({form, images, setImages}: {form: UseFormReturn<ProductsD
 				<FileUploader
           value={images}
           onValueChange={setImages}
-					diff={slug(color.label)}
+					color={color.value}
           maxFiles={10}
           maxSize={10 * 1024 * 1024}
         />

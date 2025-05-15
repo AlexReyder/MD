@@ -1,6 +1,7 @@
 "use server"
 
 import { BonusType } from '@prisma/client'
+import { addMonths } from 'date-fns'
 import { bonusStatusAdminForm } from '../types/user'
 import { BonusDb, BonusesTypeEnum, BonusHistoryType, DynamicBonusesType } from '../types/validation/bonus'
 import { prisma } from './prismaInstance'
@@ -161,12 +162,22 @@ export async function addBonus(userId: string, price: number){
 		const percentage = bonusStatusAdminForm.filter((item) => item.value === bonus?.status)[0].percentage
 		const perc = parseInt((price * (percentage / 100)).toFixed())
 		const total = bonus?.amount + perc
-		const history = bonus.history as unknown as BonusHistoryType[]
+		const history = [...bonus.history] as unknown as BonusHistoryType[]
+		const dynamicBonuses = [...bonus.dynamicBonuses] as unknown as DynamicBonusesType[]
+
 		history.push({
 			type: BonusesTypeEnum.ADD,
 			title: 'Покупка товара',
 			createdAt: new Date(),
-			expiresAt: null,
+			expiresAt: addMonths(new Date(), 2),
+			amount: perc,
+		})
+
+		dynamicBonuses.push({
+			type: BonusesTypeEnum.ADD,
+			title: 'Покупка товара',
+			createdAt: new Date(),
+			expiresAt: addMonths(new Date(), 2),
 			amount: perc,
 		})
 
@@ -176,7 +187,8 @@ export async function addBonus(userId: string, price: number){
 			},
 			data:{
 				amount: total,
-				history
+				history,
+				dynamicBonuses
 			}
 		})
 		return{

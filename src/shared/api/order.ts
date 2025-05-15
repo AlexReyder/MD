@@ -35,6 +35,7 @@ export async function makeOrder(unsafeData: CreateOrder) {
 			name: data.name,
 			surname: data.surname,
 			address: data.address,
+			patronymic: data.patronymic,
 			phone: data.phone,
 			email: data.email,
 			comment: data.comment

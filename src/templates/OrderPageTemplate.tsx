@@ -38,6 +38,7 @@ const CartPageTemplate = ({cartData, profileData, bonusData, deliveryPricesData}
           products: cartData,
           name: profileData.name ?? "",
           surname: profileData.surname ?? "",
+          patronymic: profileData.patronymic ?? "",
           address: '',
           phone: profileData.phone ?? "",
           email: profileData.email ?? "",

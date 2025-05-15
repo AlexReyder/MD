@@ -7,6 +7,7 @@ import { ErrorPageTemplate } from '@/templates'
 import { Products } from '@/widgets/Products/Products'
 import { Metadata } from 'next'
 import type { SearchParams } from 'nuqs/server'
+import { Suspense } from 'react'
 import s from './page.module.scss'
 
 export const metadata: Metadata = {
@@ -44,7 +45,9 @@ export default async  function CatalogPage({ searchParams }: PageProps) {
 				</Section>
 				<Section className={s.Container}>
 						<CatalogFilters data={filters.success} error={filters.error}/>
-						<Products products={products.success.products}/>
+						<Suspense fallback={<p>Loading feed...</p>}>
+							<Products products={products.success.products}/>
+						</Suspense>
 				</Section>
 				<CatalogPagination productsCount={products.success.length}/>
 				</>

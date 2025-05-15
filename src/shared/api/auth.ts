@@ -69,9 +69,12 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
       data: {
         name: data.name,
         surname: data.surname,
+        patronymic: data.patronymic,
         email:data.email,
         phone: data.phone,
         password: hashedPassword,
+        whatsapp: data.whatsapp,
+        telegram: data.telegram
       },
     });
     const bonus = await createBonusTable(savedUser.id)

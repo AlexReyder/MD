@@ -148,8 +148,10 @@ export async function removeProduct(id: string){
 		const productImages = product.images as Record<string, []>
 		if(Object.keys(productImages).length > 0){
 					const images: string[] = []
-					for(let color in productImages){
-						productImages[color].forEach((item: any) => images.push(item.url))
+						for(let color in productImages){
+							for(let type in productImages[color]){
+							productImages[color][type].forEach((item: any) => images.push(item.url))
+						}
 					}
 					await deleteFiles(images)
 		}

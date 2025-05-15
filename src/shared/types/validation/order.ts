@@ -14,6 +14,7 @@ export const OrderDbSchema = z.object({
 	details:z.object({
 		name:z.string(),
 		surname:z.string(),
+		patronymic: z.string().default(''),
 		address:z.string(),
 		phone:z.string(),
 		email:z.string(),
@@ -52,7 +53,8 @@ export const CreateOrderSchema = z.object({
 	products:z.any().array(),
 	name:z.string().nonempty('Обязательное поле.'),
 	surname:z.string().nonempty('Обязательное поле.'),
-	address: z.string().optional(),
+	patronymic: z.string().default(''),
+	address: z.string().nonempty('Обязательное поле.'),
 	phone:z.string().nonempty('Обязательное поле.'),
 	email:z.string().nonempty('Обязательное поле.'),
 	comment:z.string().default(''),

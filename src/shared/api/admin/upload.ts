@@ -181,18 +181,19 @@ export async function getPresignedUrl(filename: string){
 
 		let output: any = {
 		}
+		console.log(output)
 
 		await Promise.all(
 			files.map( async (file) => {
 				const arrayBuffer = await file.arrayBuffer();
 				const buffer = Buffer.from(arrayBuffer)
-
+				const filePrefix = uuidv4()
 				await sharp(buffer)
 				.jpeg({quality: 90})
 				.toBuffer({resolveWithObject: true})
 				.then( async (img) => {
 					const dimension = imageSize(img.data)
-					const filename =  uuidv4() + '_original' + '.' + dimension.type
+					const filename =  filePrefix + '_original' + '.' + dimension.type
 					const presignedUrl = await getSignedUrl(
 						s3Client,
 							new PutObjectCommand({
@@ -206,12 +207,6 @@ export async function getPresignedUrl(filename: string){
 						method: "PUT",
 						body: img.data,
 					});
-
-					//  await s3Client.send(new PutObjectCommand({
-					// 	Bucket: bucketName,
-					// 	Key: filename,
-					// 	Body: img.data
-					// }))
 
 					const data = {
 						url: `https://s3.ru1.storage.beget.cloud/d3f71020d41d-tractable-seth/${filename}`,
@@ -238,7 +233,7 @@ export async function getPresignedUrl(filename: string){
 				.toBuffer({resolveWithObject: true})
 				.then( async (img) => {
 					const dimension = imageSize(img.data)
-					const filename =  uuidv4() + '_overview' + '.' + dimension.type
+					const filename =  filePrefix + '_overview' + '.' + dimension.type
 
 					const presignedUrl = await getSignedUrl(
 						s3Client,
@@ -281,7 +276,7 @@ export async function getPresignedUrl(filename: string){
 				.toBuffer({resolveWithObject: true})
 				.then( async (img) => {
 					const dimension = imageSize(img.data)
-					const filename =  uuidv4() + '_thumbnail' + '.' + dimension.type
+					const filename =  filePrefix + '_thumbnail' + '.' + dimension.type
 
 						const presignedUrl = await getSignedUrl(
 						s3Client,
@@ -315,77 +310,8 @@ export async function getPresignedUrl(filename: string){
 						}
 				})
 
-
 			})
 		)
-
-		// await Promise.all(files.map( async (file) => {
-		// 	const arrBuff = await file.arrayBuffer();
-		// 	const buffer = Buffer.from(arrBuff)
-
-		// 	const dimension = imageSize(buffer)
-		// 	const filename =  uuidv4() +  '.' + dimension.type
-
-		// 	const originalImage = await sharp(buffer).jpeg({quality: 90}).toBuffer({resolveWithObject: true})
-
-		// 	const overviewImage = await sharp(buffer)
-		// 	.resize({
-		// 			fit: sharp.fit.contain,
-		// 			width: 1280
-		// 	})
-		// 	.jpeg({ quality: 75 })
-		// 	.toBuffer({resolveWithObject: true})
-
-		// 	const thumbnailImage = await sharp(buffer)
-		// 	.resize({
-		// 		fit: sharp.fit.contain,
-		// 		width: 200
-		// 	})
-		// 	.jpeg({quality: 75})
-		// 	.toBuffer({resolveWithObject: true})
-
-		// 	const previewImage = await sharp(buffer)
-		// 	.resize({
-		// 			fit: sharp.fit.contain,
-		// 			width: 720
-		// 	})
-		// 	.jpeg({ quality: 75 })
-		// 	.toBuffer({resolveWithObject: true})
-	
-			
-
-		// 	const url = `https://s3.ru1.storage.beget.cloud/d3f71020d41d-tractable-seth/${filename}`
-
-		// 	const data = {
-		// 		url,
-		// 		dimension,
-		// 		name: filename
-		// 	}
-
-
-		// 	const isColor = output.hasOwnProperty(color);
-    //     if(!isColor){
-    //       output[color!] = [data]
-    //     } else {
-    //       output[color!].push(data)
-    //     }
-
-		// 	const presignedUrl = await getSignedUrl(
-		// 		s3Client,
-		// 			new PutObjectCommand({
-		// 					Bucket: bucketName,
-		// 					Key: filename,
-		// 					ContentType:'image/jpeg'
-		// 			}),
-		// 			{ expiresIn: 60 },
-		// 	);
-
-		// 	await fetch(presignedUrl, {
-		// 		method: "PUT",
-		// 		body: imageBuff.data,
-		// 	});
-
-		// }))
 		return JSON.stringify({
 			output
 		})

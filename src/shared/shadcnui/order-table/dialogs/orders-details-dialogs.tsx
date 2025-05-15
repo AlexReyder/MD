@@ -33,13 +33,17 @@ export function OrderDetailsDialog({ currentRow, open, onOpenChange }: Props) {
 						</DialogTitle>
 					</DialogHeader>
 					<div className='-mr-4 h-[26.25rem] w-full overflow-y-auto py-1 pr-4'>
+							<div className='flex items-center gap-2 mt-2'>
+							<h4 className="leading-7 font-semibold tracking-tight">Фамилия: </h4>
+							<p className="leading-7">{currentRow?.details.surname}</p>
+						</div>
 						<div className='flex items-center gap-2'>
 							<h4 className="leading-7 font-semibold tracking-tight">Имя: </h4>
 							<p className="leading-7">{currentRow?.details.name}</p>
 						</div>
-						<div className='flex items-center gap-2 mt-2'>
-							<h4 className="leading-7 font-semibold tracking-tight">Фамилия: </h4>
-							<p className="leading-7">{currentRow?.details.surname}</p>
+							<div className='flex items-center gap-2 mt-2'>
+							<h4 className="leading-7 font-semibold tracking-tight">Отчество: </h4>
+							<p className="leading-7">{currentRow?.details?.patronymic}</p>
 						</div>
 						<div className='flex items-center gap-2 mt-2'>
 							<h4 className="leading-7 font-semibold tracking-tight">Номер телефона: </h4>

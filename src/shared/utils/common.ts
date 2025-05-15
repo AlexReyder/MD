@@ -116,6 +116,10 @@ export  function calculateBonusDiscount(total: number, status: BonusType, minus:
 }
 
 
+export function getFirstObjectKey(obj){
+  return Object.keys(obj)[0]
+}
+
 export function addProps(obj, arr, val) {
 
   if (typeof arr == 'string')

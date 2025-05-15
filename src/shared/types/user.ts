@@ -8,8 +8,11 @@ import { UserStatus } from './schemas'
 export interface UserProfileDTO{
   name: string | null
   surname: string | null
+  patronymic: string | null
   email: string
   phone: string
+  whatsapp: boolean
+  telegram: boolean
 }
 
 export const bonusStatusAdmin = new Map<BonusType, string>([

@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const CatalogPagination = ({productsCount}: Props) => {
-		const [offset, setOffset] = useQueryState('offset', parseAsInteger.withDefault(1).withOptions({shallow: false}))
+		const [offset, setOffset] = useQueryState('offset', parseAsInteger.withDefault(1).withOptions({shallow: false, history: 'push', scroll: true, throttleMs: 1000}))
 		const pagesCount = Math.ceil((productsCount || 12) / 12)
 		const paginationProps = {
 				containerClassName: s.ContainerClassName,

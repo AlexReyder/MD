@@ -2,7 +2,7 @@
 import { Role } from '@prisma/client'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
-import { profilePassword } from '../types/schemas'
+import { profilePassword, updateUserProfileSchema } from '../types/schemas'
 import { UserProfileDTO } from '../types/user'
 import { hashPassword } from './auth'
 import { prisma } from './prismaInstance'
@@ -10,35 +10,41 @@ import { verifySession } from './session'
 
 export async function getProfileData(): Promise<UserProfileDTO> {
 	const {userId} = await verifySession();
-	if(!userId) redirect('/login')
+	if(!userId) redirect('/signin')
 
 
 	const userData = await prisma.user.findFirst({where: {
 		id: userId
 	}})
 
-	if(!userData)	redirect('/login')
+	if(!userData)	redirect('/signin')
 
 	return {
 		name: userData.name,
 		surname: userData.surname,
+		patronymic: userData.patronymic,
 		email: userData.email,
-		phone: userData.phone
+		phone: userData.phone,
+		whatsapp: userData.whatsapp,
+		telegram: userData.telegram
 	}
 }
 
 export async function changePassword(unsafeData: z.infer<typeof profilePassword>){
 		const { success, data } = profilePassword.safeParse(unsafeData)
-		if (!success) return "Unable to change password"
+		if (!success)  return {
+				success: null,
+				error: 'Не удалось обновить пароль'
+			}
 		
 		const {isAuth,userId} = await verifySession();
-		if(!isAuth || !userId) redirect('/login')
+		if(!isAuth || !userId) redirect('/signin')
 
 		
 		const existingUser = await prisma.user.findFirst({where: {
 			id: userId
 		}})
-		if(!existingUser) redirect('/login')
+		if(!existingUser) redirect('/signin')
 			
 		try {
 		const hashedPassword =  hashPassword(data.password)
@@ -50,9 +56,74 @@ export async function changePassword(unsafeData: z.infer<typeof profilePassword>
 					password: await hashedPassword,
 				},
 			});
-		} catch {
-			return "Unable to update password"
+			return {
+				success: true,
+				error: null
+			}
+
+		} catch(e) {
+			return {
+				success: null,
+				error: 'Не удалось обновить пароль'
+			}
 		}
+}
+
+export async function updateUserProfile(unsafeData: z.infer<typeof updateUserProfileSchema>){
+	const { success, data } = updateUserProfileSchema.safeParse(unsafeData)
+		if (!success) return {
+			success: null,
+			error: 'Неверно введенные данные'
+		}
+
+  const {isAuth,userId} = await verifySession();
+	if(!isAuth || !userId) redirect('/signin')
+
+	const existingUser = await prisma.user.findFirst({where: {
+			id: userId
+		}})
+
+	if(!existingUser) redirect('/signin')
+	const user = await prisma.user.findFirst({
+		where: {
+			id: userId
+		}
+	})
+
+	if(!user){
+		return {
+			success: null,
+			error: 'Пользователя не существует'
+		}
+	}
+
+
+	try{
+		await prisma.user.update({
+			where:{
+				id: userId as string
+			},
+			data:{
+				name: data.name,
+				surname: data.surname,
+				patronymic: data.patronymic,
+				email: data.email,
+				phone: data.phone,
+				whatsapp: data.whatsapp,
+				telegram: data.telegram
+			}
+		})
+		return{
+			success: true,
+			error: null
+		}
+
+	} catch(e){
+		return{
+			success:null,
+			error: e as string
+		}
+	}
 }
 
 export async function updateUserPurchasesAmount(userId: string, plusAmount: number){

@@ -79,7 +79,7 @@ export async function syncCart(userId: string){
 		DBCartProductsJson = dbCart.products as string
 		DBCartProducts = JSON.parse(DBCartProductsJson)
 	} else {
-			const create = await prisma.cart.create({
+			 await prisma.cart.create({
 				data: {
 					userId: userId as string,
 					products: JSON.stringify([]),

@@ -18,7 +18,7 @@ export const Footer = ({}: FooterProps) => {
 				<div className={cls.General}>
 						<Logo/>
 					<Typography variant='text'>
-					«Maldito» - рок магазин это огромный выбор качественной рок-атрибутики любого размера до 5XL. Рок футболки по разумным ценам.
+			«Maldito» - легендарный питерский рок магазин метал мерча из Перу. Самый большой ассортимент футболок, лонгсливов и постеров для любителей тяжелой музыки и не только.
 					</Typography>
 				</div>
 				<div className={cls.Navigation}>

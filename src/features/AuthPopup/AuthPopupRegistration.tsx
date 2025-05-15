@@ -2,6 +2,7 @@
 import { signUp } from '@/shared/api/auth'
 import { signUpSchema } from '@/shared/types/schemas'
 import { Form, FormContainer, FormFooter, FormHeader, FormSubmit, Input } from '@/shared/ui'
+import { CheckboxForm } from '@/shared/ui/Form/FormCheckbox'
 import { FormError } from '@/shared/ui/Form/FormError'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
@@ -19,9 +20,12 @@ const AuthPopupRegistration = ({className = ''}: {className?: string}) => {
       defaultValues: {
         name:"",
         surname:"",
+        patronymic: "",
         phone:"",
         email: "",
         password: "",
+        whatsapp: false,
+        telegram: false,
       },
       resolver: zodResolver(signUpSchema)
     })
@@ -40,11 +44,14 @@ const AuthPopupRegistration = ({className = ''}: {className?: string}) => {
       <FormContainer className={className}>
       <FormHeader title='Регистрация' description='Создать аккаунт'/>   
         <Form action={handleSubmit(onSubmit)}>
-        <Input registerName='name' register={register} errors={errors.email} type='text' placeholder='Имя' />
         <Input registerName='surname' register={register} errors={errors.email} type='text' placeholder='Фамилия' />
+        <Input registerName='name' register={register} errors={errors.email} type='text' placeholder='Имя' />
+         <Input registerName='patronymic' register={register} errors={errors.patronymic} type='text' placeholder='Отчество' />
         <Input registerName='email' register={register} errors={errors.email} type='email' placeholder='Электронная почта' />
         <Input registerName='phone' register={register} errors={errors.email} type='text' placeholder='Номер телефона' />
         <Input registerName='password' register={register} errors={errors.password} type='password' placeholder='Пароль' />
+        <CheckboxForm registerName='whatsapp' register={register} errors={errors.whatsapp} labelText='WhatsApp привязан к телефону'/>
+        <CheckboxForm registerName='telegram' register={register} errors={errors.telegram} labelText='Telegram привязан к телефону'/>
         <FormSubmit 
                 title='Создать' 
                 isDisabled={!isDirty || isSubmitting}       

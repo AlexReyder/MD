@@ -1,6 +1,5 @@
 .Inner{
 	background-color: #222;
-	// border-radius: 7px;
 	padding: 1rem;
 	p {
 		&:not(:last-child) {
@@ -66,6 +65,7 @@
 	width: 100%;
 	font-weight: 500;
 	margin-bottom: 16px;
+	border: none;
 
 	&:hover {
 		border-radius: 50px;

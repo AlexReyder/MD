@@ -48,6 +48,7 @@ model User {
   email           String           @unique
   name            String?
   surname         String?
+  patronymic      String? 
   phone           String           @unique
   password        String
   role            Role             @default(USER)

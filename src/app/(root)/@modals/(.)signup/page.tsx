@@ -1,12 +1,12 @@
 import { Modal } from '@/entities/Modal/Modal'
 import AuthPopupRegistration from '@/features/AuthPopup/AuthPopupRegistration'
-
-export default function Page526() {
+import s from './styles.module.scss'
+export default function ModalSignIn() {
   return (
-		<div>
+		<>
 			<Modal>
-			<AuthPopupRegistration/>
+			<AuthPopupRegistration className={s.Modal}/>
 			</Modal>
-		</div>
+		</>
   )
 }

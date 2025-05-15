@@ -1,13 +1,19 @@
 "use client"
-import { useRouter } from 'next/navigation'
-import { ChangeEvent, KeyboardEvent, useState } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
+import { ChangeEvent, KeyboardEvent, useState, useRef, useEffect } from 'react'
 import s from './Search.module.scss'
 
 export const Search = () => {
 	const [search, setSearch] = useState('')
 	const [open, setOpen] = useState(false)
 	const router = useRouter()
+	const pathname = usePathname()
+	const ref = useRef(pathname)
 
+	useEffect(() => {
+    	setOpen(false)
+    }, [pathname])
+	
 	const handleSearch = () => {
 		setOpen(!open)
 		if(search){

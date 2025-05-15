@@ -15,11 +15,16 @@ const OrderDetailsForm = ({ register, errors, deliveryType, paymentType }:{ regi
     name = 'Адрес доставки'
   }
 
+    if(deliveryType === 'CDEK'){
+    name = 'Адрес пункта ПВЗ или адрес доставки до двери'
+  }
+
   return (
     <div className={s.OrderDetailsForm}>
       <div className={s.OrderDetailsForm__Inner}>
-      <Input registerName='name' register={register} errors={errors.name} type='text' placeholder='Имя' />
       <Input registerName='surname' register={register} errors={errors.surname} type='text' placeholder='Фамилия' />
+      <Input registerName='name' register={register} errors={errors.name} type='text' placeholder='Имя' />
+      <Input registerName='patronymic' register={register} errors={errors.patronymic} type='text' placeholder='Отчество' />
       <Input registerName='phone' register={register} errors={errors.phone} type='text' placeholder='Номер телефона' />
       {paymentType !== 'DEFFERED' ? (
          <Input registerName='address' register={register} errors={errors.address} type='text' placeholder={name} />

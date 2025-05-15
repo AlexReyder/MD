@@ -1,7 +1,8 @@
 .Item{
 	min-height: 453px;
 	position: relative;
-	padding: 16px;
+	padding: 16px 0;
+	border-radius:16px;
 	transition: background-color .2s ease-in-out, box-shadow .2s ease-in-out;
 	display: flex;
 	flex-direction: column;
@@ -19,10 +20,6 @@
 		transition: background-color .2s ease-in-out, opacity .2s ease-in-out, visibility .2s ease-in-out;
 	}
 
-	&:hover &__img img {
-		// transition: background .2s ease-in-out;
-		// background: radial-gradient(52.53% 52.53% at 50% 47.47%, #4E5D77 0%, rgba(42, 50, 63, 0.00) 100%);
-	}
 
 	@media (max-width: 590px) {
 		padding-bottom: 75px;
@@ -41,52 +38,30 @@
 	z-index: 1;
 }
 
-// .Actions {
-// 	opacity: 0;
-// 	visibility: hidden;
-// 	position: absolute;
-// 	top: 16px;
-// 	right: 16px;
-// 	display: flex;
-// 	flex-direction: column;
-// 	transition: opacity .2s ease-in-out, visibility .2s ease-in-out;
-// 	z-index: 1;
-
-// 	@media (max-width: 800px) {
-// 		opacity: 1;
-// 		visibility: visible;
-// 	}
-// }
 
 .New {
 	background-color: #FF5E2D;
 }
 
 .Bestseller {
-	background-color: var(--t-color);
+	background-color: var(--hit-color);
 }
 
 .Img {
-	margin: auto;
 	display: block;
+	width: 100%;
+	height: 320px;
+	max-height: 320px;
+	position: relative;
 	&:hover > .Cart {
 		opacity: 1;
 		visibility: visible;
 		transition: background-color .2s ease-in-out, opacity .2s ease-in-out, visibility .2s ease-in-out;
 	}
-	img {
-		// padding: 0 1rem;
-		// border: 3px solid black;
-		max-height: 332px;
-		max-width: 352px;
-		margin: 0 auto;
-		// background: radial-gradient(52.53% 52.53% at 50% 47.47%, #333A47 0%, rgba(29, 37, 51, 0.00) 100%);
-		// transition: background .2s ease-in-out;
-		object-fit: contain;
-	}
 }
 .Inner {
 	align-self: flex-start;
+	padding: 0 16px;
 }
 
 .Title {
@@ -114,7 +89,7 @@
 }
 
 .Price {
-	color: var(--p-color);
+	color: var(--price-color);
 	font-size: 2.4rem;
 	font-weight: 500;
 }
@@ -143,7 +118,7 @@
 	font-size: 16px;
 	font-weight: 500;
 	border-radius: 32px;
-	background-color: var(--t-color);
+	background-color: var(--cart-color);
 	padding: 12px 24px !important;
 	transition: background-color .2s ease-in-out, opacity .2s ease-in-out, visibility .2s ease-in-out;
 	cursor: pointer;
@@ -158,7 +133,7 @@
 	}
 
 	&:hover {
-		background-color: var(--t-color-2);;
+		background-color: var(--t-color-2);
 		transition: background-color .2s ease-in-out;
 	}
 
