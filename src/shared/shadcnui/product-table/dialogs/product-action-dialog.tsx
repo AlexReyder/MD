@@ -1,5 +1,6 @@
 'use client'
 
+import { uniqueProductArticleNumber, uniqueProductName } from '@/shared/api/admin/formUnique'
 import { addProduct } from '@/shared/api/admin/products'
 import { Button } from '@/shared/shadcnui/ui/button'
 import {
@@ -25,7 +26,7 @@ import { Textarea } from '@/shared/shadcnui/ui/textarea'
 import { IImagesData } from '@/shared/types/file'
 import { FiltersNSpecDb, ProductsDb, ProductsDbAdd, ProductsDbAddSchema } from '@/shared/types/validation/products'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useEffect, useState, useTransition } from 'react'
+import { ChangeEvent, useCallback, useEffect, useState, useTransition } from 'react'
 import { useForm, UseFormReturn } from 'react-hook-form'
 import toast, { Toaster } from 'react-hot-toast'
 import slug from 'slug'
@@ -95,7 +96,6 @@ export function ProductActionDialog({currentRow, open, onOpenChange, data}: Prop
 			countryFilter:[],
 		},
 	})
-
 	const formColors = form.watch('colors')
 	const formSizes = form.watch('sizes')
 	const formDetails = form.watch('details')
@@ -350,6 +350,15 @@ const FormTemplateField = ({form, name, data, title, placeholder, isEdit, maxSel
 
 const ProductName = (form: {form: any
 }) => {
+	const [err, setErr] = useState('')
+	const handleUnique = async(e: ChangeEvent<HTMLInputElement>) => {
+		const isUnique = await uniqueProductName(e.target.value)
+		if(!isUnique){
+			setErr('Ошибка. Поле должно быть уникальным. Товар с таким названием уже существует.')
+			return;
+		}
+		setErr('')
+	}
 	return (
 		<FormField
 		//@ts-ignore:next-line
@@ -366,8 +375,12 @@ const ProductName = (form: {form: any
 						className='col-span-4'
 						autoComplete='off'
 						{...field}
+						onBlur={handleUnique}
 					/>
 				</FormControl>
+					{err ? (
+							<p className='text-red-600 col-span-6 text-sm'>{err}</p>
+						): null}
 				<FormMessage className='col-span-4 col-start-3' />
 			</FormItem>
 		)}
@@ -403,6 +416,16 @@ const ProductDescription = (form: {form: any
 }
 const ProductArticle = (form: {form: any
 }) => {
+	const [err, setErr] = useState('')
+
+	const handleUnique = async(e: ChangeEvent<HTMLInputElement>) => {
+		const isUnique = await uniqueProductArticleNumber(e.target.value)
+		if(!isUnique){
+			setErr('Ошибка. Поле должно быть уникальным. Товар с таким артикулом уже существует.')
+			return;
+		}
+		setErr('')
+	}
 	return (
 		<FormField
 		//@ts-ignore:next-line
@@ -419,8 +442,12 @@ const ProductArticle = (form: {form: any
 							className='col-span-4'
 							autoComplete='off'
 								{...field}
+							onBlur={handleUnique}
 							/>
 						</FormControl>
+						{err ? (
+								<p className='text-red-600 col-span-6 text-sm'>{err}</p>
+						): null}
 						<FormMessage className='col-span-4 col-start-3' />
 					</FormItem>
 				)}

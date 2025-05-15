@@ -1,6 +1,7 @@
 'use client'
 
 import { upsertFilter } from '@/shared/api/admin/filters'
+import { uniqueProductBand } from '@/shared/api/admin/formUnique'
 import { getAllSpecifications } from '@/shared/api/admin/specifications'
 import { FilterType } from '@/shared/context/filters-context'
 import { Button } from '@/shared/shadcnui/ui/button'
@@ -29,7 +30,7 @@ import {
 } from "@/shared/shadcnui/ui/select"
 import { FilterAdmin } from '@/shared/types/schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast, { Toaster } from 'react-hot-toast'
 import { z } from 'zod'
@@ -61,6 +62,7 @@ interface Props {
 export function FilterActionDialog({ currentRow, specType, open, onOpenChange }: Props) {
   const [materialsData, setMaterialData] = useState(undefined)
   const [printsData, setPrintsData] = useState(undefined)
+  const [err, setErr] = useState('')
   const isEdit = !!currentRow
   const form = useForm<FilterAdminForm>({
     resolver: zodResolver(formSchema),
@@ -91,7 +93,6 @@ export function FilterActionDialog({ currentRow, specType, open, onOpenChange }:
 
   },[specType])
 
- 
   const onSubmit = async (values: FilterAdminForm) => {
     if(specType){
       // @ts-ignore:next-line
@@ -111,6 +112,17 @@ export function FilterActionDialog({ currentRow, specType, open, onOpenChange }:
       onOpenChange(false)
     }
   }
+
+  const handleUnique = async(e: ChangeEvent<HTMLInputElement>) => {
+    if(specType === 'band'){
+      const isUnique = await uniqueProductBand(e.target.value)
+      if(!isUnique){
+        setErr('Ошибка. Поле должно быть уникальным. Такой фильтр уже существует.')
+        return;
+      }
+      setErr('')
+    }
+    }
 
   return (
     <>
@@ -147,8 +159,12 @@ export function FilterActionDialog({ currentRow, specType, open, onOpenChange }:
                           className='col-span-4'
                           autoComplete='off'
                           {...field}
+                          onBlur={handleUnique}
                         />
                       </FormControl>
+                      {err ? (
+                          <p className='text-red-600 col-span-6 text-sm'>{err}</p>
+                      ): null}
                       <FormMessage className='col-span-4 col-start-3' />
                     </FormItem>
                   )}

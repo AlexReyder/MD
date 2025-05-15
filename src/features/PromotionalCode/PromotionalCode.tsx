@@ -7,7 +7,6 @@ import s from './PromotionalCode.module.scss'
 const PromotionalCode = ({register, errors, setPromocodeValue}:{register:any, errors:any, setPromocodeValue: any}) => {
 
   async function checkPromo(e:ChangeEvent<HTMLInputElement>){
-    console.log(e.target.value)
     const {success, error} = await verifyPromocode(e.target.value)
     if(success){
       setPromocodeValue({

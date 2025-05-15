@@ -92,7 +92,7 @@ export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
           onOpenChange(state)
         }}
       >
-        <DialogContent className='sm:max-w-lg'>
+        <DialogContent className='sm:max-w-xl'>
           <DialogHeader className='text-left'>
             <DialogTitle>
               {isEdit? `Изменить баннер` : `Добавить баннер`}
@@ -145,7 +145,13 @@ export function AdActionDialog({ currentRow, open, onOpenChange }: Props) {
                     </FormItem>
                   )}
                   />
-                <AdsFileUploader value={image} onValueChange={setImage} text='декстопной версии'/>
+                   <p className='text-muted-foreground'>
+										Разрешение изображения для десктопной версии 1920x480
+									</p>
+                <AdsFileUploader value={image} onValueChange={setImage} text='десктопной версии'/>
+                 <p className='text-muted-foreground'>
+									Разрешение изображения для мобильной версии 720 x 320
+								</p>
                 <AdsFileUploader value={imageMobile} onValueChange={setImageMobile} text='мобильной версии'/>
 
               </form>
