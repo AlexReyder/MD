@@ -39,6 +39,7 @@ const AuthPopupLogin = ({includeHeading = true, className = '', btnClass = ''}: 
            <Input registerName='email' register={register} errors={errors.email} type='email' placeholder='Электронная почта' />
            <Input registerName='password' register={register} errors={errors.password} type='password' placeholder='Пароль' />
            <FormSubmit 
+            className = {btnClass}
             title='Войти' 
             isDisabled={!isDirty || isSubmitting}       
             isSubmitting={isSubmitting}

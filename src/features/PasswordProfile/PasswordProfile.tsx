@@ -12,7 +12,7 @@ import s from './PasswordProfile.module.scss'
 
 type FormSchema = z.infer<typeof profilePassword>
 
-  const PasswordProfile = ( {className}: {className?: string}) => {
+  const PasswordProfile = ( {className, btnClass=''}: {className?: string, btnClass?: string}) => {
 		const [formError, setFormError] = useState('')
 		const [formSuccess, setFormSuccess] = useState('')
 
@@ -46,14 +46,20 @@ type FormSchema = z.infer<typeof profilePassword>
 				<Form action={handleSubmit(onSubmit)}>
 				<Input registerName='password' register={register} errors={errors.password} type='password' placeholder='Пароль' />
 				<Input registerName='confirmPassword' register={register} errors={errors.confirmPassword} type='password' placeholder='Повторите пароль' />
-				<FormFooter>
+					{ formSuccess || formError ? 
+						(	
+						<FormFooter>
 							<FormSuccess successMessage={formSuccess} className={s.Notify}/>
 							<FormError errorMessage={formError} className={s.Notify}/>
-				</FormFooter>
+						</FormFooter>)
+						: null
+					}
 				
-					<FormSubmit  title='Сохранить' 
-            isDisabled={!isDirty || isSubmitting}       
-            isSubmitting={isSubmitting}/>
+					<FormSubmit
+					 className={btnClass}  
+					 title='Сохранить' 
+					 isDisabled={!isDirty || isSubmitting}       
+					 isSubmitting={isSubmitting}/>
 				</Form>
 
 		</FormContainer>

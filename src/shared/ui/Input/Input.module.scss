@@ -8,13 +8,15 @@
 }
 
 .Input{
+  font-size: 1.6rem;
+  font-weight: 500;
 	width: 100%;
-  height: 38px;
+  height: 45px;
   padding: 6px 12px;
   background: var(--s-color);
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #2e344d;
+  border: 2px solid var(--g-color-1);
   -webkit-transition: all 0.3s ease-in-out 0s;
   -moz-transition: all 0.3s ease-in-out 0s;
   -ms-transition: all 0.3s ease-in-out 0s;
@@ -22,6 +24,7 @@
   transition: all 0.3s ease-in-out 0s;
   color: var(--p-color);
   box-shadow: inset 0 1px 4px 0 rgb(119 122 175 / 30%);
+  transition: all 0.3s;
 }
 
 .Input:invalid{
@@ -29,11 +32,12 @@
 }
 
 .Input::placeholder {
-  color: #495057;
+  font-weight: 500;
+  color: var(--g-color-1);
 }
 
 .Input:focus{
-	border: 1px solid #344d2e;
+	border: 2px solid var(--t-color);
   outline: 0;
   transition: all 0.3s ease-in-out 0s;
   -webkit-box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);

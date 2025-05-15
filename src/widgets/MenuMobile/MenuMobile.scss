@@ -393,6 +393,12 @@
 	transition-delay: 1.7s;
 }
 
+.navigation.nav-active .nav__list-item:nth-child(11) {
+	-webkit-transition-delay: 1.8s;
+	transition-delay: 1.8s;
+}
+
+
 .submenu {
 	opacity: 0;
 	visibility: hidden;

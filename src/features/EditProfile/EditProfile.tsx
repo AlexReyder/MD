@@ -12,7 +12,7 @@ import { z } from 'zod'
 import s from './EditProfile.module.scss'
 
 type FormSchema = z.infer<typeof updateUserProfileSchema>
-  const EditProfile = ({data, className}:{className: any, data: any}) => {
+  const EditProfile = ({data, className, btnClass = ''}:{className: any, data: any, btnClass?: string}) => {
 		const [formError, setFormError] = useState('')
 		const [formSuccess, setFormSuccess] = useState('')
 		const {name, surname, email, phone, whatsapp, telegram, patronymic} = data;
@@ -55,15 +55,21 @@ type FormSchema = z.infer<typeof updateUserProfileSchema>
 				<Input registerName='phone' register={register} errors={errors.email} type='text' placeholder='Номер телефона' />
 				<CheckboxForm registerName='whatsapp' register={register} errors={errors.whatsapp} labelText='WhatsApp привязан к телефону'/>
 				<CheckboxForm registerName='telegram' register={register} errors={errors.telegram} labelText='Telegram привязан к телефону'/>
+				{ formSuccess || formError ? 
+				(	
 				<FormFooter>
 					<FormSuccess successMessage={formSuccess} className={s.Notify}/>
 					<FormError errorMessage={formError} className={s.Notify}/>
-				</FormFooter>
-					<FormSubmit 
-										title='Сохранить' 
-										isDisabled={!isDirty || isSubmitting}       
-										isSubmitting={isSubmitting}
-									 />
+				</FormFooter>)
+				: null
+				}
+			
+					<FormSubmit
+						className={btnClass}
+						title='Сохранить' 
+						isDisabled={!isDirty || isSubmitting}       
+						isSubmitting={isSubmitting}
+					/>
 				</Form>
 		</FormContainer>
 	)

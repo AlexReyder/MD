@@ -46,7 +46,7 @@ const HistoryOrderItem = ({ main, item, position }: Props) => {
 
 						<span className={s.list__item__info}>
 							<span>Стоимость доставки: </span>
-							<span className={s.SelectedFilter}>{formatPrice(main.deliveryPrice)} ₽</span>
+							<span className={`${s.SelectedFilter} ${s.SelectedFilter__price}`}>{formatPrice(main.deliveryPrice)} ₽</span>
 						</span>
 
 							<span className={s.list__item__info}>
@@ -56,12 +56,12 @@ const HistoryOrderItem = ({ main, item, position }: Props) => {
 						
 						<span className={s.list__item__info}>
 							<span>Сумма: </span>
-							<span className={s.SelectedFilter}>{formatPrice(+item.price * +item.quantity)} ₽</span>
+							<span className={`${s.SelectedFilter} ${s.SelectedFilter__price}`}>{formatPrice(+item.price * +item.quantity)} ₽</span>
 						</span>
 
 					 <span className={s.list__item__info}>
 						<span> Статус заказа: </span>
-						<span className={s.SelectedFilter}>{orderStatusTypes.filter((el) => el.value === main.status)[0].label}</span>
+						<span className={`${s.SelectedFilter} ${s.SelectedFilter__status}`}>{orderStatusTypes.filter((el) => el.value === main.status)[0].label}</span>
 					</span>
 					{main.trackNumber ? (  <span className={s.list__item__info}>
 						<span> Трек номер: </span>

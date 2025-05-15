@@ -18,6 +18,7 @@ export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
   const categoryName = categoryFilter[0]
   const firstColor = colorsFilter[0]
   const previewImage = isImages ? images[firstColor]["overviews"][0].url : '/img/no-image.png'
+  // const imageDimension = 
   const firstPrice = price[sizes[0].label]
 
   async function onSubmit() {
@@ -54,7 +55,7 @@ export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
             href={`/catalog/${categoryName}/${nameSlug}?color=${firstColor}`}
             className={s.Img}
           >
-            <Image src={previewImage} alt={name} fill style={{objectFit:'scale-down'}} />
+            <Image src={previewImage} alt={name} fill style={{objectFit:'contain'}} loading="eager" decoding="async" />
           </Link>
           <div className={s.Inner}>
             <h3 className={s.Title}>

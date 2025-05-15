@@ -2,11 +2,15 @@ import { Breadcrumbs } from '@/features'
 import { HeadingWithCount, Section } from '@/shared/ui'
 import { ProfileAside } from '@/templates'
 import s from './styles.module.scss'
-export default function ProfileLayout({
+import { getUserRole } from '@/shared/api/user'
+
+export default async function ProfileLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const getRole = await getUserRole();
+	console.log(getRole)
 	return (
 		<main>
 			<Section>
@@ -17,8 +21,8 @@ export default function ProfileLayout({
 					/>
 			</Section>
 		<Section className={s.Container}>
-			<aside>
-				<ProfileAside/>
+			<aside className={s.ProfileAside}>
+				<ProfileAside isAdmin={getRole}/>
 			</aside>
 			{children}
 		</Section>

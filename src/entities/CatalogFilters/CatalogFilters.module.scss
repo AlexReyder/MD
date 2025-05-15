@@ -90,6 +90,11 @@ input[name='panel']:checked ~ .AccordionContent{
 }
 
 .OpenBtn{
+	display: block;
+	width: 100%;
+	max-width: 200px;
+	text-align: center;
+	border-radius: 24px;
 	border: none;
 	background-color: var(--t-color);
 	padding: 1.5rem 3rem;
@@ -100,9 +105,8 @@ input[name='panel']:checked ~ .AccordionContent{
 	position: relative;
 	left: 50%;
 	transform: translateX(-50%);
-	min-width: 200px;
 	cursor: pointer;
-	margin-bottom: 4rem;
+	margin-bottom: 2rem;
 	// display: none;
 	@media only screen and (min-width: 56.25rem) {
 		display: none;
@@ -114,6 +118,11 @@ input[name='panel']:checked ~ .AccordionContent{
 	visibility: hidden;
 	transition: all 0.3s;
 	margin-top: 4rem;
+		@media only screen and (min-width: 56.25rem) {
+			height: 100%;
+			opacity: 1;
+			visibility: visible;
+	}
 }
 
 .OpenCatalogFilters{

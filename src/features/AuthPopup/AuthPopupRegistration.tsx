@@ -13,7 +13,7 @@ import { z } from 'zod'
 
 type FormSchema = z.infer<typeof signUpSchema>
 
-const AuthPopupRegistration = ({className = ''}: {className?: string}) => {
+const AuthPopupRegistration = ({className = '', btnClass=''}: {className?: string, btnClass?: string}) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const router = useRouter()
   const {handleSubmit, register, formState:{ isDirty, isSubmitting, errors }} = useForm<FormSchema>({
@@ -53,7 +53,8 @@ const AuthPopupRegistration = ({className = ''}: {className?: string}) => {
         <CheckboxForm registerName='whatsapp' register={register} errors={errors.whatsapp} labelText='WhatsApp привязан к телефону'/>
         <CheckboxForm registerName='telegram' register={register} errors={errors.telegram} labelText='Telegram привязан к телефону'/>
         <FormSubmit 
-                title='Создать' 
+                className={btnClass}
+                title='Создать аккаунт' 
                 isDisabled={!isDirty || isSubmitting}       
                 isSubmitting={isSubmitting}
         />

@@ -127,7 +127,7 @@ model Category {
 
 model Band {
   id        String   @id @default(uuid())
-  name      String
+  name      String   @unique
   slug      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -199,7 +199,7 @@ model Country {
 
 model ShoppingCard {
   id                 String         @id @default(uuid())
-  name               String
+  name               String         @unique
   slug               String
   isActive           Boolean        @default(true) @map("is_active")
   isNew              Boolean        @default(false) @map("is_new")

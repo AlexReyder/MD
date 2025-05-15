@@ -5,7 +5,7 @@ export default function ModalSignIn() {
   return (
 		<>
 			<Modal>
-			<AuthPopupRegistration className={s.Modal}/>
+			<AuthPopupRegistration className={s.Modal} btnClass={s.Submit}/>
 			</Modal>
 		</>
   )

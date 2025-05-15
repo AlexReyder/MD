@@ -13,7 +13,7 @@ export default async function ProfileBonusPage() {
 	const bonusLevel = bonusStatusAdminForm.filter((item) => item.value === success?.data.status)[0].label
 
 	return (
-		<Section className={s.Wrapper}>
+		<div className={s.Wrapper}>
 				<FormHeader title='Программа лояльности' description=''/>
 				<div className={s.BonusInfo}>
 					<p className={s.BonusTextBlock}>
@@ -55,6 +55,6 @@ export default async function ProfileBonusPage() {
 					
 					</ul>
 				</div>
-		</Section>
+		</div>
 	)
 }

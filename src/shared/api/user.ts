@@ -200,3 +200,18 @@ export async function isAdmin(){
 
 
 }
+
+
+export async function getUserRole(){
+	const {isAuth, userId} = await verifySession();
+
+		if(isAuth){
+		const user = await prisma.user.findFirst({
+			where:{
+				id: userId as string
+			}
+			})
+			return user.role === 'ADMIN';
+		}
+	return false
+}

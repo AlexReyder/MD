@@ -16,9 +16,10 @@
 		align-items: start;
 		position: relative;
 
-		@media (max-width: 400px) {
+		@media (max-width: 37.5rem) {
 			flex-direction: column;
-			align-items: center;
+			align-items: flex-start;
+			gap: 2rem;
 		}
 
 		&__pos {
@@ -90,4 +91,11 @@
 }
 .SelectedFilter{
   font-weight: 600;
+
+  &__price{
+	color: var(--price-color) !important;
+  }
+ &__status{
+	color: var(--t-color) !important;
+  }
 }

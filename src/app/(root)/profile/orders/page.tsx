@@ -11,7 +11,7 @@ export default async function ProfileOrderHistoryPage() {
 		notFound()
 	}
 	return (
-		<Section className={s.Wrapper}>
+		<div className={s.Wrapper}>
 				<FormHeader title='История заказов' description=''/>
 			{
 				error && error  === 'EMPTY_ORDERS' ? (<h3>У вас пока нет заказов.</h3>) : null
@@ -38,6 +38,6 @@ export default async function ProfileOrderHistoryPage() {
 			 }
 			</div>
 
-		</Section>
+		</div>
 	)
 }

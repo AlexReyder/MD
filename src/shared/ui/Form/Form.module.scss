@@ -25,11 +25,20 @@
   margin-bottom: 8px;
   font-weight: 500;
   font-size: 30px;
+  @media (max-width: 37.5rem) {
+    font-size: 24px;
+		text-align: center;
+		margin-bottom: 4px;
+	}
 }
 .FormDescription{
+  font-weight: 500;
   margin: 0;
   color: #6c757d;
   margin-bottom: 16px;
+  @media (max-width: 37.5rem) {
+		text-align: center;
+	}
 }
 
 .FormFooter{

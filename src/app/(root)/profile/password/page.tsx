@@ -6,7 +6,7 @@ export default async function ProfilePassword() {
 	await isProtected()
 	return (
 		<Section className={s.Wrapper}>
-			<PasswordProfile className={s.PasswordProfileClass}/>
+			<PasswordProfile className={s.PasswordProfileClass} btnClass={s.Submit}/>
 		</Section>
 	)
 }
