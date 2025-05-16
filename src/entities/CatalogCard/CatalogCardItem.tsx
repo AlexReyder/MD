@@ -13,10 +13,10 @@ import s from './CatalogCardItem.module.scss'
 export const CatalogCardItem = ({ item }: {item: ProductsDb}) => {
   let { id, name, price, images, categoryFilter, colorsFilter, colors, sizes, isNew, isBestseller, articleNumber, isInStock, adPrice } = item;
 
-  const isImages =  Object.keys(images).length > 0
   const nameSlug = slug(name)     
   const categoryName = categoryFilter[0]
   const firstColor = colorsFilter[0]
+  const isImages =  Object.keys(images).length > 0 && images?.[firstColor] && images?.[firstColor].originals.length > 0;
   const previewImage = isImages ? images[firstColor]["overviews"][0].url : '/img/no-image.png'
   // const imageDimension = 
   const firstPrice = price[sizes[0].label]

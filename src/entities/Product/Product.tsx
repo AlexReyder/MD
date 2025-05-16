@@ -45,7 +45,7 @@ export const Product = ({product}: {product: ProductsDb}) => {
               isInStock={isInStock}
             />
           </div>
-          <ProductForm productId={id} name={name} colors={colorsInfo} sizes={sizesInfo} details={details} images={images} price={price} material={materialInfo} articleNumber={articleNumber} oColors = {product.colors}/>
+          <ProductForm productId={id} name={name} colors={colorsInfo} sizes={sizesInfo} details={details} images={images} price={price} material={materialInfo} articleNumber={articleNumber} oColors = {product.colors} colorsFilter={product.colorsFilter}/>
           <div className={s.BottomContainer}>
             <ProductDescription description={description}/>
             <ProductSpecification specifications = {specifications}/>

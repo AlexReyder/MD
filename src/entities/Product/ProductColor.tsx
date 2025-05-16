@@ -6,9 +6,8 @@ import s from './Product.module.scss'
 import ProductColorsItem from './ProductColorsItem'
 import ProductFiltersLabel from './ProductFiltersLabel'
 
-const ProductColor = ( {colors, images, error}: {colors: string[], images: any, error: string}) => {
+const ProductColor = ( {colors, images, error, isImages}: {colors: string[], images: any, error: string, isImages: boolean}) => {
 	const colorsArray = Object.keys(images)
-  const isImages = colorsArray.length > 0
 	const searchParams = useSearchParams()
 	const getColor = getQueryParamValue(searchParams, 'color') as string
 	const selectedColor = getColor ? matchColor(colors, getColor): 'Не выбран'

@@ -25,10 +25,11 @@ interface Props{
 	material: string | null
 	articleNumber: string
 	oColors: any
+	colorsFilter: any
 }
 type FormSchema = z.infer<typeof productFormSchema>
 
-const ProductForm = ({productId, name, price, images, colors, sizes, details, material, articleNumber, oColors}: Props) => {
+const ProductForm = ({productId, name, price, images, colors, sizes, details, material, articleNumber, oColors, colorsFilter}: Props) => {
 
 		const [count, setCount] = useState(0)
 		const [inStock, setInStock] = useState(1)
@@ -39,8 +40,9 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 		const selectedColor = getQueryParamValue(searchParams, 'color') as string
 		const selectedSize = getQueryParamValue(searchParams, 'size') as string
 		const colorsArray = Object.keys(images)
-		const isImages = colorsArray.length > 0
-	console.log(oColors)
+		console.log(colorsFilter)
+		const firstColor = colorsFilter[0]
+		const isImages = colorsArray.length > 0 && images?.[firstColor] && images?.[firstColor].originals.length > 0
 		useEffect(()=>{
 			setCount(0)
 			if(selectedSize !== null) {
@@ -98,7 +100,7 @@ const ProductForm = ({productId, name, price, images, colors, sizes, details, ma
 	return (
 		<Form action={handleSubmit(onSubmit)}>
 			{material ? <ProductFiltersLabel label='Материал' selected={material}/> : null}
-			<ProductColor colors={colors} images={images} error={colorError}/>
+			<ProductColor colors={colors} images={images} error={colorError} isImages={isImages}/>
 			<ProductSize sizes={sizes} details={details} error={sizeError}/>
 			{
 				inStock !== 0 ? (
